@@ -1,0 +1,47 @@
+import { useEffect, useState } from "react";
+import { Movies } from "../../Utils/FetchAPI";
+import { lazy, Suspense } from "react";
+import MovieSkeletons from "./MovieSkeletons";
+import MovieCard from "./MovieCard";
+
+const MobileCard = lazy(() => import("./MobileCard"));
+const SliderMovie = lazy(() => import("./SliderMovie"));
+
+const MovieCards = ({ upComing, popular, rated }: Movies) => {
+  const [upComingSizeChange, setUpComingSizeChange] = useState(false);
+  function handleUpComingSize() {
+    if (window.innerWidth <= 640) {
+      setUpComingSizeChange(true);
+    } else {
+      setUpComingSizeChange(false);
+    }
+  }
+
+  useEffect(() => {
+    handleUpComingSize();
+  }, []);
+
+  window.addEventListener("resize", handleUpComingSize);
+
+  return (
+    <div>
+      <Suspense fallback={<MovieSkeletons />}>
+        {upComingSizeChange ? (
+          <>
+            <MobileCard pm={upComing} movieTabTitle='UpComing' />
+            <MobileCard pm={popular} movieTabTitle='Popular' />
+            <MobileCard pm={rated} movieTabTitle='Top Rated' />
+          </>
+        ) : (
+          <>
+            <SliderMovie pm={upComing} />
+            <MovieCard pm={popular} movieTabTitle='Popular' />
+            <MovieCard pm={rated} movieTabTitle='Top Rated' />
+          </>
+        )}
+      </Suspense>
+    </div>
+  );
+};
+
+export default MovieCards;
