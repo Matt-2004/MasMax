@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import { Movies } from "../../Utils/FetchAPI";
 import { lazy, Suspense } from "react";
-import MovieSkeletons from "./MovieSkeletons";
-import MovieCard from "./MovieCard";
+import MovieSkeletons from "../SkeletonLoading/MovieSkeletons";
 
+const MovieCard = lazy(() => import("./MovieCard"));
 const MobileCard = lazy(() => import("./MobileCard"));
-const SliderMovie = lazy(() => import("./SliderMovie"));
+const SliderMovie = lazy(() => import("../Slide/SliderMovie"));
 
 const MovieCards = ({ upComing, popular, rated }: Movies) => {
   const [upComingSizeChange, setUpComingSizeChange] = useState(false);
+
   function handleUpComingSize() {
     if (window.innerWidth <= 640) {
       setUpComingSizeChange(true);
@@ -19,9 +20,8 @@ const MovieCards = ({ upComing, popular, rated }: Movies) => {
 
   useEffect(() => {
     handleUpComingSize();
-  }, []);
-
-  window.addEventListener("resize", handleUpComingSize);
+    window.addEventListener("resize", handleUpComingSize);
+  }, [window.innerWidth]);
 
   return (
     <div>
@@ -34,7 +34,7 @@ const MovieCards = ({ upComing, popular, rated }: Movies) => {
           </>
         ) : (
           <>
-            <SliderMovie pm={upComing} />
+            <SliderMovie pm={upComing} movieTabTitle='UpComing' />
             <MovieCard pm={popular} movieTabTitle='Popular' />
             <MovieCard pm={rated} movieTabTitle='Top Rated' />
           </>

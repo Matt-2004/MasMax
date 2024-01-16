@@ -1,8 +1,8 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGear, faUser, faCaretDown } from "@fortawesome/free-solid-svg-icons";
+import { faGear, faUser } from "@fortawesome/free-solid-svg-icons";
 import { fetchMovieGenres } from "../../Utils/FetchAPI";
 import { useEffect, useState } from "react";
-import SliderGenre from "./SliderGenre";
+import SliderGenre from "../Slide/SliderGenre";
 import { useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
@@ -11,7 +11,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../dropdown-menu";
+} from "../ui/dropdown-menu";
 
 const NavBar = () => {
   const navigate = useNavigate();

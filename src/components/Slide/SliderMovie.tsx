@@ -76,7 +76,7 @@ const SliderMovie = ({ pm }: PropsMovies) => {
         style={translater}
       >
         {pm.map((upcome) => (
-          <div className='flex-full'>
+          <div key={upcome.id} className='flex-full'>
             <img
               ref={imageRef}
               alt='img'

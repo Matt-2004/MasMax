@@ -4,7 +4,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "../dropdown-menu";
+} from "../ui/dropdown-menu";
 
 // import GenreSkeletons from "./GenreSkeletons";
 
@@ -15,7 +15,9 @@ const SliderGenre = ({ genres }: Genres) => {
         <DropdownMenuTrigger>Genres</DropdownMenuTrigger>
         <DropdownMenuContent>
           {genres.map((genre) => (
-            <DropdownMenuItem>{genre.name}</DropdownMenuItem>
+            <div key={genre.id}>
+              <DropdownMenuItem>{genre.name}</DropdownMenuItem>
+            </div>
           ))}
         </DropdownMenuContent>
       </DropdownMenu>
