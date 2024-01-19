@@ -6,11 +6,14 @@ import {
 } from "../../Utils/FetchAPI";
 import MovieCards from "../Cards/MovieCards";
 import Footer from "./Footer";
+import { useQueryClient } from "@tanstack/react-query";
 
 const Home = () => {
   const [upComing, setUpComing] = useState([]);
   const [popular, setPopular] = useState([]);
   const [rated, setRated] = useState([]);
+
+  const queryClient = useQueryClient()
 
   useEffect(() => {
     const fetching = async () => {
