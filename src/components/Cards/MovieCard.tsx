@@ -14,12 +14,6 @@ const MovieCard = ({ pm, movieTabTitle }: PropsMovies) => {
     localStorage.setItem("title", movieTabTitle);
   }
 
-  function roundNumber(number: number, decimal_digit: number) {
-    let powerOften = Math.pow(10, decimal_digit);
-    let result = Math.round(number * powerOften) / powerOften;
-    return result;
-  }
-
   return (
     <div className='w-[100%] mt-16 flex justify-center'>
       <div className='flex flex-col'>
@@ -42,17 +36,8 @@ const MovieCard = ({ pm, movieTabTitle }: PropsMovies) => {
                 <img
                   src={getImagePath(p.poster_path)}
                   alt={p.title}
-                  className='brightness-75 lg:w-[230px] md:w-[180px] sm:w-[140px]'
+                  className='rounded-md lg:w-[230px] md:w-[180px] sm:w-[140px]'
                 />
-              </div>
-              <div className='absolute top-[78%] left-[5%] text-white '>
-                <div className='lg:text-[20px] md:text-[16px] sm:text-[12px] lg:w-[200px] md:w-[150px] sm:w-[110px] mb-[3px] whitespace-nowrap overflow-hidden overflow-ellipsis'>
-                  {p.title}
-                </div>
-                <span className='lg:text-[17px] md:text-[14px] text-[#2eade7] sm:text-[10px] bg-[#26262e] px-2 py-[6px] rounded-md'>
-                  {roundNumber(p.vote_average, 1)}{" "}
-                  <FontAwesomeIcon icon={faStar} className='text-yellow-300' />
-                </span>
               </div>
             </div>
           ))}

@@ -8,9 +8,9 @@ const SeeMoreComs = () => {
   const [popular, setPopular] = useState([]);
   const [topRated, setTopRated] = useState([]);
   const lastPathSegement = useLastGetLocation();
+  const title = localStorage.getItem("title");
 
   useEffect(() => {
-    const title = localStorage.getItem("title");
     async function fetching() {
       if (title === "Popular") {
         const popu = await fetchPopularMovie(parseInt(lastPathSegement));

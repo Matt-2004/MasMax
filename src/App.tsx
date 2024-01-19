@@ -7,6 +7,12 @@ const SeeMoreComs = lazy(() => import("./components/SeeMore/SeeMoreComs"));
 const MovieDetils = lazy(() => import("./components/SeeMore/MovieDetils"));
 const MoviePage = lazy(() => import("./components/NavBar/MoviePage"));
 
+const elements = [
+  { path: "/search/:searchId", element: <MoviePage /> },
+  { path: "movie/:movieId", element: <MovieDetils /> },
+  { path: "/seemore/page/:id", element: <SeeMoreComs /> },
+];
+
 function App() {
   return (
     <BrowserRouter>
@@ -15,30 +21,16 @@ function App() {
       </div>
       <Routes>
         <Route path='/' element={<Home />} />
-        <Route
-          path='/search/:searchId'
-          element={
-            <Suspense fallback={<div>Loading...</div>}>
-              <MoviePage />
-            </Suspense>
-          }
-        />
-        <Route
-          path='movie/:movieId'
-          element={
-            <Suspense fallback={<div>Loading...</div>}>
-              <MovieDetils />
-            </Suspense>
-          }
-        />
-        <Route
-          path='/seemore/page/:id'
-          element={
-            <Suspense fallback={<div>Loading...</div>}>
-              <SeeMoreComs />
-            </Suspense>
-          }
-        />
+        {elements.map((ele) => (
+          <Route
+            path={ele.path}
+            element={
+              <Suspense fallback={<div>Loading...</div>}>
+                {ele.element}
+              </Suspense>
+            }
+          />
+        ))}
       </Routes>
     </BrowserRouter>
   );

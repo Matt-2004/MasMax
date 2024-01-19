@@ -80,17 +80,17 @@ const SliderMovie = ({ pm }: PropsMovies) => {
             <img
               ref={imageRef}
               alt='img'
+              loading='eager'
               className=' brightness-50 object-cover object-top w-[100%] h-[800px]'
               src={getImagePath(upcome.backdrop_path)}
             />
             <div className='absolute top-[27%] h-[440px] w-[700px] pl-[140px] text-white'>
               <div className='relative'>
-                <h2 className='text-3xl font-bold pb-4 pl-3'>
+                <h2 className='text-5xl font-bold pb-4 pl-3'>
                   {upcome.original_title}
                 </h2>
                 <span className='absolute text-lg pl-3 leading-loose '>
                   {upcome.overview}
-                  <div className=''>{upcome.vote_average}</div>
                 </span>
               </div>
             </div>
