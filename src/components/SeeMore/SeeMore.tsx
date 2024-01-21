@@ -1,52 +1,64 @@
-import { SeeMoreResult } from "@/Utils/FetchAPI";
+import { fetchPopularMovie, fetchTopRatedMovie } from "@/Utils/FetchAPI";
 import getImagePath from "@/Utils/GetImagePath";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
-import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronLeft,
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
 import DialogTag from "./DialogTag";
-import { useLastGetLocation } from "@/Utils/useLastGetLocation";
 import { useLocalStorage } from "@/Utils/useLocalStorage";
+import { useQuery } from "@tanstack/react-query";
 
-const SeeMore = ({ data, title }: SeeMoreResult) => {
-  // ToDo: When click right and left btn, initpage value have to change +1 or -1;
-  // That change indicate the page url and then fetch from api with url last
+const SeeMore = ({ title }: { title: string }) => {
+  // Have to do navigate
 
   const navigate = useNavigate();
-  const lastPathSegement = useLastGetLocation();
   const { setItem } = useLocalStorage("id");
-
   const [initPage, setInitPage] = useState([1, 2, 3, 4]);
+  const [isloading, setLoading] = useState(true);
 
-  const [pagesValid, setPageValid] = useState(false);
+  async function fetching(page: number) {
+    if (title === "Popular") {
+      const popu = await fetchPopularMovie(page);
+      return popu;
+    } else {
+      const topRate = await fetchTopRatedMovie(page);
+      return topRate;
+    }
+  }
 
-  function setPageValidToTrue() {
-    setTimeout(() => {
-      setPageValid(true);
-    }, 2000);
+  const { data, isSuccess, refetch } = useQuery({
+    queryFn: () => fetching(initPage[0]),
+    queryKey: ["querys"],
+    enabled: !!initPage,
+  });
+
+  function loaderToTrue() {
+    setLoading(true);
+    setTimeout(() => setLoading(false), 2000);
   }
 
   useEffect(() => {
-    setPageValid(false);
-    setPageValidToTrue();
-  }, [lastPathSegement, initPage]);
+    loaderToTrue();
+  }, []);
 
-  function handlePages(e: string) {
-    if (e === "increase") {
-      navigate(`/seemore/page/${initPage[1]}`);
-      if (initPage[3] !== 20) {
-        setPageValid(false);
-        setInitPage((prev) => prev.map((p) => p + 1));
-      }
-    } else {
-      navigate(`/seemore/page/${initPage[0]}`);
-      if (initPage[0] !== 1) {
-        setInitPage((prev) => prev.map((p) => p - 1));
-        setPageValid(false);
-      }
-    }
+  function next() {
+    initPage[3] < 21
+      ? setInitPage((prev) => prev.map((x) => x + 1))
+      : console.log("blarBlar");
+    loaderToTrue();
+    refetch();
+  }
+
+  function previous() {
+    initPage[0] !== 0
+      ? setInitPage((prev) => prev.map((x) => x - 1))
+      : console.log("Can't Go");
+    loaderToTrue();
+    refetch();
   }
 
   return (
@@ -54,33 +66,35 @@ const SeeMore = ({ data, title }: SeeMoreResult) => {
       <div className='flex justify-start text-3xl font-bold my-7 text-[#ffffff]'>
         {title}
       </div>
-      <div className='flex flex-wrap justify-center gap-10'>
-        {data ? (
-          data.map((datas) =>
-            pagesValid ? (
-              <div className='cursor-pointer'>
-                <img
-                  onClick={() => setItem(datas.id.toString())}
-                  src={getImagePath(datas.poster_path)}
-                  alt={datas.title}
-                  width={250}
-                  className='rounded-md'
-                />
-              </div>
-            ) : (
-              // Loader
-              <Loader />
+      <div className='flex flex-wrap gap-10 justify-center mt-6 mb-4 text-white'>
+        {isSuccess
+          ? data.map((datas: any) =>
+              isloading ? (
+                <Loader />
+              ) : (
+                <div className='cursor-pointer'>
+                  <img
+                    onClick={() => setItem(datas.id.toString())}
+                    src={getImagePath(datas.poster_path)}
+                    alt={datas.title}
+                    loading='lazy'
+                    width={250}
+                    className='rounded-md'
+                  />
+                </div>
+              )
             )
-          )
-        ) : (
-          <div>Loading...</div>
-        )}
+          : console.log("Error!!")}
       </div>
-      <div className='flex justify-center mt-6 mb-4 text-white'>
+      <div className='flex justify-center gap-2'>
         <FontAwesomeIcon
           icon={faChevronLeft}
-          onClick={() => handlePages("decrease")}
-          className='py-4 px-4 mr-3 border rounded-md  text-[#2eade7] transition-colors duration-300 hover:text-[#26262e] border-gray-600 hover:bg-[#2eade7]'
+          onClick={() => {
+            previous();
+          }}
+          className='bg-[#26262e] text-[#2eade7]
+          hover:text-[#26262e]
+          hover:bg-[#2eade7] border rounded-md border-gray-600  py-4 px-5'
         />
         {initPage.map((num) => (
           <button
@@ -88,7 +102,9 @@ const SeeMore = ({ data, title }: SeeMoreResult) => {
             onClick={(e) =>
               navigate(`/seemore/page/${e.currentTarget.innerHTML}`)
             }
-            className='w-14 border text-lg text-[#2eade7] transition-colors duration-300 hover:text-[#26262e] border-gray-600 hover:bg-[#2eade7] rounded-md mr-3'
+            className='bg-[#26262e] text-[#2eade7]
+            hover:text-[#26262e]
+            hover:bg-[#2eade7]  border rounded-md  border-gray-600 py-1 px-5'
           >
             {num}
           </button>
@@ -96,8 +112,12 @@ const SeeMore = ({ data, title }: SeeMoreResult) => {
         <DialogTag />
         <FontAwesomeIcon
           icon={faChevronRight}
-          onClick={() => handlePages("increase")}
-          className='py-4 px-4 ml-3 border border-gray-600 rounded-md  text-[#2eade7] transition-colors duration-300 hover:text-[#26262e] hover:bg-[#2eade7]'
+          onClick={() => {
+            next();
+          }}
+          className='bg-[#26262e] text-[#2eade7]
+          hover:text-[#26262e]
+          hover:bg-[#2eade7] border rounded-md border-gray-600  py-4 px-5'
         />
       </div>
     </div>

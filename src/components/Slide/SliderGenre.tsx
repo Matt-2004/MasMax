@@ -6,13 +6,11 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 
-// import GenreSkeletons from "./GenreSkeletons";
-
 const SliderGenre = ({ genres }: Genres) => {
   return (
     <div className='py-1 px-2 rounded-md'>
       <DropdownMenu>
-        <DropdownMenuTrigger>Genres</DropdownMenuTrigger>
+        <DropdownMenuTrigger className='text-lg'>Genres</DropdownMenuTrigger>
         <DropdownMenuContent>
           {genres.map((genre) => (
             <div key={genre.id}>

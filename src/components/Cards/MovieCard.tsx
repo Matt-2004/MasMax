@@ -1,7 +1,7 @@
 import { PropsMovies } from "@/Utils/FetchAPI";
 import getImagePath from "@/Utils/GetImagePath";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRightLong, faStar } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRightLong } from "@fortawesome/free-solid-svg-icons";
 import { useLocalStorage } from "@/Utils/useLocalStorage";
 import { useNavigate } from "react-router-dom";
 
@@ -36,7 +36,7 @@ const MovieCard = ({ pm, movieTabTitle }: PropsMovies) => {
                 <img
                   src={getImagePath(p.poster_path)}
                   alt={p.title}
-                  className='rounded-md lg:w-[230px] md:w-[180px] sm:w-[140px]'
+                  className='rounded-md hover:scale-110 transition-all duration-300 lg:w-[230px] md:w-[180px] sm:w-[140px]'
                 />
               </div>
             </div>

@@ -21,53 +21,6 @@ const SliderMovie = ({ pm }: PropsMovies) => {
     if (x !== 0) setX((x) => x - 1);
   }
 
-  // Problem
-
-  /* 
-  
-  Want to do rating star tag that depend on vote_average from API
-  But the data is too late to reach this function
-  So I got empty array 
-
-  */
-
-  // const [star, setStar] =  useState([]);
-  // function starRate(rate: number, index: number) {
-  //   let count = 0;
-  //   let arr: any = new Array(5);
-  //   for(let i = 0 ; i < 5 ; i++) {
-  //     if(rate > 1) {
-  //       arr.push(2);
-  //     } else if(rate === 1){
-  //       arr.push(1);
-  //     } else {
-  //       arr.push(0);
-  //     }
-  //     count = rate - 2;
-  //     rate = count;
-  //   }
-  //   setStar({...arr, [index]: arr});
-  // }
-
-  /* 
-        PROBLEM
-        
-        Interval is continously running even reaching limit and 
-        it does not clear even using clearInterval
-  */
-
-  // useEffect(() => {
-  //   const int = setInterval(() => {
-  //     if(x !== pm.length - 1) {
-  //       setX(x => x + 1)
-  //     } else {
-  //       clearInterval(int);
-  //     }
-  //     console.log("intervalX" , x)
-  //   }, 4000);
-  //   return () => clearInterval(int)
-  // }, [])
-
   return (
     <div className='cursor-pointer w-[100%] h-[700px] relative overflow-hidden'>
       <div className='absolute inset-0 z-40 h-full w-full bg-gradient-to-t from-gray-900/90 via-transparent to-transparent' />
@@ -75,23 +28,35 @@ const SliderMovie = ({ pm }: PropsMovies) => {
         className='flex transition-transform ease-in-out duration-1000'
         style={translater}
       >
-        {pm.map((upcome) => (
+        {pm?.map((upcome) => (
           <div key={upcome.id} className='flex-full'>
             <img
               ref={imageRef}
               alt='img'
-              loading='eager'
+              rel='preload'
+              loading='lazy'
               className=' brightness-50 object-cover object-top w-[100%] h-[800px]'
               src={getImagePath(upcome.backdrop_path)}
             />
-            <div className='absolute top-[27%] h-[440px] w-[700px] pl-[140px] text-white'>
-              <div className='relative'>
-                <h2 className='text-5xl font-bold pb-4 pl-3'>
-                  {upcome.original_title}
-                </h2>
-                <span className='absolute text-lg pl-3 leading-loose '>
-                  {upcome.overview}
-                </span>
+            <div className='absolute top-[27%] h-[440px] w-[100%] xl:pl-[140px] lg:pl-[100px] sm:pl-[70px] text-white'>
+              <div className='flex '>
+                <div>
+                  <img
+                    rel='preload'
+                    alt={upcome.title}
+                    loading='lazy'
+                    src={getImagePath(upcome.poster_path)}
+                    className='xl:w-72 lg:w-64 md:w-56 sm:w-44 rounded-md'
+                  />
+                </div>
+                <div className='relative'>
+                  <h2 className='text-5xl font-bold pb-4 pl-3'>
+                    {upcome.original_title}
+                  </h2>
+                  <span className='absolute text-lg xl:w-[600px] lg:w-[470px] sm:w-[380px] pl-3'>
+                    {upcome.overview}
+                  </span>
+                </div>
               </div>
             </div>
           </div>

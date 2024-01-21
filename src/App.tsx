@@ -5,12 +5,13 @@ import { Suspense, lazy } from "react";
 
 const SeeMoreComs = lazy(() => import("./components/SeeMore/SeeMoreComs"));
 const MovieDetils = lazy(() => import("./components/SeeMore/MovieDetils"));
-const MoviePage = lazy(() => import("./components/NavBar/MoviePage"));
+const MoviePage = lazy(() => import("./components/Home/MoviePage"));
 
 const elements = [
   { path: "/search/:searchId", element: <MoviePage /> },
   { path: "movie/:movieId", element: <MovieDetils /> },
   { path: "/seemore/page/:id", element: <SeeMoreComs /> },
+  // {path: "/genres/:genresId", element: }
 ];
 
 function App() {

@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGear, faUser } from "@fortawesome/free-solid-svg-icons";
-import { fetchMovieGenres } from "../../Utils/FetchAPI";
+import { fetchMovieGenres, fetchSearchMovie } from "../../Utils/FetchAPI";
 import { useEffect, useState } from "react";
 import SliderGenre from "../Slide/SliderGenre";
 import { useNavigate } from "react-router-dom";
@@ -12,11 +12,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import MoviePage from "../Home/MoviePage";
 
 const NavBar = () => {
   const navigate = useNavigate();
 
   const [genres, setGenres] = useState([]);
+  const [search, setSearch] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
 
   const [isMobile, setIsMobile] = useState(false);
   function checkIsMobile() {
@@ -34,11 +37,22 @@ const NavBar = () => {
     fetchGenres();
   }, []);
 
-  const [searchValue, setSearchValue] = useState("");
+  useEffect(() => {
+    async function fetching() {
+      const res = await fetchSearchMovie(searchValue);
+      setSearch(res);
+    }
+    fetching();
+  }, [searchValue]);
+
   function handleSearch(e: any) {
     e.preventDefault();
-    navigate(`/search/${searchValue}`);
+    navigate(`/search/${searchValue}`, {
+      state: { search: search, searchValue: searchValue },
+    });
   }
+
+  // fetch -> input -> props -> navigate ->
 
   return (
     <div className='w-[100%] bg-[#26262e] relative'>
@@ -70,7 +84,8 @@ const NavBar = () => {
           </div>
 
           <button className='max-sm:hidden bg-[#2eade7] text-[#26262e] px-2 h-[36px] text-center rounded-md opacity-80 hover:opacity-100'>
-            <FontAwesomeIcon icon={faUser} /> Login
+            <FontAwesomeIcon icon={faUser} />
+            <span className='text-lg'> Login</span>
           </button>
           {isMobile && <SettingUI genres={genres} />}
         </div>

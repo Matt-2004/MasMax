@@ -1,4 +1,4 @@
-type Genre = {
+export type Genre = {
   id: number;
   name: string;
 };
@@ -22,11 +22,6 @@ export type MovieResult = {
   video: boolean;
   vote_average: number;
   vote_count: number;
-};
-
-export type SeeMoreResult = {
-  data: MovieResult[];
-  title: string;
 };
 
 export type Movies = {
@@ -111,4 +106,11 @@ export const fetchMovieDetils = async (id: number) => {
   );
   const response = await fetchFromTMDB(url);
   return response;
+};
+
+export const fetchDiscover = async (genre: string) => {
+  const url = new URL("https://api.themoviedb.org/3/discover/movie");
+  url.searchParams.set("with_genres", genre);
+  const respones = await fetchFromTMDB(url);
+  return respones;
 };
