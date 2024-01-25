@@ -1,18 +1,12 @@
 import { useLocation } from "react-router-dom";
-import { MovieResult } from "../../Utils/FetchAPI";
-import getImagePath from "../../Utils/GetImagePath";
-import { useLocalStorage } from "../../Utils/useLocalStorage";
+import { capitalizeFirstLetterEachWord } from "./MoviePage";
+import { useLocalStorage } from "@/Utils/useLocalStorage";
+import getImagePath from "@/Utils/GetImagePath";
+import { MovieResult } from "@/Utils/FetchAPI";
 
-export function capitalizeFirstLetterEachWord(str: string) {
-  return str.replace(/\b\w/g, function (match) {
-    return match.toUpperCase();
-  });
-}
-
-const MoviePage = () => {
+const GenrePage = () => {
   const { setItem } = useLocalStorage("id");
   const location = useLocation();
-
   return (
     <div className='bg-[#26262e]'>
       <h1 className='text-3xl font-semibold ml-[10%] py-[2%] text-[#2eade7]'>
@@ -46,4 +40,4 @@ const MoviePage = () => {
   );
 };
 
-export default MoviePage;
+export default GenrePage;

@@ -2,16 +2,21 @@ import Home from "./components/Home/Home";
 import NavBar from "./components/NavBar/NavBar";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Suspense, lazy } from "react";
+import SignUp from "./components/logIn/SignUp";
+import SignIn from "./components/logIn/SignIn";
 
 const SeeMoreComs = lazy(() => import("./components/SeeMore/SeeMoreComs"));
 const MovieDetils = lazy(() => import("./components/SeeMore/MovieDetils"));
 const MoviePage = lazy(() => import("./components/Home/MoviePage"));
+const GenrePage = lazy(() => import("./components/Home/GenrePage"));
 
 const elements = [
   { path: "/search/:searchId", element: <MoviePage /> },
   { path: "movie/:movieId", element: <MovieDetils /> },
   { path: "/seemore/page/:id", element: <SeeMoreComs /> },
-  // {path: "/genres/:genresId", element: }
+  { path: "/genres/:genreId", element: <GenrePage /> },
+  { path: "/signUp", element: <SignUp /> },
+  { path: "/signIn", element: <SignIn /> },
 ];
 
 function App() {

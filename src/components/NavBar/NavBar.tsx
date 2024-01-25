@@ -12,7 +12,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import MoviePage from "../Home/MoviePage";
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -83,7 +82,10 @@ const NavBar = () => {
             {!isMobile && <GenresUI genres={genres} />}
           </div>
 
-          <button className='max-sm:hidden bg-[#2eade7] text-[#26262e] px-2 h-[36px] text-center rounded-md opacity-80 hover:opacity-100'>
+          <button
+            onClick={() => navigate("/signUp")}
+            className='max-sm:hidden bg-[#2eade7] text-[#26262e] px-2 h-[36px] text-center rounded-md opacity-80 hover:opacity-100'
+          >
             <FontAwesomeIcon icon={faUser} />
             <span className='text-lg'> Login</span>
           </button>

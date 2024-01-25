@@ -18,7 +18,9 @@ const SliderMovie = ({ pm }: PropsMovies) => {
   }
 
   function prev() {
-    if (x !== 0) setX((x) => x - 1);
+    if (x !== 0) {
+      setX((x) => x - 1);
+    }
   }
 
   return (
@@ -38,7 +40,7 @@ const SliderMovie = ({ pm }: PropsMovies) => {
               className=' brightness-50 object-cover object-top w-[100%] h-[800px]'
               src={getImagePath(upcome.backdrop_path)}
             />
-            <div className='absolute top-[27%] h-[440px] w-[100%] xl:pl-[140px] lg:pl-[100px] sm:pl-[70px] text-white'>
+            <div className='absolute  top-[27%] h-[440px] w-[100%] xl:pl-[140px] lg:pl-[100px] sm:pl-[70px] text-white'>
               <div className='flex '>
                 <div>
                   <img
@@ -46,7 +48,7 @@ const SliderMovie = ({ pm }: PropsMovies) => {
                     alt={upcome.title}
                     loading='lazy'
                     src={getImagePath(upcome.poster_path)}
-                    className='xl:w-72 lg:w-64 md:w-56 sm:w-44 rounded-md'
+                    className='xl:w-72   lg:w-64 md:w-56 sm:w-44 rounded-md'
                   />
                 </div>
                 <div className='relative'>
