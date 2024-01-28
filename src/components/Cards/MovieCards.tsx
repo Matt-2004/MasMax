@@ -25,7 +25,7 @@ const MovieCards = ({ upComing, popular, rated }: Movies) => {
 
   return (
     <div>
-      <Suspense fallback={<MovieSkeletons />}>
+      <Suspense fallback={<div>Loading...</div>}>
         {upComingSizeChange ? (
           <>
             <MobileCard pm={upComing} movieTabTitle='UpComing' />

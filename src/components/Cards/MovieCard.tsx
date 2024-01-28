@@ -37,6 +37,8 @@ const MovieCard = ({ pm, movieTabTitle }: PropsMovies) => {
                   src={getImagePath(p.poster_path)}
                   alt={p.title}
                   className='rounded-md hover:scale-110 transition-all duration-300 lg:w-[230px] md:w-[180px] sm:w-[140px]'
+                  width={230}
+                  height={520}
                 />
               </div>
             </div>

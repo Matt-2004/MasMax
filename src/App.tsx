@@ -2,8 +2,9 @@ import Home from "./components/Home/Home";
 import NavBar from "./components/NavBar/NavBar";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Suspense, lazy } from "react";
-import SignUp from "./components/logIn/SignUp";
-import SignIn from "./components/logIn/SignIn";
+
+const SignUp = lazy(() => import("./components/logIn/SignUp"));
+const SignIn = lazy(() => import("./components/logIn/SignIn"));
 
 const SeeMoreComs = lazy(() => import("./components/SeeMore/SeeMoreComs"));
 const MovieDetils = lazy(() => import("./components/SeeMore/MovieDetils"));
