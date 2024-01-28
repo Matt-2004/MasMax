@@ -11,7 +11,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
+} from "../UI/dropdown-menu";
 
 const NavBar = () => {
   const navigate = useNavigate();

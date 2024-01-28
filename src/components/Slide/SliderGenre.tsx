@@ -5,7 +5,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
+} from "../UI/dropdown-menu";
 import { useNavigate } from "react-router-dom";
 
 const SliderGenre = ({ genres }: Genres) => {
