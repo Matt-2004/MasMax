@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Movies } from "../../Utils/FetchAPI";
 import { lazy, Suspense } from "react";
-import MovieSkeletons from "../SkeletonLoading/MovieSkeletons";
 
 const MovieCard = lazy(() => import("./MovieCard"));
 const MobileCard = lazy(() => import("./MobileCard"));

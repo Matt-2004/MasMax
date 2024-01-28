@@ -1,6 +1,6 @@
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 const SignUp = () => {
   const [pwShower, setPwShower] = useState(false);
@@ -8,26 +8,26 @@ const SignUp = () => {
   const submitBtnRef = useRef<HTMLButtonElement>(null);
 
   // For User Input
-  const [userName, setUserName] = useState("");
-  const [userNameValid, setUserNameValid] = useState(false);
-  // For Password Input
-  const [pw, setPw] = useState("");
-  const [pwValid, setPwValid] = useState(false);
+  // const [userName, setUserName] = useState("");
+  // const [userNameValid, setUserNameValid] = useState(false);
+  // // For Password Input
+  // const [pw, setPw] = useState("");
+  // const [pwValid, setPwValid] = useState(false);
 
-  // For Confirm Password Input
-  const [cpw, setCpw] = useState("");
-  const [cpwValid, setCpwValid] = useState(false);
+  // // For Confirm Password Input
+  // const [cpw, setCpw] = useState("");
+  // const [cpwValid, setCpwValid] = useState(false);
 
-  const userNameRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]+$/;
-  const passwordRegex =
-    /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,16}$/;
+  // const userNameRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]+$/;
+  // const passwordRegex =
+  //   /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,16}$/;
 
-  useEffect(() => {
-    userRef.current?.focus();
-    if (userNameValid && pwValid && cpwValid) {
-      submitBtnRef.current?.removeAttribute("disabled");
-    }
-  });
+  // useEffect(() => {
+  //   userRef.current?.focus();
+  //   if (userNameValid && pwValid && cpwValid) {
+  //     submitBtnRef.current?.removeAttribute("disabled");
+  //   }
+  // });
 
   return (
     <div className='w-[100%] items-center m-0 bg-[#26262e] relative h-[100vh] flex justify-center '>
@@ -80,11 +80,11 @@ const SignUp = () => {
           <button
             ref={submitBtnRef}
             disabled
-            style={
-              userNameValid && pwValid && cpwValid
-                ? { opacity: "100%" }
-                : { opacity: "40%" }
-            }
+            // style={
+            //   userNameValid && pwValid && cpwValid
+            //     ? { opacity: "100%" }
+            //     : { opacity: "40%" }
+            // }
             className='w-[100%] mt-4 text-xl bg-[#2eade7] py-2 rounded-md'
           >
             Sign Up
