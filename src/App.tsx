@@ -16,18 +16,18 @@ const elements = [
   { path: "movie/:movieId", element: <MovieDetils /> },
   { path: "/seemore/page/:id", element: <SeeMoreComs /> },
   { path: "/genres/:genreId", element: <GenrePage /> },
-  { path: "/signUp", element: <SignUp /> },
-  { path: "/signIn", element: <SignIn /> },
+  { path: "/register", element: <SignUp /> },
+  { path: "/login", element: <SignIn /> },
 ];
 
 function App() {
   return (
     <BrowserRouter>
-      <div className='bg-[#26262e] '>
+      <div className="bg-[#26262e] ">
         <NavBar />
       </div>
       <Routes>
-        <Route path='/' element={<Home />} />
+        <Route path="/" element={<Home />} />
         {elements.map((ele) => (
           <Route
             path={ele.path}
