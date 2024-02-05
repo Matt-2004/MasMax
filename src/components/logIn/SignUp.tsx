@@ -48,32 +48,34 @@ const SignUp = () => {
     if (event.key === "Enter") {
       !pwdValid ? pwdRef.current?.focus() : cpwdRef.current?.focus();
     }
-
-    console.log("hello");
   }
 
   return (
-    <div className="w-[100%] items-center m-0 bg-[#26262e] relative h-[100vh] flex justify-center ">
-      <section className="border border-[#4682b4] rounded-sm bg-[#4682b4] py-4 px-3 w-[350px]">
-        <form className="text-black">
-          <h1 className="text-3xl font-bold mb-7">Register</h1>
+    <div className='w-[100%] items-center m-0 bg-[#26262e] relative h-[100vh] flex justify-center '>
+      <section className='border border-[#4682b4] rounded-sm bg-[#4682b4] py-4 px-3 w-[350px]'>
+        <form
+          className='text-black'
+          onSubmit={(e) => {
+            e.preventDefault;
+          }}
+        >
+          <h1 className='text-3xl font-bold mb-7'>Register</h1>
           <div>
-            <label htmlFor="userName" className="text-lg block">
+            <label htmlFor='userName' className='text-lg block'>
               Username :
             </label>
             <input
               ref={userRef}
-              autoComplete="off"
-              type="text"
-              id="userName"
+              autoComplete='off'
+              type='text'
+              id='userName'
               onChange={(e) => setUserName(e.target.value)}
-              className="bg-white outline-none pl-2 w-[100%] py-1 rounded-md mt-1 mb-2"
+              className='bg-white outline-none pl-2 w-[100%] py-1 rounded-md mt-1 mb-2'
               onKeyDown={handleKeyPress}
               onFocus={() => setUserFocus(true)}
-              onBlur={() => setUserFocus(false)}
             />
             {!userNameValid && userFocus ? (
-              <div className="text-red-600 text-sm">
+              <div className='text-red-600 text-sm'>
                 - 4 to 24 characters.
                 <br />
                 - Must begin with a letter.
@@ -83,16 +85,16 @@ const SignUp = () => {
               ""
             )}
           </div>
-          <div className="relative">
-            <label htmlFor="pw" className="text-lg block">
+          <div className='relative'>
+            <label htmlFor='pw' className='text-lg block'>
               Password :
             </label>
-            <div className="bg-white py-1 px-2 rounded-md mb-3">
+            <div className='bg-white py-1 px-2 rounded-md mb-3'>
               <input
                 ref={pwdRef}
                 type={pwShower ? "text" : "password"}
-                id="pw"
-                className="bg-white outline-none inline w-[275px] pt-1"
+                id='pw'
+                className='bg-white outline-none inline w-[275px] pt-1'
                 onChange={(e) => setPwd(e.target.value)}
                 onKeyDown={handleKeyPress}
                 onFocus={() => setPwdFocus(true)}
@@ -107,43 +109,36 @@ const SignUp = () => {
               </span>
             </div>
             {!pwdValid && pwdFocus ? (
-              <div className="text-red-600 text-sm mt-2">
+              <div className='text-red-600 text-sm mt-2'>
                 - 8 to 24 characters.
                 <br />
                 - Must include uppercase and lowercase letters, a number and a
                 special character.
                 <br />- Allowed special characters:{" "}
-                <span aria-label="exclamation mark">!</span>{" "}
-                <span aria-label="at symbol">@</span>{" "}
-                <span aria-label="hashtag">#</span>{" "}
-                <span aria-label="dollar sign">$</span>{" "}
-                <span aria-label="percent">%</span>
+                <span aria-label='exclamation mark'>!</span>{" "}
+                <span aria-label='at symbol'>@</span>{" "}
+                <span aria-label='hashtag'>#</span>{" "}
+                <span aria-label='dollar sign'>$</span>{" "}
+                <span aria-label='percent'>%</span>
               </div>
             ) : (
               ""
             )}
           </div>
           <div>
-            <label htmlFor="cpw" className="text-lg block">
+            <label htmlFor='cpw' className='text-lg block'>
               Confirm Password :
             </label>
             <input
               ref={cpwdRef}
-              type="password"
-              id="cpw"
-              className="bg-white outline-none pl-2 w-[100%] py-1 rounded-md mt-1 mb-2"
+              type='password'
+              id='cpw'
+              className='bg-white outline-none pl-2 w-[100%] py-1 rounded-md mt-1 mb-2'
               onChange={(e) => setCpwd(e.target.value)}
               onFocus={() => setCpwdFocus(true)}
               onBlur={() => setCpwdFocus(false)}
               onPaste={(e) => e.preventDefault()}
             />
-            {!cpwdValid && cpwdFocus ? (
-              <div className="text-red-600 text-sm">
-                - Must match the first password input field.
-              </div>
-            ) : (
-              ""
-            )}
           </div>
           <button
             ref={submitBtnRef}
@@ -153,15 +148,17 @@ const SignUp = () => {
                 ? { opacity: "100%" }
                 : { opacity: "40%" }
             }
-            className="w-[100%] mt-4 mb-3 text-xl bg-[#2eade7] py-2 rounded-md"
+            className='w-[100%] mt-4 mb-3 text-xl bg-[#2eade7] py-2 rounded-md'
             onClick={handleRegister}
           >
             Sign Up
           </button>
         </form>
         <div
-          className="text-yellow-500 text-sm cursor-pointer"
-          onClick={() => navigate("/login")}
+          className='text-yellow-500 text-sm cursor-pointer hover:underline'
+          onClick={() => {
+            navigate("/login");
+          }}
         >
           {" "}
           You already have a account? Click here.

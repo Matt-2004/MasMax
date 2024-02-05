@@ -27,20 +27,17 @@ const SliderMovie = ({ pm }: PropsMovies) => {
   }
 
   return (
-    <div className='cursor-pointer w-[100%] h-[700px] relative overflow-hidden'>
-      <div className='' style={{ opacity: isLoaded ? 0 : 1 }}>
-        <div className='bg-gray-700 animate-pulse w-[100%] h-[700px] absolute' />
-        <img
-          className='w-[250px] h-[400px] object-cover  absolute top-[28%] left-[10%] rounded-md'
-          src='https://archive.org/download/placeholder-image/placeholder-image.jpg'
-          alt='placeholderImg'
-          width={250}
-          height={375}
-        />
-        <div className='w-[250px] h-[30px] rounded-md bg-gray-600 absolute top-[28%] left-[25%]' />
-        <div className='w-[400px] h-[24px] absolute top-[38%] bg-gray-600 rounded-md left-[25%]' />
-        <div className='w-[400px] h-[24px] absolute top-[43%] bg-gray-600 rounded-md left-[25%]' />
-        <div className='w-[400px] h-[24px] absolute top-[48%] bg-gray-600 rounded-md left-[25%]' />
+    <div className='cursor-pointer w-[100%] h-[700px]  overflow-hidden'>
+      <div className='relative' style={{ opacity: isLoaded ? 0 : 1 }}>
+        <div className='flex absolute left-[8%] mt-[14rem] lg:w-[700px] md:w-[640px] sm:w-[510px] justify-between'>
+          <div className='xl:w-72 lg:w-64 md:w-56 sm:w-44 xl:h-[400px] lg:h-[370px] md:h-[330px] sm:h-[290px] rounded-md bg-gray-600 animate-pulse' />
+          <div className='flex flex-col h-[150px] justify-between'>
+            <div className='md:w-[250px] sm:w-[200px] md:h-[30px] sm:h-[24px] rounded-md bg-gray-600  ' />
+            <div className='md:w-[400px] sm:w-[320px] h-[24px]   bg-gray-600  rounded-md ' />
+            <div className='md:w-[400px] sm:w-[320px] h-[24px]   bg-gray-600 rounded-md ' />
+            <div className='md:w-[400px] sm:w-[320px] h-[24px]   bg-gray-600 rounded-md ' />
+          </div>
+        </div>
       </div>
 
       <div
@@ -78,7 +75,7 @@ const SliderMovie = ({ pm }: PropsMovies) => {
                   />
                 </div>
                 <div className='relative'>
-                  <h2 className='text-5xl font-bold pb-4 pl-3'>
+                  <h2 className='xl:text-5xl lg:text-4xl md:text-3xl sm:text-2xl font-bold pb-4 pl-3'>
                     {upcome.original_title}
                   </h2>
                   <span className='absolute text-lg xl:w-[600px] lg:w-[470px] sm:w-[380px] pl-3'>
