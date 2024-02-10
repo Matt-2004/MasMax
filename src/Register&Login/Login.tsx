@@ -1,8 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef } from "react";
+import { useState } from "react";
+import axios from "axios";
 
 const Login = () => {
   const navigate = useNavigate();
+
   return (
     <div className='flex  justify-center h-screen items-center w-[100%]'>
       <div className='bg-[#0FDDD6] relative  w-[400px] h-[530px] bg-opacity-10 rounded-t-md'>
@@ -36,21 +39,33 @@ const Login = () => {
 };
 
 function LoginForm() {
-  const firstInputRef = useRef<HTMLInputElement>(null);
-  useEffect(() => {
-    firstInputRef.current?.focus();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const axio = axios.create({
+    withCredentials: true,
   });
+
+  const handleLogin = async (e?: any) => {
+    e.preventDefault();
+    await axio.post("http://localhost:8000/db/login", {
+      email: email,
+      password: password,
+    });
+    console.log("It's worked!");
+  };
   return (
-    <>
+    <form onSubmit={handleLogin}>
       <div className='flex flex-col items-center'>
         <input
-          ref={firstInputRef}
+          onChange={(e) => setEmail(e.target.value)}
           type='email'
           className='py-2 w-[90%] mt-7 border-[#9d9d9d] border rounded-sm pl-5 outline-none placeholder:text-[14px] placeholder:font-roboto'
           placeholder='Email'
         />
         <input
           type='password'
+          onChange={(e) => setPassword(e.target.value)}
           className='py-2 w-[90%] mt-6 border-[#9d9d9d] border rounded-sm pl-5 outline-none placeholder:text-[14px] placeholder:font-roboto'
           placeholder='Password'
         />
@@ -65,11 +80,14 @@ function LoginForm() {
         </label>
       </div>
       <div className='flex justify-center mt-3'>
-        <button className='text-[15px] hover:bg-opacity-85 rounded-sm font-bold font-roboto text-white w-[356px] h-[43px] bg-[#0FDDD6]'>
+        <button
+          onClick={handleLogin}
+          className='text-[15px] hover:bg-opacity-85 rounded-sm font-bold font-roboto text-white w-[356px] h-[43px] bg-[#0FDDD6]'
+        >
           SIGN IN
         </button>
       </div>
-    </>
+    </form>
   );
 }
 
