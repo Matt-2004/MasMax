@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect, useRef } from "react";
 import { useState } from "react";
 import axios from "axios";
 
@@ -39,20 +38,30 @@ const Login = () => {
 };
 
 function LoginForm() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const axio = axios.create({
-    withCredentials: true,
-  });
-
   const handleLogin = async (e?: any) => {
     e.preventDefault();
-    await axio.post("http://localhost:8000/db/login", {
-      email: email,
-      password: password,
-    });
-    console.log("It's worked!");
+
+    await axios.post(
+      "http://localhost:8000/db/login",
+      {
+        email: email,
+        password: password,
+      },
+      { withCredentials: true }
+    );
+    await axios
+      .get("http://localhost:8000/db/verification", {
+        headers: { Authorization: document.cookie },
+        withCredentials: true,
+      })
+      .then(() => {
+        navigate("/");
+      })
+      .catch((err) => console.log("Error", err));
   };
   return (
     <form onSubmit={handleLogin}>

@@ -1,4 +1,5 @@
-import { useEffect, useRef } from "react";
+import axios from "axios";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Register = () => {
@@ -8,12 +9,7 @@ const Register = () => {
       <div className='bg-[#0FDDD6] relative  w-[400px] h-[530px] bg-opacity-10 rounded-t-md'>
         <Header />
         <Form />
-        <CheckBox />
-        <div className='flex justify-center mt-4'>
-          <button className='text-[15px] hover:bg-opacity-85 rounded-sm font-semibold font-roboto text-white w-[356px] h-[43px] bg-[#0FDDD6]'>
-            SIGN UP
-          </button>
-        </div>
+
         <div className='flex justify-center mt-9'>
           <div className='text-white text-[13px] font-roboto'>
             Have already an account?
@@ -24,11 +20,25 @@ const Register = () => {
               Login Here
             </span>
           </div>
+          R
         </div>
       </div>
     </div>
   );
 };
+
+function RegisterBtn({ handleRegister }: any) {
+  return (
+    <div className='flex justify-center mt-4'>
+      <button
+        onClick={handleRegister}
+        className='text-[15px] hover:bg-opacity-85 rounded-sm font-semibold font-roboto text-white w-[356px] h-[43px] bg-[#0FDDD6]'
+      >
+        SIGN UP
+      </button>
+    </div>
+  );
+}
 
 function CheckBox() {
   return (
@@ -54,36 +64,60 @@ function Header() {
 }
 
 function Form() {
+  const navigate = useNavigate();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const firstInputRef = useRef<HTMLInputElement>(null);
-  useEffect(() => {
-    firstInputRef.current?.focus();
-  });
+  // useEffect(() => {
+  //   firstInputRef.current?.focus();
+  // });
+
+  // Registration
+  const handleRegister = async (e?: any) => {
+    e.preventDefault();
+    await axios.post("http://localhost:8000/db/register", {
+      username: name,
+      email: email,
+      password: password,
+    });
+    navigate("/login");
+  };
+
+  // Valid the input
   return (
-    <div className='flex justify-center'>
-      <div className='flex flex-col gap-5'>
-        <input
-          ref={firstInputRef}
-          type='text'
-          className='w-[356px] h-[45px] outline-none rounded-md border border-[#9d9d9d] font-roboto placeholder:text-[14px] pl-4 placeholder:opacity-80'
-          placeholder='Username'
-        />
-        <input
-          type='email'
-          className='w-[356px] h-[45px] outline-none rounded-md border border-[#9d9d9d] font-roboto placeholder:text-[14px] pl-4 placeholder:opacity-80'
-          placeholder='Email'
-        />
-        <input
-          type='password'
-          className='w-[356px] h-[45px] outline-none rounded-md border border-[#9d9d9d] font-roboto placeholder:text-[14px] pl-4 placeholder:opacity-80'
-          placeholder='Password'
-        />
-        <input
-          type='password'
-          className='w-[356px] h-[45px] outline-none rounded-md border border-[#9d9d9d] font-roboto placeholder:text-[14px] pl-4 placeholder:opacity-80'
-          placeholder='Confirm Password'
-        />
-      </div>
-    </div>
+    <>
+      <form onSubmit={handleRegister} className='flex justify-center'>
+        <div className='flex flex-col gap-5'>
+          <input
+            onChange={(e) => setName(e.target.value)}
+            ref={firstInputRef}
+            type='text'
+            className='w-[356px] h-[45px] outline-none rounded-md border border-[#9d9d9d] font-roboto placeholder:text-[14px] pl-4 placeholder:opacity-80'
+            placeholder='Username'
+          />
+          <input
+            onChange={(e) => setEmail(e.target.value)}
+            type='email'
+            className='w-[356px] h-[45px] outline-none rounded-md border border-[#9d9d9d] font-roboto placeholder:text-[14px] pl-4 placeholder:opacity-80'
+            placeholder='Email'
+          />
+          <input
+            onChange={(e) => setPassword(e.target.value)}
+            type='password'
+            className='w-[356px] h-[45px] outline-none rounded-md border border-[#9d9d9d] font-roboto placeholder:text-[14px] pl-4 placeholder:opacity-80'
+            placeholder='Password'
+          />
+          <input
+            type='password'
+            className='w-[356px] h-[45px] outline-none rounded-md border border-[#9d9d9d] font-roboto placeholder:text-[14px] pl-4 placeholder:opacity-80'
+            placeholder='Confirm Password'
+          />
+        </div>
+      </form>
+      <CheckBox />
+      <RegisterBtn handleRegister={handleRegister} />
+    </>
   );
 }
 
