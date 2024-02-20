@@ -19,11 +19,12 @@ interface UserDetils {
 }
 
 const NavBar = () => {
-  const jwtToken = Cookies.get("token");
-
   const [user, setUser] = useState<UserDetils>();
+  const [tokenExist, setTokenExist] = useState(false);
 
   useEffect(() => {
+    const jwtToken = document.cookie;
+
     if (jwtToken) {
       try {
         const emailFromJWT = atob(jwtToken.split(".")[1]);
@@ -44,13 +45,13 @@ const NavBar = () => {
   }, []);
 
   return (
-    <div className="flex justify-center shadow-md">
-      <div className="w-[1512px] h-[70px]  flex justify-between lg:px-8 md:px-3 sm:px-2  max-sm:px-2 items-center drop-shadow-2xl ">
-        <div className="font-roboto font-bold text-3xl text-white">
+    <div className='flex justify-center shadow-md'>
+      <div className='w-[1512px] h-[70px]  flex justify-between lg:px-8 md:px-3 sm:px-2  max-sm:px-2 items-center drop-shadow-2xl '>
+        <div className='font-roboto font-bold text-3xl text-white'>
           Mas
-          <span className="text-[#0FDDD6]">Max</span>
+          <span className='text-[#0FDDD6]'>Max</span>
         </div>
-        {jwtToken ? <Profile username={user?.username} /> : <RegisterBtn />}
+        {tokenExist ? <Profile username={user?.username} /> : <RegisterBtn />}
       </div>
     </div>
   );
@@ -60,15 +61,15 @@ function Profile({ username }: any) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <div className="gap-2 flex justify-between items-center">
-          <div className="w-11 h-11 ">
+        <div className='gap-2 flex justify-between items-center'>
+          <div className='w-11 h-11 '>
             <img
-              className="rounded-[90%] border-2 border-[#0FDDD6]"
-              src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-              alt="blank-img"
+              className='rounded-[90%] border-2 border-[#0FDDD6]'
+              src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'
+              alt='blank-img'
             />
           </div>
-          <span className="text-2xl font-semibold text-white ">{username}</span>
+          <span className='text-2xl font-semibold text-white '>{username}</span>
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
@@ -90,7 +91,7 @@ function RegisterBtn() {
   return (
     <button
       onClick={() => navigate("/login")}
-      className="font-medium shadow-cyan-500/50 shadow-lg text-white  text-md  px-3 py-1.5 bg-[#0FDDD6]"
+      className='font-medium shadow-cyan-500/50 shadow-lg text-white  text-md  px-3 py-1.5 bg-[#0FDDD6]'
     >
       Register
     </button>
