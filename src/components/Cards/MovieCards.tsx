@@ -4,7 +4,7 @@ import { lazy, Suspense } from "react";
 
 const MovieCard = lazy(() => import("./MovieCard"));
 const MobileCard = lazy(() => import("./MobileCard"));
-const SliderMovie = lazy(() => import("../Slide/SliderMovie"));
+const SliderMovie = lazy(() => import("../Slide/Carousels"));
 
 const MovieCards = ({ upComing, popular, rated }: Movies) => {
   const [upComingSizeChange, setUpComingSizeChange] = useState(false);
@@ -27,15 +27,15 @@ const MovieCards = ({ upComing, popular, rated }: Movies) => {
       <Suspense fallback={<div>Loading...</div>}>
         {upComingSizeChange ? (
           <>
-            <MobileCard pm={upComing} movieTabTitle='UpComing' />
-            <MobileCard pm={popular} movieTabTitle='Popular' />
-            <MobileCard pm={rated} movieTabTitle='Top Rated' />
+            <MobileCard pm={upComing} movieTabTitle="UpComing" />
+            <MobileCard pm={popular} movieTabTitle="Popular" />
+            <MobileCard pm={rated} movieTabTitle="Top Rated" />
           </>
         ) : (
           <>
-            <SliderMovie pm={upComing} movieTabTitle='UpComing' />
-            <MovieCard pm={popular} movieTabTitle='Popular' />
-            <MovieCard pm={rated} movieTabTitle='Top Rated' />
+            <SliderMovie pm={upComing} movieTabTitle="UpComing" />
+            <MovieCard pm={popular} movieTabTitle="Popular" />
+            <MovieCard pm={rated} movieTabTitle="Top Rated" />
           </>
         )}
       </Suspense>

@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGear, faUser } from "@fortawesome/free-solid-svg-icons";
 import { fetchMovieGenres, fetchSearchMovie } from "../../Utils/FetchAPI";
 import { useEffect, useState } from "react";
-import SliderGenre from "../Slide/DropDownGenres";
+import SliderGenre from "../Genres/DropDownGenres";
 import { useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
@@ -56,7 +56,7 @@ const NavBar = () => {
       <div className="flex justify-between md:px-5 max-sm:px-1 sm:h-14 max-sm:h-14 items-center ">
         <h1
           onClick={() => navigate("/")}
-          className="text-cener text-[#2eade7] sm:text-4xl max-sm:text-2xl font-bold"
+          className="text-cener text-[#2eade7] font-roboto sm:text-4xl max-sm:text-2xl font-bold"
         >
           MASMAX
         </h1>
@@ -84,8 +84,8 @@ const NavBar = () => {
             onClick={() => navigate("/register")}
             className="max-sm:hidden bg-[#2eade7] text-[#26262e] px-2 h-[36px] text-center rounded-sm font-medium opacity-80 hover:opacity-100"
           >
-            <FontAwesomeIcon icon={faUser} />
-            <span className="text-lg"> Login</span>
+            <FontAwesomeIcon className="text-md" icon={faUser} />
+            <span className="text-md font-titillium font-semibold"> Login</span>
           </button>
           {isMobile && <SettingUI genres={genres} />}
         </div>
