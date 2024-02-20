@@ -1,15 +1,14 @@
 import Home from "./components/Home/Home";
-import NavBar from "./components/NavBar/NavBar";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Suspense, lazy } from "react";
 
-const SignUp = lazy(() => import("./components/logIn/SignUp"));
-const SignIn = lazy(() => import("./components/logIn/SignIn"));
+const SignUp = lazy(() => import("./components/Register&login/SignUp"));
+const SignIn = lazy(() => import("./components/Register&login/SignIn"));
 
 const SeeMoreComs = lazy(() => import("./components/SeeMore/SeeMoreComs"));
-const MovieDetils = lazy(() => import("./components/SeeMore/MovieDetils"));
-const MoviePage = lazy(() => import("./components/Home/MoviePage"));
-const GenrePage = lazy(() => import("./components/Home/GenrePage"));
+const MovieDetils = lazy(() => import("./components/Detils/MovieDetils"));
+const MoviePage = lazy(() => import("./components/Search/MoviePage"));
+const GenrePage = lazy(() => import("./components/Genres/GenrePage"));
 
 const elements = [
   { path: "/search/:searchId", element: <MoviePage /> },
@@ -23,9 +22,6 @@ const elements = [
 function App() {
   return (
     <BrowserRouter>
-      <div className="bg-[#26262e] ">
-        <NavBar />
-      </div>
       <Routes>
         <Route path="/" element={<Home />} />
         {elements.map((ele) => (

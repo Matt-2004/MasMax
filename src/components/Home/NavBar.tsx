@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGear, faUser } from "@fortawesome/free-solid-svg-icons";
 import { fetchMovieGenres, fetchSearchMovie } from "../../Utils/FetchAPI";
 import { useEffect, useState } from "react";
-import SliderGenre from "../Slide/SliderGenre";
+import SliderGenre from "../Slide/DropDownGenres";
 import { useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
@@ -51,8 +51,6 @@ const NavBar = () => {
     });
   }
 
-  // fetch -> input -> props -> navigate ->
-
   return (
     <div className="w-[100%] bg-[#26262e] relative">
       <div className="flex justify-between md:px-5 max-sm:px-1 sm:h-14 max-sm:h-14 items-center ">
@@ -84,7 +82,7 @@ const NavBar = () => {
 
           <button
             onClick={() => navigate("/register")}
-            className="max-sm:hidden bg-[#2eade7] text-[#26262e] px-2 h-[36px] text-center rounded-md opacity-80 hover:opacity-100"
+            className="max-sm:hidden bg-[#2eade7] text-[#26262e] px-2 h-[36px] text-center rounded-sm font-medium opacity-80 hover:opacity-100"
           >
             <FontAwesomeIcon icon={faUser} />
             <span className="text-lg"> Login</span>

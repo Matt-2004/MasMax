@@ -7,6 +7,7 @@ import {
 import MovieCards from "../Cards/MovieCards";
 import Footer from "./Footer";
 import { useQuery } from "@tanstack/react-query";
+import NavBar from "./NavBar";
 
 const Home = () => {
   const [popular, setPopular] = useState([]);
@@ -28,7 +29,8 @@ const Home = () => {
   }, []);
 
   return (
-    <div className='bg-[#26262e] '>
+    <div className="bg-[#26262e] ">
+      <NavBar />
       <MovieCards upComing={upComing.data} popular={popular} rated={rated} />
       <Footer />
     </div>

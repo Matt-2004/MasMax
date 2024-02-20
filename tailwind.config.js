@@ -20,6 +20,10 @@ module.exports = {
       flex: {
         full: "0 0 100%",
       },
+      fontFamily: {
+        roboto: ["Roboto", "sans-serif"],
+        titillium: ["Titillium Web", "sans-serif"],
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
