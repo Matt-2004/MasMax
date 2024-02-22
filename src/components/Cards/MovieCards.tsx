@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { Movies } from "../../Utils/FetchAPI";
-import { lazy, Suspense } from "react";
 
-const MovieCard = lazy(() => import("./MovieCard"));
-const MobileCard = lazy(() => import("./MobileCard"));
-const SliderMovie = lazy(() => import("../Slide/Carousels"));
+import MovieCard from "./MovieCard";
+import MobileCard from "./MobileCard";
+import Carousels from "../Carousel/Carousels";
 
 const MovieCards = ({ upComing, popular, rated }: Movies) => {
   const [upComingSizeChange, setUpComingSizeChange] = useState(false);
@@ -24,21 +23,19 @@ const MovieCards = ({ upComing, popular, rated }: Movies) => {
 
   return (
     <div>
-      <Suspense fallback={<div>Loading...</div>}>
-        {upComingSizeChange ? (
-          <>
-            <MobileCard pm={upComing} movieTabTitle="UpComing" />
-            <MobileCard pm={popular} movieTabTitle="Popular" />
-            <MobileCard pm={rated} movieTabTitle="Top Rated" />
-          </>
-        ) : (
-          <>
-            <SliderMovie pm={upComing} movieTabTitle="UpComing" />
-            <MovieCard pm={popular} movieTabTitle="Popular" />
-            <MovieCard pm={rated} movieTabTitle="Top Rated" />
-          </>
-        )}
-      </Suspense>
+      {upComingSizeChange ? (
+        <>
+          <MobileCard pm={upComing} movieTabTitle='UpComing' />
+          <MobileCard pm={popular} movieTabTitle='Popular' />
+          <MobileCard pm={rated} movieTabTitle='Top Rated' />
+        </>
+      ) : (
+        <>
+          <Carousels pm={upComing} movieTabTitle='UpComing' />
+          <MovieCard pm={popular} movieTabTitle='Popular' />
+          <MovieCard pm={rated} movieTabTitle='Top Rated' />
+        </>
+      )}
     </div>
   );
 };

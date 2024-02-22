@@ -1,10 +1,8 @@
 import { PropsMovies } from "../../Utils/FetchAPI";
 import getImagePath from "../../Utils/GetImagePath";
-import { useLocalStorage } from "../../Utils/useLocalStorage";
 
 const MobileCard = ({ pm, movieTabTitle }: PropsMovies) => {
   // pm = propsMovie
-  const { setItem } = useLocalStorage("id");
 
   return (
     <div className='h-[100%] w-[100%]'>
@@ -17,7 +15,7 @@ const MobileCard = ({ pm, movieTabTitle }: PropsMovies) => {
         <div className='flex overflow-x-scroll no-scrollbar overflow-y-hidden gap-6 mx-2 pt-4'>
           {pm.slice(0, 10).map((prop) => (
             <div
-              onClick={() => setItem(prop.id.toString())}
+              onClick={() => localStorage.setItem("id", prop.id.toString())}
               className='relative flex-shrink-0 cursor-pointer transfrom hover:scale-105 transition duration-200 ease-out hover:drop-shadow-lg'
             >
               <div className='absolute inset-0 bg-gradient-to-b from-gray-200/0 via-gray-900/10 to-[#1A1C29]/80 z-10' />

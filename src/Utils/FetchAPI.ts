@@ -1,42 +1,3 @@
-export type Genre = {
-  id: number;
-  name: string;
-};
-
-export type Genres = {
-  genres: Genre[];
-};
-
-export type MovieResult = {
-  adult: boolean;
-  backdrop_path?: string | undefined;
-  genre_ids: [number[]];
-  id: number;
-  original_language: string;
-  original_title: string;
-  overview: string;
-  popularity: number;
-  poster_path: string;
-  release_date: string;
-  title: string;
-  video: boolean;
-  vote_average: number;
-  vote_count: number;
-};
-
-export type Movies = {
-  upComing: MovieResult[];
-  popular: MovieResult[];
-  rated: MovieResult[];
-  props?: MovieResult[];
-};
-
-export type PropsMovies = {
-  pm: MovieResult[];
-  movieTabTitle: string;
-  upComingFinish?: boolean;
-};
-
 export const fetchFromTMDB = async (url: URL) => {
   const options = {
     method: "GET",
@@ -113,4 +74,12 @@ export const fetchDiscover = async (genre: string) => {
   url.searchParams.set("with_genres", genre);
   const respones = await fetchFromTMDB(url);
   return respones;
+};
+
+export const fetchVideo = async (movie_id: string) => {
+  const url = new URL(
+    `https://api.themoviedb.org/3/movie/${movie_id}/videos?language=en-US`
+  );
+  const respones = await fetchFromTMDB(url);
+  return respones.results;
 };

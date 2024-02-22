@@ -52,28 +52,28 @@ const NavBar = () => {
   }
 
   return (
-    <div className="w-[100%] bg-[#26262e] relative">
-      <div className="flex justify-between md:px-5 max-sm:px-1 sm:h-14 max-sm:h-14 items-center ">
+    <div className='w-[100%] bg-[#26262e] relative'>
+      <div className='flex justify-between md:px-5 max-sm:px-1 sm:h-14 max-sm:h-14 items-center '>
         <h1
           onClick={() => navigate("/")}
-          className="text-cener text-[#2eade7] font-roboto sm:text-4xl max-sm:text-2xl font-bold"
+          className='text-cener text-[#2eade7] font-roboto sm:text-4xl max-sm:text-2xl font-bold'
         >
           MASMAX
         </h1>
-        <div className="bg-[#26262e] h-9 sm:gap-6 max-sm:gap-1 flex text-white">
-          <div className="flex sm:flex-row-reverse gap-5">
-            <div className="">
+        <div className='bg-[#26262e] h-9 sm:gap-6 max-sm:gap-1 flex text-white'>
+          <div className='flex sm:flex-row-reverse gap-5'>
+            <div className=''>
               <form
                 onSubmit={(e) => {
                   handleSearch(e);
                 }}
-                className="flex h-[36px] rounded-md items-center border border-gray-600"
+                className='flex h-[2.25rem] rounded-md items-center border border-gray-600'
               >
                 <input
-                  type="text"
+                  type='text'
                   onChange={(e) => setSearchValue(e.target.value)}
-                  placeholder="Search..."
-                  className="py-1 bg-[#26262e] pl-3 "
+                  placeholder='Search...'
+                  className='py-1 bg-[#26262e] pl-3 '
                 />
               </form>
             </div>
@@ -82,10 +82,10 @@ const NavBar = () => {
 
           <button
             onClick={() => navigate("/register")}
-            className="max-sm:hidden bg-[#2eade7] text-[#26262e] px-2 h-[36px] text-center rounded-sm font-medium opacity-80 hover:opacity-100"
+            className='max-sm:hidden bg-[#2eade7] text-[#26262e] px-2 h-[2.25rem] text-center rounded-sm font-medium opacity-80 hover:opacity-100'
           >
-            <FontAwesomeIcon className="text-md" icon={faUser} />
-            <span className="text-md font-titillium font-semibold"> Login</span>
+            <FontAwesomeIcon className='text-md' icon={faUser} />
+            <span className='text-md font-titillium font-semibold'> Login</span>
           </button>
           {isMobile && <SettingUI genres={genres} />}
         </div>
@@ -96,7 +96,7 @@ const NavBar = () => {
 
 function SettingUI({ genres }: any) {
   return (
-    <div className="py-1 px-3 text-xl">
+    <div className='py-1 px-3 text-xl'>
       <DropdownMenu>
         <DropdownMenuTrigger>
           <FontAwesomeIcon icon={faGear} />
@@ -107,7 +107,7 @@ function SettingUI({ genres }: any) {
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem>
-            <span className="py-1 px-2">Login</span>
+            <span className='py-1 px-2'>Login</span>
           </DropdownMenuItem>
           <DropdownMenuItem>
             <GenresUI genres={genres} />
@@ -120,7 +120,7 @@ function SettingUI({ genres }: any) {
 
 function GenresUI({ genres }: any) {
   return (
-    <div className="">
+    <div className=''>
       <SliderGenre genres={genres} />
     </div>
   );
