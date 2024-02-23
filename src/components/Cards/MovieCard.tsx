@@ -1,4 +1,4 @@
-import { PropsMovies } from "@/Utils/FetchAPI";
+import { PropsMovies } from "@/Utils/Interfaces";
 import getImagePath from "@/Utils/GetImagePath";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRightLong } from "@fortawesome/free-solid-svg-icons";
@@ -39,6 +39,7 @@ const MovieCard = ({ pm, movieTabTitle }: PropsMovies) => {
                 <img
                   src={getImagePath(p.poster_path)}
                   alt={p.title}
+                  loading='lazy'
                   className='rounded-md hover:scale-110 transition-all duration-300 lg:w-[14.37rem] md:w-[11.25rem] sm:w-[8.75rem]'
                   width={230}
                   height={520}

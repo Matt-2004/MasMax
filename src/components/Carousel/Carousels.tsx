@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { PropsMovies } from "../../Utils/FetchAPI";
+import { PropsMovies } from "../../Utils/Interfaces";
 import getImagePath from "../../Utils/GetImagePath";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
@@ -29,13 +29,13 @@ const SliderMovie = ({ pm }: PropsMovies) => {
   return (
     <div className='cursor-pointer w-[100%] h-[44rem]  overflow-hidden'>
       <div className='relative' style={{ opacity: isLoaded ? 0 : 1 }}>
-        <div className='flex absolute left-[9%] mt-[14rem] lg:w-[44rem] md:w-[40rem] sm:w-[32rem] justify-between'>
-          <div className='xl:w-[16rem] lg:w-[14rem] md:w-[12rem] sm:w-[10rem] xl:h-[25rem] lg:h-[23.12rem] md:h-[20.6rem] sm:h-[18.12rem] rounded-md bg-gray-600 animate-pulse' />
+        <div className='flex absolute left-[9%] mt-[14rem] lg:w-[46rem] md:w-[37rem] sm:w-[27rem]  justify-between'>
+          <div className='xl:w-[16rem] lg:w-[14rem] md:w-[12rem] sm:w-[10rem] xl:h-[25rem] lg:h-[23.12rem] md:h-[20.6rem] sm:h-[15rem] rounded-md bg-gray-600 animate-pulse' />
           <div className='flex flex-col h-[9.37rem] justify-between'>
-            <div className='md:w-[15.6rem] sm:w-[12.5rem] md:h-[1.87rem] sm:h-[1.5rem] rounded-md bg-gray-600  ' />
-            <div className='md:w-[25rem] sm:w-[20rem] h-[1.5rem]   bg-gray-600  rounded-md ' />
-            <div className='md:w-[25rem] sm:w-[20rem] h-[1.5rem]   bg-gray-600 rounded-md ' />
-            <div className='md:w-[25rem] sm:w-[20rem] h-[1.5rem]   bg-gray-600 rounded-md ' />
+            <div className='md:w-[15.6rem] sm:w-[11rem] md:h-[1.87rem] sm:h-[1.5rem] rounded-md bg-gray-600  ' />
+            <div className='lg:w-[28rem] md:w-[23rem] sm:w-[15rem] h-[1.5rem]   bg-gray-600  rounded-md ' />
+            <div className='lg:w-[28rem]  md:w-[23rem] sm:w-[15rem] h-[1.5rem]   bg-gray-600 rounded-md ' />
+            <div className='lg:w-[28rem] md:w-[23rem] sm:w-[15rem] h-[1.5rem]   bg-gray-600 rounded-md ' />
           </div>
         </div>
       </div>
@@ -48,13 +48,12 @@ const SliderMovie = ({ pm }: PropsMovies) => {
         }}
       >
         <div className='absolute inset-0 z-40 h-full w-full bg-gradient-to-t from-gray-900/90 via-transparent to-transparent' />
-        {pm?.map((upcome) => (
+        {pm?.map((upcome: any) => (
           <div key={upcome.id} className='flex-full'>
             <img
               ref={imageRef}
               alt='img'
               rel='preload'
-              loading='lazy'
               className=' brightness-50 object-cover object-top w-[100%] h-[800px]'
               width={1980}
               height={960}
@@ -67,7 +66,6 @@ const SliderMovie = ({ pm }: PropsMovies) => {
                   <img
                     rel='preload'
                     alt={upcome.title}
-                    loading='lazy'
                     src={getImagePath(upcome.poster_path)}
                     className='xl:w-72   lg:w-64 md:w-56 sm:w-44 rounded-md'
                     width={256}

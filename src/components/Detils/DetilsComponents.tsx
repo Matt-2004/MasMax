@@ -27,14 +27,14 @@ export function Poster_path({ poster_path }: { poster_path: string }) {
   return (
     <img
       src={getImagePath(poster_path)}
-      className='rounded-md lg:h-[31.2rem] sm:h-[18.75rem] max-sm:h-[15.62rem] md:h-[25rem] '
+      className='rounded-md md:static sm:absolute max-sm:absolute sm:top-[3%] sm:left-[37%] max-sm:top-[1%] max-sm:left-[34%] lg:h-[25rem] sm:h-[18rem] max-sm:h-[15.62rem] md:h-[20rem] '
     />
   );
 }
 
 export function Title({ title, release_date }: any) {
   return (
-    <span className='lg:text-4xl md:text-3xl sm:text-2xl font-semibold text-slate-200'>
+    <span className='lg:text-4xl md:text-3xl sm:text-2xl max-sm:text-2xl font-semibold text-slate-200'>
       {title} ({release_date.slice(0, 4)})
     </span>
   );
@@ -42,7 +42,7 @@ export function Title({ title, release_date }: any) {
 
 export function Genres({ genres }: any) {
   return (
-    <div className='text-slate-300 mt-2  flex text-lg'>
+    <div className='text-slate-300 mt-2  flex xl:text-lg md:text-md'>
       {genres.map((genre: any, index: any) => (
         <div key={genre.key} className='hover:text-slate-400'>
           {genre.name}
@@ -55,7 +55,7 @@ export function Genres({ genres }: any) {
 
 export function Status({ status }: any) {
   return (
-    <div className='ml-1 text-xl font-bold mt-2 text-white'>
+    <div className='ml-1 lg:text-xl md:text-lg lg:font-bold md:font-semibold mt-2 text-white'>
       Status : <span className='font-semibold'> {status}</span>
     </div>
   );
@@ -63,9 +63,9 @@ export function Status({ status }: any) {
 
 export function OverView({ overview }: any) {
   return (
-    <div className='text-3xl text-white overflow-hidden font-bold mt-3'>
+    <div className='lg:text-3xl  sm:text-2xl max-sm:text-xl text-white overflow-hidden md:font-bold sm:font-semibold max-sm:font-semibold mt-3'>
       Overview
-      <div className='text-white block overflow-scroll mt-3 no-scrollbar font-normal leading-loose text-[1rem] font-roboto w-[37.5rem]'>
+      <div className='text-white block overflow-scroll mt-3 no-scrollbar font-normal leading-loose sm:leading-6 max-sm:leading-6 md:text-[1rem] sm:text-[0.9rem] max-sm:text-[0.9rem] font-roboto lg:w-[37.5rem] md:w-[25rem]'>
         {overview}
       </div>
     </div>
@@ -98,20 +98,24 @@ export function Videos({ videos }: any) {
   return (
     <>
       {videos ? (
-        <div className=''>
-          <h2 className='pl-[10rem]'>Movie Videos</h2>
-          <ul className='flex justify-center  gap-9 pt-10'>
-            {videos.map((video: any) => (
-              <li key={video.id}>
-                <iframe
-                  title={video.name}
-                  width={560}
-                  height={315}
-                  src={getVideoPath(video.key)}
-                  allowFullScreen
-                />
-              </li>
-            ))}
+        <div className='ml-[10rem] mt-[2rem]'>
+          <h2 className='text-2xl font-semibold text-slate-300 font-roboto'>
+            Movie Videos
+          </h2>
+          <ul className='flex w-[100%] overflow-hidden pt-10 '>
+            <div className='flex overflow-x-scroll'>
+              {videos.map((video: any) => (
+                <li key={video.id}>
+                  <iframe
+                    title={video.name}
+                    width={560}
+                    height={315}
+                    src={getVideoPath(video.key)}
+                    allowFullScreen
+                  />
+                </li>
+              ))}
+            </div>
           </ul>
         </div>
       ) : (

@@ -47,25 +47,27 @@ const MovieDetils = () => {
       {detils ? (
         <div className='relative h-[100%] w-[100%] bg-[#26262e]'>
           <BackDropPath backdrop_path={detils.backdrop_path} />
-          <div className='absolute top-[9%] left-[15%] sm:left-[10%] flex'>
+          <div className='md:absolute  top-[9%] left-[15%] sm:left-[10%] flex'>
             <section className='flex lg:w-[56.25rem] md:w-[37.5rem] sm:w-[31.25rem] max-sm:w-[25rem] justify-evenly '>
               <Poster_path poster_path={detils.poster_path} />
-              <RightInfoContainer>
-                <Title
-                  title={detils.title}
-                  release_date={detils.release_date}
-                />
-                <Genres genres={detils.genres} />
-                <Status status={detils.status} />
-                <OverView overview={detils.overview} />
-
-                <LanguageAndVoteContainer>
-                  <OriginalLanguage
-                    original_language={detils.original_language}
+              <div className='max-sm:w-[23rem] md:w-[100%] sm:w-[27rem] sm:flex sm:justify-center sm:mt-3 max-sm:mt-4 max-sm:flex max-sm:justify-center'>
+                <RightInfoContainer>
+                  <Title
+                    title={detils.title}
+                    release_date={detils.release_date}
                   />
-                  <VoteAverage vote_average={detils.vote_average} />
-                </LanguageAndVoteContainer>
-              </RightInfoContainer>
+                  <Genres genres={detils.genres} />
+                  <Status status={detils.status} />
+                  <OverView overview={detils.overview} />
+
+                  <LanguageAndVoteContainer>
+                    <OriginalLanguage
+                      original_language={detils.original_language}
+                    />
+                    <VoteAverage vote_average={detils.vote_average} />
+                  </LanguageAndVoteContainer>
+                </RightInfoContainer>
+              </div>
             </section>
           </div>
           <Videos videos={videos} />
