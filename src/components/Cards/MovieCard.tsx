@@ -16,7 +16,7 @@ const MovieCard = ({ pm, movieTabTitle }: PropsMovies) => {
     <div className='w-[100%] mt-16 flex justify-center'>
       <div className='flex flex-col'>
         <div className='flex justify-between'>
-          <div className='mb-8  font-bold text-2xl text-[#2eade7]'>
+          <div className='mb-8  font-bold  md:text-2xl sm:text-xl text-[#2eade7]'>
             {movieTabTitle}
           </div>
           <div

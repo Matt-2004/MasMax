@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
-import { MovieResult } from "../../Utils/FetchAPI";
 import getImagePath from "../../Utils/GetImagePath";
+import { MovieResult } from "@/Utils/Interfaces";
 export function capitalizeFirstLetterEachWord(str: string) {
   return str.replace(/\b\w/g, function (match) {
     return match.toUpperCase();
@@ -25,7 +25,7 @@ const MoviePage = () => {
               <img
                 alt={searchs.original_title}
                 src={getImagePath(searchs.backdrop_path)}
-                className=' max-sm:w-[18.75rem] rounded-md hover:translate-x-[-40px] transition-transform duration-300 sm:w-[28.1rem] h-fit'
+                className=' max-sm:w-[18.75rem] rounded-sm hover:translate-x-[-40px] transition-transform duration-300 sm:w-[28.1rem] h-fit'
               />
             </div>
             <div className='pt-4 pl-5 sm:w-[25rem]  flex flex-col overflow-hidden overflow-ellipsis'>

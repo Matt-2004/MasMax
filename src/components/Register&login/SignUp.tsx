@@ -2,6 +2,16 @@ import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+/* DOCUMENTS
+
+  main component -> Register 
+
+  Register -> <Header /> 
+           -> <Form /> -->       4 inputs 
+                       -->       <CheckBox />  --     Props - Validation( that provide the btn to undisabled)   --->   <RegisterBtn />
+
+*/
+
 const Register = () => {
   const navigate = useNavigate();
   return (
@@ -27,6 +37,7 @@ const Register = () => {
 };
 function Form() {
   const navigate = useNavigate();
+
   const [name, setName] = useState("");
   const [nameValid, setNameValid] = useState(false);
   const [nameFocus, setNameFocus] = useState(false);
@@ -43,6 +54,8 @@ function Form() {
   const [cpwValid, setCpwValid] = useState(false);
   const [cpwFocus, setCpwFocus] = useState(false);
 
+  const [btnValid, setBtnValid] = useState(true);
+
   const firstInputRef = useRef<HTMLInputElement>(null);
 
   const userNameRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]+$/;
@@ -50,20 +63,22 @@ function Form() {
     /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
   const passwordRegex = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
 
-  /*   --  Todo  -- 
-  
-  check validation for username, password, cpw 
-  
-  
-  */
-
   useEffect(() => {
     firstInputRef.current?.focus();
   }, []);
 
   useEffect(() => {
+    setNameValid(userNameRegex.test(name));
     setEmailValid(emailRegex.test(email));
-  }, [email]);
+    setPasswordValid(passwordRegex.test(password));
+    setCpwValid(password === cpw ? true : false);
+  }, [email, name, password, cpw]);
+
+  useEffect(() => {
+    nameValid && emailValid && passwordValid && cpwValid
+      ? setBtnValid(false)
+      : setBtnValid(true);
+  }, [emailValid, nameValid, passwordValid, cpwValid]);
 
   // Registration
   const handleRegister = async (e?: any) => {
@@ -76,7 +91,6 @@ function Form() {
     navigate("/login");
   };
 
-  // Valid the input
   return (
     <>
       <form onSubmit={handleRegister} className='flex justify-center'>
@@ -87,8 +101,8 @@ function Form() {
               border: !nameValid && nameFocus ? "1px solid red" : "none",
             }}
             ref={firstInputRef}
-            onFocus={() => setNameValid(true)}
-            onBlur={() => setNameValid(false)}
+            onFocus={() => setNameFocus(true)}
+            onBlur={() => setNameFocus(false)}
             type='text'
             className='w-[22.25rem] h-[2.8rem] outline-none rounded-sm border border-[#9d9d9d] font-roboto placeholder:text-[0.875rem] pl-4 placeholder:opacity-80'
             placeholder='Username'
@@ -129,33 +143,77 @@ function Form() {
           />
         </div>
       </form>
-      <CheckBox />
-      <RegisterBtn handleRegister={handleRegister} />
+      <CheckBox handleRegister={handleRegister} btnValid={btnValid} />
     </>
   );
 }
 
-function CheckBox() {
+function CheckBox({ handleRegister, btnValid }: any) {
+  const checkBoxRef = useRef<HTMLInputElement>(null);
+  const [click, setClick] = useState(false);
+  const [checked, setChecked] = useState(Boolean);
+
+  const toggleCheckBox = () => {
+    if (checkBoxRef.current) {
+      setChecked(checkBoxRef.current.checked);
+    }
+  };
+
+  useEffect(() => {
+    toggleCheckBox();
+  }, [click]);
+
   return (
-    <div className='flex my-4'>
-      <input type='checkbox' className='ml-6 w-3' id='agree' />
-      <label
-        htmlFor='agree'
-        className='text-[0.8rem] font-roboto font-medium text-white pl-2'
-      >
-        I agree all statements in{" "}
-        <span className='underline hover:text-blue-500'>Terms of service</span>
-      </label>
-    </div>
+    <>
+      <div className='flex my-4'>
+        <input
+          type='checkbox'
+          ref={checkBoxRef}
+          className='ml-6 w-3'
+          onClick={() => setClick(!click)}
+          id='agree'
+        />
+        <label
+          htmlFor='agree'
+          className='text-[0.8rem] font-roboto font-medium text-white pl-2'
+        >
+          I agree all statements in{" "}
+          <span className='underline hover:text-blue-500'>
+            Terms of service
+          </span>
+        </label>
+      </div>
+      <RegisterBtn
+        handleRegister={handleRegister}
+        btnValid={btnValid}
+        checked={checked}
+      />
+    </>
   );
 }
 
-function RegisterBtn({ handleRegister }: any) {
+function RegisterBtn({ handleRegister, btnValid, checked }: any) {
+  const btnRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    console.log("Checked:: ", checked);
+    if (btnRef.current) {
+      btnValid && checked
+        ? (btnRef.current.disabled = false)
+        : (btnRef.current.disabled = true);
+    }
+  }, [btnValid, checked]);
+
   return (
     <div className='flex justify-center mt-4'>
       <button
+        ref={btnRef}
         onClick={handleRegister}
-        className='text-[0.94rem] hover:bg-opacity-85 rounded-sm font-semibold font-roboto text-white w-[22.25rem] h-[2.7rem] bg-[#0FDDD6]'
+        style={{
+          opacity: btnValid && checked ? "1" : "0.5",
+          cursor: btnValid && checked ? "pointer" : "",
+        }}
+        className='text-[0.94rem]  rounded-sm font-semibold font-roboto text-white w-[22.25rem] h-[2.7rem] bg-[#0FDDD6]'
       >
         SIGN UP
       </button>
