@@ -1,38 +1,17 @@
-import { useEffect, useState } from "react";
-import {
-  fetchPopularMovie,
-  fetchTopRatedMovie,
-  fetchUpComingMoive,
-} from "../../Utils/FetchAPI";
-import MovieCards from "../Cards/MovieCards";
-import Footer from "./Footer";
-import { useQuery } from "@tanstack/react-query";
+import Carousels from "../Carousel/Carousels";
 import NavBar from "./NavBar";
+import { lazy, Suspense } from "react";
+
+const MovieCards = lazy(() => import("../Cards/MovieCards"));
 
 const Home = () => {
-  const [popular, setPopular] = useState([]);
-  const [rated, setRated] = useState([]);
-
-  const upComing = useQuery({
-    queryKey: ["upcoming"],
-    queryFn: () => fetchUpComingMoive(),
-  });
-
-  useEffect(() => {
-    const fetching = async () => {
-      const popu = await fetchPopularMovie();
-      const rate = await fetchTopRatedMovie();
-      setPopular(popu);
-      setRated(rate);
-    };
-    fetching();
-  }, []);
-
   return (
-    <div className="bg-[#26262e] ">
+    <div className='bg-[#26262e] '>
       <NavBar />
-      <MovieCards upComing={upComing.data} popular={popular} rated={rated} />
-      <Footer />
+      <Carousels />
+      <Suspense fallback={<div>Loading...</div>}>
+        <MovieCards />
+      </Suspense>
     </div>
   );
 };

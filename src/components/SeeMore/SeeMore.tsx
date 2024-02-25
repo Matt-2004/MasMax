@@ -2,12 +2,6 @@ import { fetchPopularMovie, fetchTopRatedMovie } from "@/Utils/FetchAPI";
 import getImagePath from "@/Utils/GetImagePath";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faChevronLeft,
-  faChevronRight,
-} from "@fortawesome/free-solid-svg-icons";
 import { Button } from "../ui/button";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -156,8 +150,7 @@ const SeeMore = ({ title }: { title: string }) => {
                 ))
               : console.log("Error!!")}
             <div className='flex justify-center gap-2'>
-              <FontAwesomeIcon
-                icon={faChevronLeft}
+              <div
                 onClick={() => {
                   previous();
                 }}
@@ -213,8 +206,7 @@ const SeeMore = ({ title }: { title: string }) => {
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
-              <FontAwesomeIcon
-                icon={faChevronRight}
+              <div
                 onClick={() => {
                   next();
                 }}

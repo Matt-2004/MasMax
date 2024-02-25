@@ -1,5 +1,14 @@
+const PurgeCSSPlugin = require("purgecss-webpack-plugin");
+const glob = require("glob");
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+
 module.exports = {
-  // ...
+  plugins: [
+    new PurgeCSSPlugin({
+      paths: glob.sync("src/**/*", { nodir: true }),
+    }),
+    new BundleAnalyzerPlugin(),
+  ],
   module: {
     rules: [
       {

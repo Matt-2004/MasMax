@@ -1,17 +1,24 @@
-import { useRef, useState } from "react";
-import { PropsMovies } from "../../Utils/Interfaces";
+import { useEffect, useRef, useState } from "react";
 import getImagePath from "../../Utils/GetImagePath";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { fetchUpComingMoive } from "@/Utils/FetchAPI";
 
-const SliderMovie = ({ pm }: PropsMovies) => {
+const SliderMovie = () => {
   const imageRef = useRef<HTMLImageElement>(null);
   const imageWidth = imageRef.current?.offsetWidth || 0;
   const [x, setX] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [upComing, setUpComing] = useState([]);
+
+  useEffect(() => {
+    const fetching = async () => {
+      const upcoming = await fetchUpComingMoive();
+      setUpComing(upcoming);
+    };
+    fetching();
+  }, []);
 
   function next() {
-    if (x !== pm.length - 1) setX((x) => x + 1);
+    if (x !== upComing.length - 1) setX((x) => x + 1);
   }
 
   function prev() {
@@ -21,9 +28,7 @@ const SliderMovie = ({ pm }: PropsMovies) => {
   }
 
   function handleLoad() {
-    setTimeout(() => {
-      setIsLoaded(true);
-    }, 1000);
+    setIsLoaded(true);
   }
 
   return (
@@ -48,12 +53,12 @@ const SliderMovie = ({ pm }: PropsMovies) => {
         }}
       >
         <div className='absolute inset-0 z-40 h-full w-full bg-gradient-to-t from-gray-900/90 via-transparent to-transparent' />
-        {pm?.map((upcome: any) => (
+        {upComing?.map((upcome: any) => (
           <div key={upcome.id} className='flex-full'>
             <img
               ref={imageRef}
               alt='img'
-              rel='preload'
+              loading='lazy'
               className=' brightness-50 object-cover object-top w-[100%] h-[800px]'
               width={1980}
               height={960}
@@ -86,13 +91,11 @@ const SliderMovie = ({ pm }: PropsMovies) => {
         ))}
       </div>
       <div className='absolute flex w-[100%] z-50 justify-between top-[50%]'>
-        <FontAwesomeIcon
-          icon={faArrowLeft}
+        <div
           onClick={() => prev()}
           className='bg-[#26262e] opacity-70 hover:opacity-100 text-[#2eade7]  mx-3 rounded-md px-3 py-3 '
         />
-        <FontAwesomeIcon
-          icon={faArrowRight}
+        <div
           onClick={() => next()}
           className=' bg-[#26262e] opacity-70 hover:opacity-100  mx-3 rounded-md px-3 py-3 text-[#2eade7]'
         />

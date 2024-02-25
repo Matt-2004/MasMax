@@ -53,7 +53,6 @@ export type DetilsResult = {
 };
 
 export type Movies = {
-  upComing: MovieResult[];
   popular: MovieResult[];
   rated: MovieResult[];
   props?: MovieResult[];

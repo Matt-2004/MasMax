@@ -1,7 +1,6 @@
 import { PropsMovies } from "@/Utils/Interfaces";
 import getImagePath from "@/Utils/GetImagePath";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRightLong } from "@fortawesome/free-solid-svg-icons";
+
 import { useNavigate } from "react-router-dom";
 
 const MovieCard = ({ pm, movieTabTitle }: PropsMovies) => {
@@ -24,7 +23,6 @@ const MovieCard = ({ pm, movieTabTitle }: PropsMovies) => {
             onClick={() => naviAndSetItem()}
           >
             see more
-            <FontAwesomeIcon icon={faArrowRightLong} className='ml-1' />
           </div>
         </div>
         <div className='flex cursor-pointer lg:w-[62.5rem] md:w-[48.12rem] sm:w-[40rem] justify-between'>

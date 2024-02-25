@@ -1,12 +1,24 @@
 import { useEffect, useState } from "react";
-import { Movies } from "../../Utils/FetchAPI";
-
 import MovieCard from "./MovieCard";
 import MobileCard from "./MobileCard";
-import Carousels from "../Carousel/Carousels";
 
-const MovieCards = ({ upComing, popular, rated }: Movies) => {
+const MovieCards = () => {
   const [upComingSizeChange, setUpComingSizeChange] = useState(false);
+  const [popular, setPopular] = useState([]);
+  const [rated, setRated] = useState([]);
+
+  useEffect(() => {
+    const fetching = async () => {
+      const { fetchPopularMovie, fetchTopRatedMovie } = await import(
+        "@/Utils/FetchAPI"
+      );
+      const popu = await fetchPopularMovie();
+      const rate = await fetchTopRatedMovie();
+      setPopular(popu);
+      setRated(rate);
+    };
+    fetching();
+  }, []);
 
   function handleUpComingSize() {
     if (window.innerWidth <= 640) {
@@ -25,13 +37,12 @@ const MovieCards = ({ upComing, popular, rated }: Movies) => {
     <div>
       {upComingSizeChange ? (
         <>
-          <MobileCard pm={upComing} movieTabTitle='UpComing' />
+          <MobileCard movieTabTitle='UpComing' />
           <MobileCard pm={popular} movieTabTitle='Popular' />
           <MobileCard pm={rated} movieTabTitle='Top Rated' />
         </>
       ) : (
         <>
-          <Carousels pm={upComing} movieTabTitle='UpComing' />
           <MovieCard pm={popular} movieTabTitle='Popular' />
           <MovieCard pm={rated} movieTabTitle='Top Rated' />
         </>

@@ -1,7 +1,10 @@
-const getImagePath = (imagePath?: string) => {
+export const getImagePath = (imagePath?: string, size) => {
   return imagePath
-    ? `http://image.tmdb.org/t/p/original/${imagePath}`
+    ? `http://image.tmdb.org/t/p/w300/${imagePath}`
     : "https://links.papareact.com/o8z";
 };
-
-export default getImagePath;
+export const getLargeImagePath = (imagePath?: string, size) => {
+  return imagePath
+    ? `http://image.tmdb.org/t/p/w300/${imagePath}`
+    : "https://links.papareact.com/o8z";
+};

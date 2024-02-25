@@ -1,5 +1,3 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGear, faUser } from "@fortawesome/free-solid-svg-icons";
 import { fetchMovieGenres, fetchSearchMovie } from "../../Utils/FetchAPI";
 import { useEffect, useState } from "react";
 import SliderGenre from "../Genres/DropDownGenres";
@@ -84,7 +82,6 @@ const NavBar = () => {
             onClick={() => navigate("/register")}
             className='max-sm:hidden bg-[#2eade7] text-[#26262e] px-2 h-[2.25rem] text-center rounded-sm font-medium opacity-80 hover:opacity-100'
           >
-            <FontAwesomeIcon className='text-md' icon={faUser} />
             <span className='text-md font-titillium font-semibold'> Login</span>
           </button>
           {isMobile && <SettingUI genres={genres} />}
@@ -98,13 +95,9 @@ function SettingUI({ genres }: any) {
   return (
     <div className='py-1 px-3 text-xl'>
       <DropdownMenu>
-        <DropdownMenuTrigger>
-          <FontAwesomeIcon icon={faGear} />
-        </DropdownMenuTrigger>
+        <DropdownMenuTrigger></DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuLabel>
-            <FontAwesomeIcon icon={faGear} /> Setting
-          </DropdownMenuLabel>
+          <DropdownMenuLabel></DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem>
             <span className='py-1 px-2'>Login</span>
