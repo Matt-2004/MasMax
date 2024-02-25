@@ -1,10 +1,10 @@
-export const getImagePath = (imagePath?: string, size) => {
+export const getImagePath = (size: string, imagePath?: string) => {
   return imagePath
-    ? `http://image.tmdb.org/t/p/w300/${imagePath}`
+    ? `http://image.tmdb.org/t/p/w${size}/${imagePath}`
     : "https://links.papareact.com/o8z";
 };
-export const getLargeImagePath = (imagePath?: string, size) => {
+export const getLargeImagePath = (imagePath?: string) => {
   return imagePath
-    ? `http://image.tmdb.org/t/p/w300/${imagePath}`
+    ? `http://image.tmdb.org/t/p/original/${imagePath}`
     : "https://links.papareact.com/o8z";
 };
