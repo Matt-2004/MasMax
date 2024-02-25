@@ -7,7 +7,7 @@ const SignIn = lazy(() => import("./components/Register&login/SignIn"));
 
 const SeeMoreComs = lazy(() => import("./components/SeeMore/SeeMoreComs"));
 const MovieDetils = lazy(() => import("./components/Detils/MovieDetils"));
-const MoviePage = lazy(() => import("./components/Search/MoviePage"));
+const MoviePage = lazy(() => import("./components/Search/SearchPage"));
 const GenrePage = lazy(() => import("./components/Genres/GenrePage"));
 
 const elements = [
@@ -23,7 +23,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path='/' element={<Home />} />
         {elements.map((ele) => (
           <Route
             path={ele.path}

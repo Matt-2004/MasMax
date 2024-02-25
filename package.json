@@ -21,6 +21,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "file-loader": "^6.2.0",
+    "framer-motion": "^11.0.6",
     "lucide-react": "^0.309.0",
     "prettier-plugin-tailwindcss": "^0.5.11",
     "react": "^18.2.0",

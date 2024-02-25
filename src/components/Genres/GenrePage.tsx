@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import { capitalizeFirstLetterEachWord } from "../Search/MoviePage";
+import { capitalizeFirstLetterEachWord } from "../Search/SearchPage";
 import getImagePath from "@/Utils/GetImagePath";
 import { MovieResult } from "@/Utils/FetchAPI";
 
