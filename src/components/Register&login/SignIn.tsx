@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import { User } from "./User";
+import axios from "axios";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -47,10 +47,25 @@ function LoginForm() {
     emailRef.current?.focus();
   }, []);
 
-  const handleLogin = (e?: any) => {
+  const handleLogin = async (e?: any) => {
     e.preventDefault();
-    const user = new User();
-    user.Login(email, password, navigate("/"));
+    await axios.post(
+      "https://masmaxnode.onrender.com/db/login",
+      {
+        email: email,
+        password: password,
+      },
+      { withCredentials: true }
+    );
+    await axios
+      .get("https://masmaxnode.onrender.com/db/verification", {
+        headers: { Authorization: document.cookie },
+        withCredentials: true,
+      })
+      .then(() => {
+        navigate("/");
+      })
+      .catch((err) => console.log("Error", err));
   };
 
   return (
