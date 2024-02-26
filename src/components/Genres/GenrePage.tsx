@@ -1,7 +1,7 @@
 import { useLocation } from "react-router-dom";
 import { capitalizeFirstLetterEachWord } from "../Search/SearchPage";
-import getImagePath from "@/Utils/GetImagePath";
-import { MovieResult } from "@/Utils/FetchAPI";
+import { getImagePath } from "@/Utils/GetImagePath";
+import { MovieResult } from "@/Utils/Interfaces";
 
 const GenrePage = () => {
   const location = useLocation();
@@ -19,7 +19,7 @@ const GenrePage = () => {
             <div className='flex justify-center items-center'>
               <img
                 alt={searchs.original_title}
-                src={getImagePath(searchs.backdrop_path)}
+                src={getImagePath(300, searchs.backdrop_path)}
                 className=' max-sm:w-[18.75rem] rounded-md hover:translate-x-[-40px] transition-transform duration-300 sm:w-[28.125rem] h-fit'
               />
             </div>

@@ -1,6 +1,3 @@
-import axios, { AxiosResponse } from "axios";
-import { MovieResult } from "./Interfaces";
-
 export const fetchFromTMDB = async (url: URL) => {
   const options = {
     method: "GET",

@@ -16,6 +16,8 @@ const SeeMore = ({ title }: { title: string }) => {
   const array = Array.from({ length: 20 }, (_, index) => index + 1);
 
   useEffect(() => {
+    setPages(1); /////
+    error; //////
     if (pages > 20) {
       btn.current?.setAttribute("disabled", "true");
       setError(`Can't go pages of ${pages}, have to type within 20`);
@@ -82,11 +84,11 @@ const SeeMore = ({ title }: { title: string }) => {
     navigate(`/seemore/page/${value}`);
   }
 
-  function exitAndHandleLoader(pages: number) {
-    setIsLoaded(false);
-    pagesCheck(pages);
-    navigate(`/seemore/page/${pages}`);
-  }
+  // function exitAndHandleLoader(pages: number) {
+  //   setIsLoaded(false);
+  //   pagesCheck(pages);
+  //   navigate(`/seemore/page/${pages}`);
+  // }
 
   const [isLoaded, setIsLoaded] = useState(false);
   const handleImageLoad = () => {

@@ -1,6 +1,6 @@
 export const getImagePath = (size: number, imagePath?: string) => {
   return imagePath
-    ? `http://image.tmdb.org/t/p/w400/${imagePath}`
+    ? `http://image.tmdb.org/t/p/w${size}/${imagePath}`
     : "https://links.papareact.com/o8z";
 };
 export const getLargeImagePath = (imagePath?: string) => {

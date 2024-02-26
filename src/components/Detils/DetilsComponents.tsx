@@ -1,7 +1,5 @@
 import { getImagePath, getLargeImagePath } from "@/Utils/GetImagePath";
 import getVideoPath from "@/Utils/GetVideoPath";
-import { faStar } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export function BackDropPath({ backdrop_path }: any) {
   return (
@@ -88,7 +86,7 @@ export function VoteAverage({ vote_average }: any) {
   return (
     <div className='text-white w-20 text-center py-1 bg-black rounded-md'>
       <span className='text-md'>{roundNumber(vote_average)}</span>
-      <FontAwesomeIcon icon={faStar} className='text-yellow-400 ml-1' />
+      <div className='text-yellow-400 ml-1' />
     </div>
   );
 }

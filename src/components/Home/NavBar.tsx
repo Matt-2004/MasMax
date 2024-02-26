@@ -1,4 +1,4 @@
-import { fetchMovieGenres, fetchSearchMovie } from "../../Utils/FetchAPI";
+import { fetchSearchMovie } from "../../Utils/FetchAPI";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -24,6 +24,7 @@ const NavBar = () => {
       setSearch(res);
     }
     fetching();
+    isMobile; ///////////////
   }, [searchValue]);
 
   function handleSearch(e: any) {
