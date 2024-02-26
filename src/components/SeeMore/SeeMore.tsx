@@ -1,19 +1,8 @@
 import { fetchPopularMovie, fetchTopRatedMovie } from "@/Utils/FetchAPI";
-import getImagePath from "@/Utils/GetImagePath";
+import { getImagePath } from "@/Utils/GetImagePath";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "../ui/button";
 import { useQuery } from "@tanstack/react-query";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogClose,
-} from "../ui/dialog";
 // This got error in laptop
 
 const SeeMore = ({ title }: { title: string }) => {
@@ -134,7 +123,7 @@ const SeeMore = ({ title }: { title: string }) => {
                         localStorage.setItem("id", datas.id.toString());
                         navigate(`/movie/${datas.id}`);
                       }}
-                      src={getImagePath(datas.poster_path)}
+                      src={getImagePath(300, datas.poster_path)}
                       alt={datas.title}
                       style={{
                         opacity: isLoaded ? 1 : 0,
@@ -164,48 +153,12 @@ const SeeMore = ({ title }: { title: string }) => {
                   onClick={(e) => handlePageBtn(e)}
                   className='bg-[#26262e] text-[#2eade7]
             hover:text-[#26262e]
-            hover:bg-[#2eade7]  border rounded-md  border-gray-600 py-1 px-5'
+            hover:bg-[#2eade7]  border rounded-md  border-gray-600 py-2 px-5'
                 >
                   {num}
                 </button>
               ))}
-              <Dialog>
-                <DialogTrigger asChild>
-                  <button className='px-4 py-2 border text-lg text-[#2eade7] transition-colors duration-300 hover:text-[#26262e] border-gray-600 hover:bg-[#2eade7] rounded-md'>
-                    ...
-                  </button>
-                </DialogTrigger>
-                <DialogContent className='w-[400px]'>
-                  <DialogHeader>
-                    <DialogTitle>Pages</DialogTitle>
-                    <DialogDescription>
-                      You can go within 20 pages.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className='text-white'>
-                    <input
-                      type='number'
-                      max='2'
-                      min='1'
-                      onChange={(e) => setPages(parseInt(e.target.value))}
-                      className='outline-none text-black px-3 py-1 rounded-md mr-4 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none'
-                    />
-                    <span>/ 20</span>
-                  </div>
-                  <div className='text-red-600'>{error}</div>
-                  <DialogFooter>
-                    <DialogClose asChild>
-                      <Button
-                        type='submit'
-                        onClick={() => exitAndHandleLoader(pages)}
-                        ref={btn}
-                      >
-                        Go
-                      </Button>
-                    </DialogClose>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
+
               <div
                 onClick={() => {
                   next();

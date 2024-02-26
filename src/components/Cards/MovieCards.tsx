@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import MovieCard from "./MovieCard";
 import MobileCard from "./MobileCard";
+import Carousels from "../Carousel/Carousels";
 
 const MovieCards = () => {
   const [upComingSizeChange, setUpComingSizeChange] = useState(false);
@@ -37,12 +38,12 @@ const MovieCards = () => {
     <div>
       {upComingSizeChange ? (
         <>
-          <MobileCard movieTabTitle='UpComing' />
           <MobileCard pm={popular} movieTabTitle='Popular' />
           <MobileCard pm={rated} movieTabTitle='Top Rated' />
         </>
       ) : (
         <>
+          <Carousels />
           <MovieCard pm={popular} movieTabTitle='Popular' />
           <MovieCard pm={rated} movieTabTitle='Top Rated' />
         </>

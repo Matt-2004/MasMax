@@ -1,4 +1,4 @@
-import getImagePath from "@/Utils/GetImagePath";
+import { getImagePath, getLargeImagePath } from "@/Utils/GetImagePath";
 import getVideoPath from "@/Utils/GetVideoPath";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -7,7 +7,7 @@ export function BackDropPath({ backdrop_path }: any) {
   return (
     <section className='relative'>
       <img
-        src={getImagePath(backdrop_path)}
+        src={getLargeImagePath(backdrop_path)}
         className='flex lg:h-[37.5rem] w-[100%] object-cover object-top brightness-50'
       />
       <div className='absolute inset-0 bg-gradient-to-b from-gray-200/0 via-gray-900/40 to-[#1A1C29]/80' />
@@ -26,7 +26,7 @@ export function LanguageAndVoteContainer({ children }: any) {
 export function Poster_path({ poster_path }: { poster_path: string }) {
   return (
     <img
-      src={getImagePath(poster_path)}
+      src={getImagePath(300, poster_path)}
       className='rounded-md md:static sm:absolute max-sm:absolute sm:top-[3%] sm:left-[37%] max-sm:top-[1%] max-sm:left-[34%] lg:h-[25rem] sm:h-[18rem] max-sm:h-[15.62rem] md:h-[20rem] '
     />
   );

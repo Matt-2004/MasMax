@@ -1,4 +1,3 @@
-import Carousels from "../Carousel/Carousels";
 import NavBar from "./NavBar";
 import { lazy, Suspense } from "react";
 
@@ -8,7 +7,7 @@ const Home = () => {
   return (
     <div className='bg-[#26262e] '>
       <NavBar />
-      <Carousels />
+
       <Suspense fallback={<div>Loading...</div>}>
         <MovieCards />
       </Suspense>

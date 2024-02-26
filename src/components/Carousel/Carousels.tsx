@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import getImagePath from "../../Utils/GetImagePath";
+import { getImagePath, getLargeImagePath } from "../../Utils/GetImagePath";
 import { fetchUpComingMoive } from "@/Utils/FetchAPI";
 
 const SliderMovie = () => {
@@ -58,12 +58,11 @@ const SliderMovie = () => {
             <img
               ref={imageRef}
               alt='img'
+              rel='preload'
               loading='lazy'
               className=' brightness-50 object-cover object-top w-[100%] h-[800px]'
-              width={1980}
-              height={960}
               onLoad={handleLoad}
-              src={getImagePath(upcome.backdrop_path)}
+              src={getLargeImagePath(upcome.backdrop_path)}
             />
             <div className='absolute  top-[27%] h-[27.5rem] w-[100%] xl:pl-[8.75rem] lg:pl-[6.25rem] sm:pl-[4.37rem] text-white'>
               <div className='flex '>
@@ -71,10 +70,8 @@ const SliderMovie = () => {
                   <img
                     rel='preload'
                     alt={upcome.title}
-                    src={getImagePath(upcome.poster_path)}
+                    src={getImagePath(400, upcome.poster_path)}
                     className='xl:w-72   lg:w-64 md:w-56 sm:w-44 rounded-md'
-                    width={256}
-                    height={300}
                   />
                 </div>
                 <div className='relative'>
