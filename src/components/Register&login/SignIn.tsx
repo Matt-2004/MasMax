@@ -38,7 +38,7 @@ const Login = () => {
 };
 
 function LoginForm() {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const emailRef = useRef<HTMLInputElement>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -63,7 +63,9 @@ function LoginForm() {
         withCredentials: true,
       })
       .then((result) => {
-        console.log(result);
+        if (result.data.valid === true) {
+          navigate("/");
+        }
       })
       .catch((err) => console.log("Error", err));
   };
