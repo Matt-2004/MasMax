@@ -50,7 +50,7 @@ function LoginForm() {
   const handleLogin = async (e?: any) => {
     e.preventDefault();
     await axios.post(
-      "https://masmaxnode.onrender.com/db/login",
+      "http://localhost:8000/db/login",
       {
         email: email,
         password: password,
@@ -58,12 +58,12 @@ function LoginForm() {
       { withCredentials: true }
     );
     await axios
-      .get("https://masmaxnode.onrender.com/db/verification", {
+      .get("http://localhost:8000/db/verification", {
         headers: { Authorization: document.cookie },
         withCredentials: true,
       })
-      .then(() => {
-        navigate("/");
+      .then((result) => {
+        console.log(result);
       })
       .catch((err) => console.log("Error", err));
   };
