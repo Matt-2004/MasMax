@@ -83,7 +83,7 @@ function Form() {
   // Registration
   const handleRegister = async (e?: any) => {
     e.preventDefault();
-    await axios.post("http://localhost:8000/db/register", {
+    await axios.post("https://mas-max-6ywh.vercel.app/db/register", {
       username: name,
       email: email,
       password: password,

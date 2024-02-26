@@ -8,7 +8,7 @@ interface IUser {
 export class User implements IUser {
   public async Login(email: string, password: string, path: void) {
     await axios.post(
-      "http://localhost:8000/db/login",
+      "https://mas-max-6ywh.vercel.app/db/login",
       {
         email: email,
         password: password,
@@ -16,7 +16,7 @@ export class User implements IUser {
       { withCredentials: true }
     );
     await axios
-      .get("http://localhost:8000/db/verification", {
+      .get("https://mas-max-6ywh.vercel.app/db/verification", {
         headers: { Authorization: document.cookie },
         withCredentials: true,
       })
