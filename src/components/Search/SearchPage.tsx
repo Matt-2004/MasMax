@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import getImagePath from "../../Utils/GetImagePath";
+import { getImagePath } from "../../Utils/GetImagePath";
 import { MovieResult } from "@/Utils/Interfaces";
 export function capitalizeFirstLetterEachWord(str: string) {
   return str.replace(/\b\w/g, function (match) {
@@ -24,7 +24,7 @@ const MoviePage = () => {
             <div className='flex justify-center items-center'>
               <img
                 alt={searchs.original_title}
-                src={getImagePath(searchs.backdrop_path)}
+                src={getImagePath(400, searchs.backdrop_path)}
                 className=' max-sm:w-[18.75rem] rounded-sm hover:translate-x-[-40px] transition-transform duration-300 sm:w-[28.1rem] h-fit'
               />
             </div>
