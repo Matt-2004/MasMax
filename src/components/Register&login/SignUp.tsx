@@ -83,7 +83,7 @@ function Form() {
   // Registration
   const handleRegister = async (e?: any) => {
     e.preventDefault();
-    await axios.post("https://masmaxnode.onrender.com/db/register", {
+    await axios.post("https://masmaxnode.onrender.com/register", {
       username: name,
       email: email,
       password: password,
