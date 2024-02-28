@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { getImagePath, getLargeImagePath } from "../../Utils/GetImagePath";
 import { fetchUpComingMoive } from "@/Utils/FetchAPI";
-import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 
 const SliderMovie = () => {
   const imageRef = useRef<HTMLImageElement>(null);
@@ -95,17 +93,18 @@ const SliderMovie = () => {
           onClick={() => prev()}
           className='bg-[#26262e] opacity-75 hover:opacity-100   mx-3 rounded-md px-3 py-3 '
         >
-          <ArrowBackIcon
+          <div
             style={{
               color: "#2eade7",
             }}
-          />
+          />{" "}
+          // Arrow Backword
         </span>
         <span
           onClick={() => next()}
           className=' bg-[#26262e] opacity-75 hover:opacity-100  mx-3 rounded-md px-3 py-3 text-[#2eade7]'
         >
-          <ArrowForwardIcon />
+          <div /> // arrow Forward
         </span>
       </div>
     </div>

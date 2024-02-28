@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
-import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { getImagePath } from "@/Utils/GetImagePath";
 
 export const Cards = ({ data, handleImageLoad, isLoaded }: any) => {
@@ -55,7 +53,7 @@ export const Btn = ({ next, previous, handlePageBtn }: any) => {
           hover:text-[#26262e]
           hover:bg-[#2eade7] border rounded-md border-gray-600  items-center py-3 px-3'
         >
-          <ArrowBackIosIcon style={{ paddingLeft: "3px" }} />
+          <div style={{ paddingLeft: "3px" }} />
         </div>
 
         {initPage.map((num) => (
@@ -75,7 +73,7 @@ export const Btn = ({ next, previous, handlePageBtn }: any) => {
           hover:text-[#26262e]
           hover:bg-[#2eade7] border rounded-md border-gray-600 items-center py-3 px-3'
         >
-          <ArrowForwardIosIcon style={{ padding: "2px" }} />
+          <div style={{ padding: "2px" }} />
         </div>
       </div>
     </>

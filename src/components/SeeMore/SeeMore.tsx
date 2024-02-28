@@ -2,7 +2,6 @@ import { fetchPopularMovie, fetchTopRatedMovie } from "@/Utils/FetchAPI";
 import { useEffect, useState } from "react";
 import { Btn, Cards, SkeletonLoad } from "./components";
 import { useNavigate } from "react-router-dom";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 
 const SeeMore = ({ title }: { title: string }) => {
   const navigate = useNavigate();
@@ -68,7 +67,7 @@ const SeeMore = ({ title }: { title: string }) => {
           onClick={() => navigate("/")}
           className='cursor-pointer opacity-75 hover:opacity-100 pb-2 px-2 '
         >
-          <ArrowBackIcon height={4} />
+          <div /> // icon
         </span>
         {title}
       </div>

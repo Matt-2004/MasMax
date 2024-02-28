@@ -1,6 +1,5 @@
 import { PropsMovies } from "@/Utils/Interfaces";
 import { getImagePath } from "@/Utils/GetImagePath";
-import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
 import { useNavigate } from "react-router-dom";
 
 const MovieCard = ({ pm, movieTabTitle }: PropsMovies) => {
@@ -24,7 +23,7 @@ const MovieCard = ({ pm, movieTabTitle }: PropsMovies) => {
           >
             see more
             <span>
-              <ArrowRightAltIcon />
+              <div /> // arrowRightAlt
             </span>
           </div>
         </div>
