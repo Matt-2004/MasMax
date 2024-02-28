@@ -1,6 +1,6 @@
 import { PropsMovies } from "@/Utils/Interfaces";
 import { getImagePath } from "@/Utils/GetImagePath";
-
+import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
 import { useNavigate } from "react-router-dom";
 
 const MovieCard = ({ pm, movieTabTitle }: PropsMovies) => {
@@ -23,6 +23,9 @@ const MovieCard = ({ pm, movieTabTitle }: PropsMovies) => {
             onClick={() => naviAndSetItem()}
           >
             see more
+            <span>
+              <ArrowRightAltIcon />
+            </span>
           </div>
         </div>
         <div className='flex cursor-pointer lg:w-[62.5rem] md:w-[48.12rem] sm:w-[40rem] justify-between'>

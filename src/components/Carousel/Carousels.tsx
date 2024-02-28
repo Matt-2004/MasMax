@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { getImagePath, getLargeImagePath } from "../../Utils/GetImagePath";
 import { fetchUpComingMoive } from "@/Utils/FetchAPI";
+import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 
 const SliderMovie = () => {
   const imageRef = useRef<HTMLImageElement>(null);
@@ -9,11 +11,12 @@ const SliderMovie = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [upComing, setUpComing] = useState([]);
 
+  const fetching = async () => {
+    const upcoming = await fetchUpComingMoive();
+    setUpComing(upcoming);
+  };
+
   useEffect(() => {
-    const fetching = async () => {
-      const upcoming = await fetchUpComingMoive();
-      setUpComing(upcoming);
-    };
     fetching();
   }, []);
 
@@ -78,7 +81,7 @@ const SliderMovie = () => {
                   <h2 className='xl:text-5xl lg:text-4xl md:text-3xl sm:text-2xl font-bold pb-4 pl-3'>
                     {upcome.original_title}
                   </h2>
-                  <span className='absolute text-lg xl:w-[37.5rem] lg:w-[29.37rem] sm:w-[23.75rem] pl-3'>
+                  <span className='absolute text-xl  xl:w-[37.5rem] lg:w-[29.37rem] sm:w-[23.75rem] pl-3'>
                     {upcome.overview}
                   </span>
                 </div>
@@ -87,15 +90,23 @@ const SliderMovie = () => {
           </div>
         ))}
       </div>
-      <div className='absolute flex w-[100%] z-50 justify-between top-[50%]'>
-        <div
+      <div className='absolute flex w-[100%] z-50 justify-between top-[43%]'>
+        <span
           onClick={() => prev()}
-          className='bg-[#26262e] opacity-70 hover:opacity-100 text-[#2eade7]  mx-3 rounded-md px-3 py-3 '
-        />
-        <div
+          className='bg-[#26262e] opacity-75 hover:opacity-100   mx-3 rounded-md px-3 py-3 '
+        >
+          <ArrowBackIcon
+            style={{
+              color: "#2eade7",
+            }}
+          />
+        </span>
+        <span
           onClick={() => next()}
-          className=' bg-[#26262e] opacity-70 hover:opacity-100  mx-3 rounded-md px-3 py-3 text-[#2eade7]'
-        />
+          className=' bg-[#26262e] opacity-75 hover:opacity-100  mx-3 rounded-md px-3 py-3 text-[#2eade7]'
+        >
+          <ArrowForwardIcon />
+        </span>
       </div>
     </div>
   );
