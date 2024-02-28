@@ -1,101 +1,62 @@
 import { fetchPopularMovie, fetchTopRatedMovie } from "@/Utils/FetchAPI";
-import { getImagePath } from "@/Utils/GetImagePath";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { Btn, Cards, SkeletonLoad } from "./components";
 import { useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-// This got error in laptop
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 
 const SeeMore = ({ title }: { title: string }) => {
-  const btn = useRef<HTMLButtonElement>(null);
-
   const navigate = useNavigate();
-  const [initPage, setInitPage] = useState([1, 2, 3, 4]);
-
-  const [pages, setPages] = useState(1);
-  const [error, setError] = useState("");
-  const array = Array.from({ length: 20 }, (_, index) => index + 1);
-
-  useEffect(() => {
-    setPages(1); /////
-    error; //////
-    if (pages > 20) {
-      btn.current?.setAttribute("disabled", "true");
-      setError(`Can't go pages of ${pages}, have to type within 20`);
-    } else {
-      btn.current?.removeAttribute("disabled");
-      setError("");
-    }
-  }, [pages]);
-
-  async function fetching(page: number) {
-    if (title === "Popular") {
-      const popu = await fetchPopularMovie(page);
-      return popu;
-    } else {
-      const topRate = await fetchTopRatedMovie(page);
-      return topRate;
-    }
-  }
-
-  const { data, isSuccess, refetch } = useQuery({
-    queryFn: () => fetching(initPage[0]),
-    queryKey: ["querys", initPage],
-    enabled: !!initPage,
-  });
-
-  function next() {
-    initPage[3] < 21
-      ? setInitPage((prev) => prev.map((x) => x + 1))
-      : console.log("blarBlar");
-    refetch();
-    setIsLoaded(false);
-  }
-
-  function previous() {
-    initPage[0] !== 1
-      ? setInitPage((prev) => prev.map((x) => x - 1))
-      : console.log("Can't Go");
-    refetch();
-    setIsLoaded(false);
-  }
-  function pagesCheck(pages: number) {
-    // this function prevent btn value not to pass 20
-
-    if (pages >= 16 && initPage[0] <= 15) {
-      let value = pages - 16;
-      setInitPage((init: any) =>
-        init.map((inits: any) => inits + pages - 1 - value)
-      );
-    } else if (pages >= 16) {
-      setInitPage((init: any) =>
-        init.map((inits: any) => inits + pages - pages + 1)
-      );
-    } else {
-      setInitPage((init: any) =>
-        init.map((inits: any) => inits + pages - init[0])
-      );
-      7;
-    }
-  }
-
-  function handlePageBtn(e: any) {
-    let value = e.currentTarget.innerHTML;
-    pagesCheck(parseInt(value));
-    navigate(`/seemore/page/${value}`);
-  }
-
-  // function exitAndHandleLoader(pages: number) {
-  //   setIsLoaded(false);
-  //   pagesCheck(pages);
-  //   navigate(`/seemore/page/${pages}`);
-  // }
 
   const [isLoaded, setIsLoaded] = useState(false);
+  const [count, setCount] = useState(0);
+  const [data, setData] = useState([]);
+  const [page, setPage] = useState(1);
+
+  const fetching = async () => {
+    if (title === "Popular") {
+      const popu = await fetchPopularMovie(page);
+      setData(popu);
+    } else {
+      const topRate = await fetchTopRatedMovie(page);
+      setData(topRate);
+    }
+  };
+
+  useEffect(() => {
+    navigate(`/seemore/page/1`);
+  }, []);
+
+  useEffect(() => {
+    fetching();
+    handleImageLoad();
+  }, [count]);
+
+  function next() {
+    setCount((prev) => prev + 1);
+    setPage((prev) => prev + 1);
+    setIsLoaded(false);
+    navigate(`/seemore/page/${page + 1}`);
+  }
+  function previous() {
+    setCount((prev) => prev - 1);
+    setPage((prev) => prev - 1);
+    setIsLoaded(false);
+    navigate(`/seemore/page/${page - 1}`);
+  }
+
   const handleImageLoad = () => {
     setTimeout(() => {
       setIsLoaded(true);
-    }, 1200);
+    }, 700);
   };
+
+  function handlePageBtn(e: any) {
+    setIsLoaded(false);
+    let value = e.currentTarget.innerHTML;
+    setCount(value);
+    setPage(value);
+    navigate(`/seemore/page/${value}`);
+  }
 
   return (
     <div className='w-[75%] h-[100%] '>
@@ -103,74 +64,28 @@ const SeeMore = ({ title }: { title: string }) => {
         id='title'
         className='flex justify-start text-3xl font-bold my-7 text-[#ffffff]'
       >
+        <span
+          onClick={() => navigate("/")}
+          className='cursor-pointer opacity-75 hover:opacity-100 pb-2 px-2 '
+        >
+          <ArrowBackIcon height={4} />
+        </span>
         {title}
       </div>
       <div className='relative'>
-        <div className=''>
-          <div
-            style={{ opacity: isLoaded ? 0 : 1 }}
-            className='flex flex-wrap gap-10 justify-center mt-6 mb-4 text-white absolute top-0'
-          >
-            {array.map(() => (
-              // <Loader />
-              <div className='w-[15.62rem] h-[23.12rem] rounded-md bg-gray-600 animate-pulse' />
-            ))}
-          </div>
-          <div className='flex flex-wrap gap-10 justify-center mt-6 mb-4 text-white absolute top-0'>
-            {isSuccess
-              ? data.map((datas: any) => (
-                  <div className='cursor-pointer hover:scale-110 transition-all duration-300'>
-                    <img
-                      onClick={() => {
-                        localStorage.setItem("id", datas.id.toString());
-                        navigate(`/movie/${datas.id}`);
-                      }}
-                      src={getImagePath(300, datas.poster_path)}
-                      alt={datas.title}
-                      style={{
-                        opacity: isLoaded ? 1 : 0,
-                        transition: "opacity 0.5s",
-                      }}
-                      loading='lazy'
-                      height={375}
-                      width={250}
-                      onLoad={handleImageLoad}
-                      className='rounded-md '
-                    />
-                  </div>
-                ))
-              : console.log("Error!!")}
-            <div className='flex justify-center gap-2'>
-              <div
-                onClick={() => {
-                  previous();
-                }}
-                className='bg-[#26262e] text-[#2eade7]
-          hover:text-[#26262e]
-          hover:bg-[#2eade7] border rounded-md border-gray-600  py-4 px-5'
-              />
-              {initPage.map((num) => (
-                <button
-                  key={num}
-                  onClick={(e) => handlePageBtn(e)}
-                  className='bg-[#26262e] text-[#2eade7]
-            hover:text-[#26262e]
-            hover:bg-[#2eade7]  border rounded-md  border-gray-600 py-2 px-5'
-                >
-                  {num}
-                </button>
-              ))}
-
-              <div
-                onClick={() => {
-                  next();
-                }}
-                className='bg-[#26262e] text-[#2eade7]
-          hover:text-[#26262e]
-          hover:bg-[#2eade7] border rounded-md border-gray-600  py-4 px-5'
-              />
-            </div>
-          </div>
+        <SkeletonLoad isLoaded={isLoaded} />
+        <div className='flex flex-wrap gap-10 justify-center mt-6 mb-4 text-white absolute top-0'>
+          <Cards
+            handleImageLoad={handleImageLoad}
+            isLoaded={isLoaded}
+            data={data}
+          />
+          <Btn
+            next={next}
+            previous={previous}
+            handlePageBtn={handlePageBtn}
+            isLoaded={isLoaded}
+          />
         </div>
       </div>
     </div>
