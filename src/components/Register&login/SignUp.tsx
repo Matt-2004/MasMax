@@ -15,17 +15,16 @@ import { useNavigate } from "react-router-dom";
 const Register = () => {
   const navigate = useNavigate();
   return (
-    <div className="flex  justify-center h-screen items-center w-[100%]">
-      <div className="bg-[#0FDDD6] relative overflow-hidden  w-[25rem] h-[33.125rem] bg-opacity-10 rounded-t-md">
+    <div className='flex  justify-center h-screen items-center w-[100%]'>
+      <div className='bg-[#0FDDD6] relative overflow-hidden  w-[50rem] h-[40rem] flex flex-col justify-center items-center bg-opacity-10 rounded-md'>
         <Header />
         <Form />
-
-        <div className="flex justify-center mt-9">
-          <div className="text-white text-[0.8rem] font-roboto">
+        <div className='flex justify-center mt-9'>
+          <div className='text-white text-[0.8rem] font-roboto'>
             Have already an account?
             <span
               onClick={() => navigate("/login")}
-              className="font-bold underline cursor-pointer hover:text-blue-500"
+              className='font-bold underline cursor-pointer hover:text-blue-500'
             >
               Login Here
             </span>
@@ -35,6 +34,7 @@ const Register = () => {
     </div>
   );
 };
+
 function Form() {
   const navigate = useNavigate();
 
@@ -93,8 +93,8 @@ function Form() {
 
   return (
     <>
-      <form onSubmit={handleRegister} className="flex justify-center">
-        <div className="flex flex-col gap-5">
+      <form onSubmit={handleRegister} className='flex justify-center'>
+        <div className='flex flex-col gap-5'>
           <input
             onChange={(e) => setName(e.target.value)}
             style={{
@@ -103,20 +103,20 @@ function Form() {
             ref={firstInputRef}
             onFocus={() => setNameFocus(true)}
             onBlur={() => setNameFocus(false)}
-            type="text"
-            className="w-[22.25rem] h-[2.8rem] outline-none rounded-sm border border-[#9d9d9d] font-roboto placeholder:text-[0.875rem] pl-4 placeholder:opacity-80"
-            placeholder="Username"
+            type='text'
+            className='w-[22.25rem] h-[2.5rem] outline-none rounded-sm border border-[#9d9d9d] font-roboto placeholder:text-[0.875rem] pl-4 placeholder:opacity-80'
+            placeholder='Username'
           />
           <input
             onChange={(e) => setEmail(e.target.value)}
             style={{
               border: !emailValid && emailFocus ? "1px solid red" : "none",
             }}
-            type="email"
+            type='email'
             onFocus={() => setEmailFocus(true)}
             onBlur={() => setEmailFocus(false)}
-            className="w-[22.25rem] h-[2.8rem] outline-none rounded-sm border border-[#9d9d9d] font-roboto placeholder:text-[0.875rem] pl-4 placeholder:opacity-80"
-            placeholder="Email"
+            className='w-[22.25rem] h-[2.5rem] outline-none rounded-sm border border-[#9d9d9d] font-roboto placeholder:text-[0.875rem] pl-4 placeholder:opacity-80'
+            placeholder='Email'
           />
           <input
             onChange={(e) => setPassword(e.target.value)}
@@ -124,22 +124,22 @@ function Form() {
               border:
                 !passwordValid && passwordFocus ? "1px solid red" : "none",
             }}
-            type="password"
+            type='password'
             onFocus={() => setPasswordFocus(true)}
             onBlur={() => setPasswordFocus(false)}
-            className="w-[22.25rem] h-[2.8rem] outline-none rounded-sm border border-[#9d9d9d] font-roboto placeholder:text-[0.875rem] pl-4 placeholder:opacity-80"
-            placeholder="Password"
+            className='w-[22.25rem] h-[2.5rem] outline-none rounded-sm border border-[#9d9d9d] font-roboto placeholder:text-[0.875rem] pl-4 placeholder:opacity-80'
+            placeholder='Password'
           />
           <input
             onChange={(e) => setCpw(e.target.value)}
             style={{
               border: !cpwValid && cpwFocus ? "1px solid red" : "none",
             }}
-            type="password"
+            type='password'
             onFocus={() => setCpwFocus(true)}
             onBlur={() => setCpwFocus(false)}
-            className="w-[22.25rem] h-[2.8rem] outline-none rounded-sm border border-[#9d9d9d] font-roboto placeholder:text-[0.875rem] pl-4 placeholder:opacity-80"
-            placeholder="Confirm Password"
+            className='w-[22.25rem] h-[2.5rem] outline-none rounded-sm border border-[#9d9d9d] font-roboto placeholder:text-[0.875rem] pl-4 placeholder:opacity-80'
+            placeholder='Confirm Password'
           />
         </div>
       </form>
@@ -165,20 +165,20 @@ function CheckBox({ handleRegister, btnValid }: any) {
 
   return (
     <>
-      <div className="flex my-4">
+      <div className='flex mt-4'>
         <input
-          type="checkbox"
+          type='checkbox'
           ref={checkBoxRef}
-          className="ml-6 w-3"
+          className='ml-6 w-3'
           onClick={() => setClick(!click)}
-          id="agree"
+          id='agree'
         />
         <label
-          htmlFor="agree"
-          className="text-[0.8rem] font-roboto font-medium text-white pl-2"
+          htmlFor='agree'
+          className='text-[0.8rem] ml-2 font-roboto font-medium text-white'
         >
           I agree all statements in{" "}
-          <span className="underline hover:text-blue-500">
+          <span className='underline hover:text-blue-500'>
             Terms of service
           </span>
         </label>
@@ -196,7 +196,6 @@ function RegisterBtn({ handleRegister, btnValid, checked }: any) {
   const btnRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    console.log("Checked:: ", checked);
     if (btnRef.current) {
       btnValid && checked
         ? (btnRef.current.disabled = false)
@@ -205,7 +204,7 @@ function RegisterBtn({ handleRegister, btnValid, checked }: any) {
   }, [btnValid, checked]);
 
   return (
-    <div className="flex justify-center mt-4">
+    <div className='flex justify-center mt-4'>
       <button
         ref={btnRef}
         onClick={handleRegister}
@@ -213,7 +212,7 @@ function RegisterBtn({ handleRegister, btnValid, checked }: any) {
           opacity: btnValid && checked ? "1" : "0.5",
           cursor: btnValid && checked ? "pointer" : "",
         }}
-        className="text-[0.94rem]  rounded-sm font-semibold font-roboto text-white w-[22.25rem] h-[2.7rem] bg-[#0FDDD6]"
+        className='text-[0.94rem]  rounded-sm font-semibold font-roboto text-white w-[22.25rem] h-[2.7rem] bg-[#0FDDD6]'
       >
         SIGN UP
       </button>
@@ -223,7 +222,7 @@ function RegisterBtn({ handleRegister, btnValid, checked }: any) {
 
 function Header() {
   return (
-    <h1 className="flex justify-center font-roboto font-medium text-[2.5rem] py-6 outline-none text-white">
+    <h1 className='flex justify-center font-roboto font-medium text-[2.5rem] py-6 outline-none text-white'>
       Register
     </h1>
   );

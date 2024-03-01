@@ -1,21 +1,31 @@
-import { PropsMovies } from "@/Utils/Interfaces";
+import { MovieResult } from "@/Utils/Interfaces";
 import { getImagePath } from "@/Utils/GetImagePath";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
-const MovieCard = ({ pm, movieTabTitle }: PropsMovies) => {
+const MovieCard = () => {
   const navigate = useNavigate();
+  const [rated, setRated] = useState([]);
 
   function naviAndSetItem() {
     navigate(`/seemore/page/${1}`);
-    localStorage.setItem("title", movieTabTitle);
   }
+
+  useEffect(() => {
+    const fetching = async () => {
+      const { fetchTopRatedMovie } = await import("@/Utils/FetchAPI");
+      const rate = await fetchTopRatedMovie();
+      setRated(rate);
+    };
+    fetching();
+  }, []);
 
   return (
     <div className='w-[100%] mt-16 flex justify-center'>
       <div className='flex flex-col'>
         <div className='flex justify-between'>
           <div className='mb-8  font-bold  md:text-2xl sm:text-xl text-[#2eade7]'>
-            {movieTabTitle}
+            Top Rated
           </div>
           <div
             className='cursor-pointer text-md underline text-white'
@@ -28,7 +38,7 @@ const MovieCard = ({ pm, movieTabTitle }: PropsMovies) => {
           </div>
         </div>
         <div className='flex cursor-pointer lg:w-[62.5rem] md:w-[48.12rem] sm:w-[40rem] justify-between'>
-          {pm.slice(0, 4).map((p) => (
+          {rated.slice(0, 4).map((p: MovieResult) => (
             <div key={p.id} className='relative'>
               <div
                 onClick={() => {

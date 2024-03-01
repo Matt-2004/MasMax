@@ -7,7 +7,7 @@ const Login = () => {
 
   return (
     <div className='flex  justify-center h-screen items-center w-[100%]'>
-      <div className='bg-[#0FDDD6] relative  w-[25rem] h-[33.125rem] bg-opacity-10 rounded-t-md'>
+      <div className='bg-[#0FDDD6] relative  w-[50rem] h-[40rem] flex flex-col justify-center items-center bg-opacity-10 rounded-t-md'>
         <h1 className='flex mt-7 justify-center text-[2.5rem] font-medium text-white font-roboto'>
           Login
         </h1>
@@ -23,7 +23,7 @@ const Login = () => {
         </div>
         <GoogleBtn />
 
-        <div className='text-white text-[0.8rem] mt-10 flex justify-center '>
+        <div className='text-white text-[0.8rem] mt-10 font-roboto flex justify-center '>
           Create an account?
           <span
             onClick={() => navigate("/register")}
@@ -38,7 +38,6 @@ const Login = () => {
 };
 
 function LoginForm() {
-  // const navigate = useNavigate();
   const emailRef = useRef<HTMLInputElement>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -75,13 +74,13 @@ function LoginForm() {
           ref={emailRef}
           onChange={(e) => setEmail(e.target.value)}
           type='email'
-          className='py-2 w-[90%] mt-7 border-[#9d9d9d] border rounded-sm pl-5 outline-none placeholder:text-[0.875rem] placeholder:font-roboto'
+          className='w-[22.25rem] h-[2.68rem] mt-7 border-[#9d9d9d] border rounded-sm pl-5 outline-none placeholder:text-[0.875rem] placeholder:font-roboto'
           placeholder='Email'
         />
         <input
           type='password'
           onChange={(e) => setPassword(e.target.value)}
-          className='py-2 w-[90%] mt-6 border-[#9d9d9d] border rounded-sm pl-5 outline-none placeholder:text-[0.875rem] placeholder:font-roboto'
+          className='w-[22.25rem] h-[2.68rem] mt-6 border-[#9d9d9d] border rounded-sm pl-5 outline-none placeholder:text-[0.875rem] placeholder:font-roboto'
           placeholder='Password'
         />
       </div>
