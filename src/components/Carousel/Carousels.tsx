@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { getImagePath, getLargeImagePath } from "../../Utils/GetImagePath";
 import { fetchUpComingMoive } from "@/Utils/FetchAPI";
+import ArrowRightOutlined from "@ant-design/icons/ArrowRightOutlined";
+import ArrowLeftOutlined from "@ant-design/icons/ArrowLeftOutlined";
 
 const SliderMovie = () => {
   const imageRef = useRef<HTMLImageElement>(null);
@@ -91,20 +93,15 @@ const SliderMovie = () => {
       <div className='absolute flex w-[100%] z-50 justify-between top-[43%]'>
         <span
           onClick={() => prev()}
-          className='bg-[#26262e] opacity-75 hover:opacity-100   mx-3 rounded-md px-3 py-3 '
+          className='bg-[#26262e] opacity-85 hover:opacity-100  w-10 h-10 items-center mx-3 text-center pt-1 text-[#2eade7]'
         >
-          <div
-            style={{
-              color: "#2eade7",
-            }}
-          />{" "}
-          // Arrow Backword
+          <ArrowLeftOutlined className='text-xl' />
         </span>
         <span
           onClick={() => next()}
-          className=' bg-[#26262e] opacity-75 hover:opacity-100  mx-3 rounded-md px-3 py-3 text-[#2eade7]'
+          className=' bg-[#26262e] opacity-85 hover:opacity-100 w-10 h-10 items-center mx-3 text-center pt-1 text-[#2eade7]'
         >
-          <div /> // arrow Forward
+          <ArrowRightOutlined className='text-xl' />
         </span>
       </div>
     </div>

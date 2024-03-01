@@ -1,15 +1,27 @@
 import { getImagePath, getLargeImagePath } from "@/Utils/GetImagePath";
 import getVideoPath from "@/Utils/GetVideoPath";
+import ArrowLeftOutlined from "@ant-design/icons/ArrowLeftOutlined";
+import { useNavigate } from "react-router-dom";
 
 export function BackDropPath({ backdrop_path }: any) {
+  const navigate = useNavigate();
   return (
-    <section className='relative'>
-      <img
-        src={getLargeImagePath(backdrop_path)}
-        className='flex lg:h-[37.5rem] w-[100%] object-cover object-top brightness-50'
-      />
-      <div className='absolute inset-0 bg-gradient-to-b from-gray-200/0 via-gray-900/40 to-[#1A1C29]/80' />
-    </section>
+    <>
+      <div
+        onClick={() => navigate("/")}
+        className='absolute z-40 top-[3%] left-[2%] text-[#2eade7] bg-[#26262e] bg-opacity-70 py-2 px-3 opacity-80 rounded-sm hover:bg-opacity-100 hover:opaicty-100'
+      >
+        <ArrowLeftOutlined className='text-xl ' />
+      </div>
+
+      <section className='relative'>
+        <img
+          src={getLargeImagePath(backdrop_path)}
+          className='flex lg:h-[37.5rem] w-[100%] object-cover object-top brightness-50'
+        />
+        <div className='absolute inset-0 bg-gradient-to-b from-gray-200/0 via-gray-900/40 to-[#1A1C29]/80' />
+      </section>
+    </>
   );
 }
 
@@ -101,11 +113,12 @@ export function Videos({ videos }: any) {
             Movie Videos
           </h2>
           <ul className='flex w-[100%] overflow-hidden pt-10 '>
-            <div className='flex overflow-x-scroll'>
+            <div className='flex overflow-x-scroll no-scrollbar gap-3'>
               {videos.map((video: any) => (
                 <li key={video.id}>
                   <iframe
                     title={video.name}
+                    className='xl:w-[35rem] lg:w-[28rem] md:w-[24rem] xl:h-[20rem] lg:h-[16rem] md:h-[14rem]'
                     width={560}
                     height={315}
                     src={getVideoPath(video.key)}
