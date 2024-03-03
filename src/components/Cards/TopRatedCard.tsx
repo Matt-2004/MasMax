@@ -2,6 +2,7 @@ import { MovieResult } from "@/Utils/Interfaces";
 import { getImagePath } from "@/Utils/GetImagePath";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import SwapRightOutlined from "@ant-design/icons/SwapRightOutlined";
 
 const MovieCard = () => {
   const navigate = useNavigate();
@@ -28,12 +29,12 @@ const MovieCard = () => {
             Top Rated
           </div>
           <div
-            className='cursor-pointer text-md underline text-white'
+            className='cursor-pointer text-md hover:underline text-white'
             onClick={() => naviAndSetItem()}
           >
             see more
-            <span className='max-sm:text-md'>
-              <div /> // arrowRightAlt
+            <span className='max-sm:text-md text-xl'>
+              <SwapRightOutlined />
             </span>
           </div>
         </div>

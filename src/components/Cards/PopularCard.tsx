@@ -31,7 +31,7 @@ const MovieCard = () => {
                 Popular
               </div>
               <div
-                className='cursor-pointer text-md underline text-white'
+                className='cursor-pointer text-md hover:underline text-white'
                 onClick={() => naviAndSetItem()}
               >
                 see more

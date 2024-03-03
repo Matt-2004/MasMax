@@ -53,7 +53,7 @@ export const Btn = ({ next, previous, handlePageBtn }: any) => {
           onClick={Previous}
           className='bg-[#26262e] text-[#2eade7]
           hover:text-[#26262e]
-          hover:bg-[#2eade7] border rounded-md border-gray-600  items-center py-3 px-3'
+          hover:bg-[#2eade7] border rounded-md border-gray-600  items-center py-3 px-4'
         >
           <ArrowLeftOutlined />
         </div>
@@ -73,7 +73,7 @@ export const Btn = ({ next, previous, handlePageBtn }: any) => {
           onClick={Next}
           className='bg-[#26262e] text-[#2eade7]
           hover:text-[#26262e]
-          hover:bg-[#2eade7] border rounded-md border-gray-600 items-center py-3 px-3'
+          hover:bg-[#2eade7] border rounded-md border-gray-600 items-center py-3 px-4'
         >
           <ArrowRightOutlined />
         </div>
