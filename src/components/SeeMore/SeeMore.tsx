@@ -2,6 +2,7 @@ import { fetchPopularMovie, fetchTopRatedMovie } from "@/Utils/FetchAPI";
 import { useEffect, useState } from "react";
 import { Btn, Cards, SkeletonLoad } from "./components";
 import { useNavigate } from "react-router-dom";
+import ArrowLeftOutlined from "@ant-design/icons/ArrowLeftOutlined";
 
 const SeeMore = ({ title }: { title: string }) => {
   const navigate = useNavigate();
@@ -61,13 +62,13 @@ const SeeMore = ({ title }: { title: string }) => {
     <div className='w-[75%] h-[100%] '>
       <div
         id='title'
-        className='flex justify-start text-3xl font-bold my-7 text-[#ffffff]'
+        className='flex justify-start text-3xl h-[2rem] items-center font-bold my-7 text-[#ffffff]'
       >
         <span
           onClick={() => navigate("/")}
-          className='cursor-pointer opacity-75 hover:opacity-100 pb-2 px-2 '
+          className='cursor-pointer opacity-75 hover:opacity-100  mr-3 mb-3'
         >
-          <div /> // icon
+          <ArrowLeftOutlined className='text-2xl' />
         </span>
         {title}
       </div>
