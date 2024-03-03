@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getImagePath } from "@/Utils/GetImagePath";
+import ArrowLeftOutlined from "@ant-design/icons/ArrowLeftOutlined";
+import ArrowRightOutlined from "@ant-design/icons/ArrowRightOutlined";
 
 export const Cards = ({ data, handleImageLoad, isLoaded }: any) => {
   const navigate = useNavigate();
@@ -53,7 +55,7 @@ export const Btn = ({ next, previous, handlePageBtn }: any) => {
           hover:text-[#26262e]
           hover:bg-[#2eade7] border rounded-md border-gray-600  items-center py-3 px-3'
         >
-          <div style={{ paddingLeft: "3px" }} />
+          <ArrowLeftOutlined />
         </div>
 
         {initPage.map((num) => (
@@ -73,7 +75,7 @@ export const Btn = ({ next, previous, handlePageBtn }: any) => {
           hover:text-[#26262e]
           hover:bg-[#2eade7] border rounded-md border-gray-600 items-center py-3 px-3'
         >
-          <div style={{ padding: "2px" }} />
+          <ArrowRightOutlined />
         </div>
       </div>
     </>

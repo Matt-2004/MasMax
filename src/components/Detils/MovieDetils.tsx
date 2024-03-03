@@ -1,6 +1,7 @@
 import { fetchMovieDetils, fetchVideo } from "../../Utils/FetchAPI";
 import { useEffect, useState } from "react";
 import { DetilsResult } from "@/Utils/Interfaces";
+import "@/index.css";
 import {
   BackDropPath,
   Genres,
@@ -63,7 +64,9 @@ const MovieDetils = () => {
           <Videos videos={videos} />
         </div>
       ) : (
-        <div className='text-white'>Loading...</div>
+        <div className='progress'>
+          <div className='runner'></div>
+        </div>
       )}
     </>
   );

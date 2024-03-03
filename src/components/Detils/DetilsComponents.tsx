@@ -9,7 +9,7 @@ export function BackDropPath({ backdrop_path }: any) {
     <>
       <div
         onClick={() => navigate("/")}
-        className='absolute z-40 top-[3%] left-[2%] text-[#2eade7] bg-[#26262e] bg-opacity-70 py-2 px-3 opacity-80 rounded-sm hover:bg-opacity-100 hover:opaicty-100'
+        className='absolute z-40 cursor-pointer top-[3%] left-[2%] text-[#2eade7] bg-[#26262e] bg-opacity-70 py-2 px-3 opacity-80 rounded-sm hover:bg-opacity-100 hover:opaicty-100'
       >
         <ArrowLeftOutlined className='text-xl ' />
       </div>
@@ -100,28 +100,28 @@ export function VoteAverage({ vote_average }: any) {
 
 export function Videos({ videos }: any) {
   function HeaderContainer({ children }: any) {
-    return <div className='flex justify-between'>{children}</div>;
+    return <div className='flex justify-between w-[90%]'>{children}</div>;
   }
 
   return (
     <>
       {videos ? (
-        <section className='mt-10 max-sm:w-[100%]  max-sm:flex max-sm:justify-center'>
-          <div className='max-sm:flex max-sm:w-[95%]  max-sm:flex-col max-sm:justify-center '>
+        <section className='mt-10 w-[100%] sm:flex justify-center  max-sm:flex max-sm:justify-center'>
+          <div className='max-sm:flex max-sm:w-[95%] sm:w-[80%]  max-sm:flex-col max-sm:justify-center '>
             <HeaderContainer>
-              <h2 className='text-xl font-semibold text-slate-300 font-roboto'>
-                Movie Videos
+              <h2 className='text-2xl font-medium text-white font-roboto'>
+                Trailer
               </h2>
-              <span className='text-lg hover:underline font-medium text-slate-400 font-titillium'>
+              <span className='text-lg hover:underline font-medium text-white font-titillium'>
                 More {"->"}
               </span>
             </HeaderContainer>
-            <ul className='flex w-[100%] sm:overflow-hidden pt-5 '>
+            <ul className='flex w-[90%] sm:overflow-hidden pt-5 '>
               <div className='flex overflow-x-scroll no-scrollbar gap-3'>
-                {videos.slice(0, 1).map((video: any) => (
+                {videos.map((video: any) => (
                   <li key={video.id}>
                     <iframe
-                      className='xl:w-[35rem] lg:w-[28rem] md:w-[24rem] max-sm:w-[23rem]  xl:h-[20rem] lg:h-[16rem] md:h-[14rem] max-sm:h-[14rem]'
+                      className='xl:w-[35rem] rounded-md lg:w-[28rem] md:w-[24rem] max-sm:w-[23rem]  xl:h-[18.7rem] lg:h-[16rem] md:h-[14rem] max-sm:h-[14rem]'
                       title={video.name}
                       width={560}
                       height={315}

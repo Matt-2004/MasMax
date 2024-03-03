@@ -47,12 +47,12 @@ const SeeMore = ({ title }: { title: string }) => {
   const handleImageLoad = () => {
     setTimeout(() => {
       setIsLoaded(true);
-    }, 700);
+    }, 1200);
   };
 
   function handlePageBtn(e: any) {
     setIsLoaded(false);
-    let value = e.currentTarget.innerHTML;
+    let value = parseInt(e.currentTarget.innerHTML);
     setCount(value);
     setPage(value);
     navigate(`/seemore/page/${value}`);
