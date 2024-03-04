@@ -4,28 +4,35 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CaretDownOutlined from "@ant-design/icons/CaretDownOutlined";
 
-const Trending = () => {
+const MovieCard = () => {
   const navigate = useNavigate();
-  const [trend, setTrend] = useState([]);
+  const [dispaly, setDisplay] = useState([]);
   const dropDownRef = useRef<HTMLUListElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
-  const [select, setSelect] = useState("day");
+  const [select, setSelect] = useState("popular");
   const movieType = [
     {
-      label: "day",
+      label: "popular",
       id: 1,
     },
     {
-      label: "week",
+      label: "top rated",
       id: 2,
     },
   ];
 
   useEffect(() => {
     const fetching = async () => {
-      const { fetchTrendMovie } = await import("@/Utils/FetchAPI");
-      const trending = await fetchTrendMovie(select);
-      setTrend(trending);
+      const { fetchPopularMovie, fetchTopRatedMovie } = await import(
+        "@/Utils/FetchAPI"
+      );
+      if (select === "popular") {
+        const res = await fetchPopularMovie(1);
+        setDisplay(res);
+      } else {
+        const res = await fetchTopRatedMovie(1);
+        setDisplay(res);
+      }
     };
     fetching();
   }, [select]);
@@ -43,12 +50,12 @@ const Trending = () => {
 
   return (
     <>
-      {trend ? (
-        <div className='w-[100%] mt-16 mb-8 max-sm:mt-1 flex justify-center'>
+      {dispaly ? (
+        <div className='w-[100%] mt-16 max-sm:mt-1 flex justify-center'>
           <div className='flex flex-col'>
             <div className='flex justify-between mx-2'>
               <div className='mb-8 lg:text-3xl font-bold  md:text-2xl sm:text-xl max-sm:text-xl text-[#2eade7]'>
-                Trending
+                Movies
               </div>
               <section
                 className='w-[9rem] relative'
@@ -77,7 +84,7 @@ const Trending = () => {
               </section>
             </div>
             <div className='flex flex-wrap gap-4 cursor-pointer mb-3 lg:w-[62.5rem] md:w-[48.12rem] sm:w-[40rem] justify-between max-sm:justify-evenly'>
-              {trend.slice(0, 8).map((p: MovieResult) => (
+              {dispaly.slice(0, 8).map((p: MovieResult) => (
                 <div key={p.id} className='relative'>
                   <div
                     onClick={() => {
@@ -105,4 +112,4 @@ const Trending = () => {
   );
 };
 
-export default Trending;
+export default MovieCard;

@@ -11,6 +11,7 @@
   border: 1px solid #6be2f9;
   width: 1rem;
   animation: progress 3s infinite linear;
+  animation-iteration-count: 1;
   transform: translateX(0px);
 }
 

@@ -83,3 +83,13 @@ export const fetchVideo = async (movie_id: string) => {
   const respones = await fetchFromTMDB(url);
   return respones.results;
 };
+
+export const fetchTrendMovie = async (timeLine?: string) => {
+  const url = new URL(
+    `https://api.themoviedb.org/3/trending/movie/${
+      timeLine || "day"
+    }?language=en-US`
+  );
+  const respones = await fetchFromTMDB(url);
+  return respones.results;
+};

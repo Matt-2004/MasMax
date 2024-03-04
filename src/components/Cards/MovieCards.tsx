@@ -1,6 +1,6 @@
 import Carousels from "../Carousel/Carousels";
-import PopularCard from "../Cards/PopularCard";
-import TopRatedCard from "../Cards/TopRatedCard";
+import MovieCard from "./MovieCard";
+
 import Trending from "./Trending";
 
 const MovieCards = () => {
@@ -8,8 +8,7 @@ const MovieCards = () => {
     <div>
       <Carousels />
       <Trending />
-      <PopularCard />
-      <TopRatedCard />
+      <MovieCard />
     </div>
   );
 };
