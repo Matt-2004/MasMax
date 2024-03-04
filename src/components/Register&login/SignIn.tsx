@@ -38,6 +38,7 @@ const Login = () => {
 };
 
 function LoginForm() {
+  const navigate = useNavigate();
   const emailRef = useRef<HTMLInputElement>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -61,8 +62,8 @@ function LoginForm() {
         headers: { Authorization: document.cookie },
         withCredentials: true,
       })
-      .then((result) => {
-        console.log(result);
+      .then(() => {
+        navigate("/");
       })
       .catch((err) => console.log("Error", err));
   };
