@@ -64,9 +64,11 @@ const MovieDetils = () => {
           <Videos videos={videos} />
         </div>
       ) : (
-        <div className='progress'>
-          <div className='runner'></div>
-        </div>
+        <>
+          <div className='progress'>
+            <div className='runner'></div>
+          </div>
+        </>
       )}
     </>
   );

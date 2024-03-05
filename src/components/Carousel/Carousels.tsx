@@ -70,7 +70,6 @@ const SliderMovie = () => {
             </div>
           </div>
         ))}
-        S
       </div>
       <div className='absolute flex w-[100%] z-50 justify-between xl:top-[43%] lg:top-[38%] md:top-[30%] sm:top-[25%]  max-sm:top-[26%]'>
         <span

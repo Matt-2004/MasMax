@@ -48,6 +48,7 @@ const NavBar = () => {
                 className='flex h-[2.25rem] rounded-md items-center border border-gray-600'
               >
                 <input
+                  id='search'
                   type='text'
                   onChange={(e) => setSearchValue(e.target.value)}
                   placeholder='Search...'
