@@ -40,8 +40,8 @@ const Login = () => {
 function LoginForm() {
   const navigate = useNavigate();
   const emailRef = useRef<HTMLInputElement>(null);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
   useEffect(() => {
     emailRef.current?.focus();
@@ -52,20 +52,25 @@ function LoginForm() {
     await axios.post(
       "https://masmaxnode.onrender.com/login",
       {
-        email: email,
-        password: password,
+        email,
+        password,
       },
       { withCredentials: true }
     );
     await axios
-      .get("https://masmaxnode.onrender.com/verification", {
-        headers: { Authorization: document.cookie },
-        withCredentials: true,
-      })
+      .post(
+        "https://masmaxnode.onrender.com/verification",
+        {
+          email,
+        },
+        { withCredentials: true }
+      )
       .then(() => {
         navigate("/");
       })
-      .catch((err) => console.log("Error", err));
+      .catch((err) => {
+        throw new Error(err);
+      });
   };
 
   return (
