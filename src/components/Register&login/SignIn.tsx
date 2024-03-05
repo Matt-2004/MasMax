@@ -42,6 +42,7 @@ function LoginForm() {
   const emailRef = useRef<HTMLInputElement>(null);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [isLoginDone, setIsLoginDone] = useState(false);
 
   useEffect(() => {
     emailRef.current?.focus();
@@ -64,6 +65,17 @@ function LoginForm() {
       });
   }
 
+  // When isLoginDone is true
+
+  // start loading animaton in submit btn
+
+  // start verification function
+  useEffect(() => {
+    if (isLoginDone) {
+      handleVerification();
+    }
+  }, [isLoginDone]);
+
   const handleLogin = async (e?: any) => {
     e.preventDefault();
     await axios
@@ -76,7 +88,7 @@ function LoginForm() {
         { withCredentials: true }
       )
       .then(() => {
-        handleVerification();
+        setIsLoginDone(true);
       })
       .catch(() => {
         console.log("Error when enter login");
