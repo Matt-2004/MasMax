@@ -47,16 +47,7 @@ function LoginForm() {
     emailRef.current?.focus();
   }, []);
 
-  const handleLogin = async (e?: any) => {
-    e.preventDefault();
-    await axios.post(
-      "https://masmaxnode.onrender.com/login",
-      {
-        email,
-        password,
-      },
-      { withCredentials: true }
-    );
+  async function handleVerification() {
     await axios
       .post(
         "https://masmaxnode.onrender.com/verification",
@@ -70,6 +61,25 @@ function LoginForm() {
       })
       .catch((err) => {
         throw new Error(err);
+      });
+  }
+
+  const handleLogin = async (e?: any) => {
+    e.preventDefault();
+    await axios
+      .post(
+        "https://masmaxnode.onrender.com/login",
+        {
+          email,
+          password,
+        },
+        { withCredentials: true }
+      )
+      .then(() => {
+        handleVerification();
+      })
+      .catch(() => {
+        console.log("Error when enter login");
       });
   };
 
