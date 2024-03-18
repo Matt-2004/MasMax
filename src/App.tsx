@@ -3,11 +3,15 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import "./index.css";
 
+const Register = lazy(() => import("./components/Register&Login/Register"));
+const Login = lazy(() => import("./components/Register&Login/Login"));
 const MovieDetils = lazy(() => import("./components/Detils/MovieDetils"));
 const MoviePage = lazy(() => import("./components/Search/SearchPage"));
 const GenrePage = lazy(() => import("./components/Genres/GenrePage"));
 
 const elements = [
+  { path: "/register", element: <Register /> },
+  { path: "/login", element: <Login /> },
   { path: "/search/:searchId", element: <MoviePage /> },
   { path: "movie/:movieId", element: <MovieDetils /> },
   { path: "/genres/:genreId", element: <GenrePage /> },

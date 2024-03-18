@@ -15,7 +15,7 @@ const NavBar = () => {
             onClick={() => navigate("/register")}
             className='max-sm:hidden bg-[#2eade7] text-[#26262e] px-2 h-[2.25rem] text-center rounded-sm font-medium opacity-80 hover:opacity-100'
           >
-            <span className='text-md font-titillium font-semibold px-1'>
+            <span className='text-md font-roboto font-medium px-[10px]'>
               {" "}
               Login
             </span>

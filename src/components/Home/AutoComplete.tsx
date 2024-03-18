@@ -29,13 +29,16 @@ function AutoComplete() {
   }
 
   useEffect(() => {
+    // fetch data -> selectEnglishTypeMovie => enMovie -> descendingOrder => autoCompleteMovi
     const fetching = async () => {
-      const res = await fetchSearchMovie(searchValue); // res => EnMovie => AutoComplete
+      // fetch the data first
+      const res = await fetchSearchMovie(searchValue);
+      // filter only English Video and the result push to #enMovie
       selectEnglishTypeMovie(res);
+      // descend order of enMovie => put result to #autoCompleteValue
       descendingOrder();
     };
     fetching();
-    console.log(autoCompleteValue);
   }, [searchValue]);
 
   function handleSearch(e: any) {
