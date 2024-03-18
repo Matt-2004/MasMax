@@ -38,13 +38,13 @@ const FilterUI = (props: IFilterUI) => {
       </div>
       <ul
         ref={dropDownRef}
-        className='text-white hidden font-roboto bg-white bg-opacity-40 shadow-lg w-[10rem] z-20 top-[80%] left-[-10%]  px-1 text-center'
+        className='text-white hidden border border-slate-500 font-roboto bg-[#26262e]  shadow-lg w-[10rem] z-20 top-[80%] left-[-10%] py-1  text-center'
       >
         {FilterType.map((types, i) => (
           <li
             key={i}
-            onClick={(e) => setSelect(e.currentTarget.innerHTML)}
-            className='py-2 bg-[#2EADE7] rounded-md my-1 hover:text-[#2EADE7] hover:bg-white px-4'
+            onClick={(e) => setSelect(e.currentTarget.innerHTML.toLowerCase())}
+            className='py-[9px]  bg-[#26262e] hover:bg-[#858588] px-4'
           >
             {types.label}
           </li>

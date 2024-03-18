@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 const ImageUI = ({ display }: any) => {
   const navigate = useNavigate();
   return (
-    <div className='flex flex-wrap gap-4 cursor-pointer mb-3 lg:w-[62.5rem] md:w-[48.12rem] sm:w-[40rem] justify-between max-sm:justify-evenly'>
+    <div className='flex flex-wrap gap-3 cursor-pointer mb-3 lg:w-[62.5rem] md:w-[48.12rem] sm:w-[40rem] max-sm:w-[20rem] justify-between max-sm:justify-evenly'>
       {display.slice(0, 8).map((p: MovieResult) => (
         <div key={p.id} className='relative'>
           <div

@@ -9,11 +9,11 @@ const Trending = () => {
   const [select, setSelect] = useState("day");
   const timeType = [
     {
-      label: "day",
+      label: "Day",
       id: 1,
     },
     {
-      label: "week",
+      label: "Week",
       id: 2,
     },
   ];

@@ -1,12 +1,3 @@
-export type Genre = {
-  id: number;
-  name: string;
-};
-
-export type Genres = {
-  genres: Genre[];
-};
-
 export type MovieResult = {
   adult: boolean;
   backdrop_path?: string | undefined;
@@ -50,16 +41,4 @@ export type DetilsResult = {
   video: boolean;
   vote_average: number;
   vote_count: number;
-};
-
-export type Movies = {
-  popular: MovieResult[];
-  rated: MovieResult[];
-  props?: MovieResult[];
-};
-
-export type PropsMovies = {
-  pm: MovieResult[];
-  movieTabTitle: string;
-  upComingFinish?: boolean;
 };

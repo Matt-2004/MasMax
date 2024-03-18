@@ -5,15 +5,14 @@ import FilterUI from "./FilterUI";
 
 const MovieCard = () => {
   const [display, setDisplay] = useState([]);
-
   const [select, setSelect] = useState("popular");
   const movieType = [
     {
-      label: "popular",
+      label: "Popular",
       id: 1,
     },
     {
-      label: "top rated",
+      label: "Top rated",
       id: 2,
     },
   ];

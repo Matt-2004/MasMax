@@ -1,6 +1,10 @@
 import { useLocation } from "react-router-dom";
 import { getImagePath } from "../../Utils/GetImagePath";
 import { MovieResult } from "@/Utils/Interfaces";
+import { useEffect, useState } from "react";
+
+import { fetchSearchMovie } from "@/Utils/FetchAPI";
+
 export function capitalizeFirstLetterEachWord(str: string) {
   return str.replace(/\b\w/g, function (match) {
     return match.toUpperCase();
@@ -9,6 +13,15 @@ export function capitalizeFirstLetterEachWord(str: string) {
 
 const MoviePage = () => {
   const location = useLocation();
+  const [search, setSearch] = useState<MovieResult[]>([]);
+
+  useEffect(() => {
+    const fetching = async () => {
+      const res = await fetchSearchMovie(location.state.searchValue);
+      setSearch(res);
+    };
+    fetching();
+  }, []);
 
   return (
     <div className='bg-[#26262e]'>
@@ -16,7 +29,7 @@ const MoviePage = () => {
         Result for {capitalizeFirstLetterEachWord(location.state.searchValue)}
       </h1>
       <div className=''>
-        {location.state.search.map((searchs: MovieResult) => (
+        {search.map((searchs: MovieResult) => (
           <div
             onClick={() => localStorage.set("id", searchs.id.toString())}
             className='pt-10  flex max-sm:flex-col sm:justify-center '

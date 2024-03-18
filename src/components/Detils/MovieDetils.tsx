@@ -21,10 +21,10 @@ const MovieDetils = () => {
   const [videos, setVideos] = useState();
 
   useEffect(() => {
-    const valueFromGetItem: any = localStorage.getItem("id");
+    const Id: any = localStorage.getItem("id");
     async function fetchDetils() {
-      const response = await fetchMovieDetils(valueFromGetItem);
-      const res = await fetchVideo(valueFromGetItem);
+      const response = await fetchMovieDetils(Id);
+      const res = await fetchVideo(Id);
       if (response && res) {
         setDetils(response);
         setVideos(res);
