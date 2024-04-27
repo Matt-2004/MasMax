@@ -8,7 +8,6 @@ const NavBar = () => {
     <div className='w-[100%] bg-[#26262e] relative'>
       <div className='flex justify-between md:px-5 sm:px-3 max-sm:px-1 sm:h-14 max-sm:h-14 items-center '>
         <LogoUI />
-
         <div className='bg-[#26262e] h-9 sm:gap-6 max-sm:gap-1 flex text-white'>
           <AutoComplete />
           <button

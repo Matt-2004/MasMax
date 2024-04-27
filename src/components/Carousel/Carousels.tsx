@@ -29,6 +29,10 @@ const SliderMovie = () => {
     }
   }
 
+  function Capitalize(str: string) {
+    return str.toUpperCase();
+  }
+
   return (
     <div className='cursor-pointer w-[100%] xl:h-[40rem] lg:h-[35rem] md:h-[30rem] max-sm:h-[22rem]  overflow-hidden'>
       <div
@@ -50,17 +54,15 @@ const SliderMovie = () => {
             />
             <div className='absolute sm:top-[14%] h-[27.5rem] max-sm:h-[22rem] max-sm:top-0 max-sm:flex  max-sm:justify-center  max-sm:items-center   max-sm:ml-3 w-[100%] xl:pl-[8.75rem] lg:pl-[6.25rem] sm:pl-[4.37rem] text-white'>
               <div className='max-sm:flex max-sm:w-[90%] max-sm:justify-start flex '>
-                <div>
-                  <img
-                    rel='preload'
-                    alt={upcome.title}
-                    src={getImagePath(400, upcome.poster_path)}
-                    className='xl:w-72   lg:w-64 md:w-56 sm:w-44 max-sm:w-[10rem] rounded-md'
-                  />
-                </div>
+                <img
+                  rel='preload'
+                  alt={upcome.title}
+                  src={getImagePath(400, upcome.poster_path)}
+                  className='xl:w-72 mr-3  lg:w-64 md:w-56 sm:w-44 max-sm:w-[10rem] rounded-md'
+                />
                 <div className='relative'>
-                  <h2 className='xl:text-5xl lg:text-4xl md:text-3xl sm:text-2xl max-sm:text-xl font-bold font-roboto max-sm:font-semibold pb-4 pl-3'>
-                    {upcome.original_title}
+                  <h2 className='xl:text-5xl italic lg:text-4xl md:text-3xl sm:text-2xl max-sm:text-xl font-bold font-roboto max-sm:font-semibold pb-4 pl-3'>
+                    {Capitalize(upcome.original_title)}
                   </h2>
                   <span className='absolute md:text-xl sm:text-md max-sm:text-sm max-sm:line-clamp-1 no-scrollbar max-sm:w-[10rem] max-sm:h-[12rem] max-sm:overflow-scroll  xl:w-[37.5rem] lg:w-[29.37rem] sm:w-[23.75rem] pl-3'>
                     {upcome.overview}
