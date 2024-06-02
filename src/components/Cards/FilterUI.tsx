@@ -34,7 +34,7 @@ const FilterUI = (props: IFilterUI) => {
     >
       <div className='text-white border border-slate-500 text-lg h-[2.5rem] items-center cursor-pointer flex justify-between   font-roboto px-6   hover:bg-[#858588]  hover:bg-opacity-30 py-2 rounded-md'>
         <div>{select}</div>
-        <span className='mb-[5px]'>{icon}</span>
+        <span>{icon}</span>
       </div>
       <ul
         ref={dropDownRef}
@@ -43,7 +43,7 @@ const FilterUI = (props: IFilterUI) => {
         {FilterType.map((types, i) => (
           <li
             key={i}
-            onClick={(e) => setSelect(e.currentTarget.innerHTML.toLowerCase())}
+            onClick={(e) => setSelect(e.currentTarget.innerHTML)}
             className='py-[9px]  bg-[#26262e] hover:bg-[#858588] px-4'
           >
             {types.label}

@@ -4,8 +4,13 @@ import ImageUI from "@/components/Cards/ImageUI";
 import FilterUI from "./FilterUI";
 
 const MovieCard = () => {
+  // to store a data from fetch
   const [display, setDisplay] = useState([]);
-  const [select, setSelect] = useState("popular");
+
+  // to store a type of filter as Paramater
+  const [select, setSelect] = useState("Popular");
+
+  // types for filter
   const movieType = [
     {
       label: "Popular",
@@ -22,7 +27,7 @@ const MovieCard = () => {
       const { fetchPopularMovie, fetchTopRatedMovie } = await import(
         "@/Utils/FetchAPI"
       );
-      if (select === "popular") {
+      if (select.toLowerCase() === "popular") {
         const res = await fetchPopularMovie(1);
         setDisplay(res);
       } else {

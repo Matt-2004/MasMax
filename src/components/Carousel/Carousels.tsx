@@ -73,16 +73,16 @@ const SliderMovie = () => {
           </div>
         ))}
       </div>
-      <div className='absolute flex w-[100%] z-50 justify-between xl:top-[43%] lg:top-[38%] md:top-[30%] sm:top-[25%]  max-sm:top-[26%]'>
+      <div className='absolute flex w-[100%] h-[10rem] z-50 justify-between xl:top-[42%] lg:top-[38%] md:top-[30%] sm:top-[25%]  max-sm:top-[26%]'>
         <span
           onClick={() => prev()}
-          className='bg-[#26262e] opacity-85 max-sm:opacity-50 hover:opacity-100  w-10 h-10 items-center mx-3 text-center pt-1 text-[#2eade7]'
+          className='bg-[#26262e] opacity-85 max-sm:opacity-50 hover:opacity-100  w-10 h-11 mx-5  text-center pt-[0.65rem] text-[#2eade7]'
         >
           <ArrowLeftOutlined className='text-xl max-sm:text-lg' />
         </span>
         <span
           onClick={() => next()}
-          className=' bg-[#26262e] opacity-85 max-sm:opacity-50 hover:opacity-100 w-10 h-10 items-center mx-3 text-center pt-1 text-[#2eade7]'
+          className=' bg-[#26262e] opacity-85 max-sm:opacity-50 hover:opacity-100 w-10 h-11 mx-5 text-center pt-[0.65rem] text-[#2eade7]'
         >
           <ArrowRightOutlined className='text-xl max-sm:text-lg' />
         </span>

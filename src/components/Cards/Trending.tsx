@@ -6,7 +6,7 @@ import FilterUI from "./FilterUI";
 const Trending = () => {
   const [trend, setTrend] = useState([]);
 
-  const [select, setSelect] = useState("day");
+  const [select, setSelect] = useState("Day");
   const timeType = [
     {
       label: "Day",
@@ -21,7 +21,7 @@ const Trending = () => {
   useEffect(() => {
     const fetching = async () => {
       const { fetchTrendMovie } = await import("@/Utils/FetchAPI");
-      const trending = await fetchTrendMovie(select);
+      const trending = await fetchTrendMovie(select.toLowerCase());
       setTrend(trending);
     };
     fetching();
