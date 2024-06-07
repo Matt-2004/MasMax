@@ -8,6 +8,9 @@ const Login = lazy(() => import("./components/Register&Login/Login"));
 const MovieDetils = lazy(() => import("./components/Detils/MovieDetils"));
 const MoviePage = lazy(() => import("./components/Search/SearchPage"));
 const GenrePage = lazy(() => import("./components/Genres/GenrePage"));
+const Buy = lazy(() => import("./components/Tickets/Buy"));
+const Settings = lazy(() => import("./components/Tickets/Settings"));
+const Checkout = lazy(() => import("./components/Tickets/Checkout"));
 
 const elements = [
   { path: "/register", element: <Register /> },
@@ -15,6 +18,9 @@ const elements = [
   { path: "/search/:searchId", element: <MoviePage /> },
   { path: "movie/:movieId", element: <MovieDetils /> },
   { path: "/genres/:genreId", element: <GenrePage /> },
+  { path: "/buy/:buyID", element: <Buy /> },
+  { path: "/seat_settings", element: <Settings /> },
+  { path: "/checkout", element: <Checkout /> },
 ];
 
 function App() {

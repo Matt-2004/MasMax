@@ -14,6 +14,12 @@
   transform: translateX(0px);
 }
 
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #26262e inset;
+  box-shadow: 0 0 0 1000px #26262e inset;
+  -webkit-text-fill-color: white;
+}
+
 @keyframes progress {
   0% {
     width: 0%;
