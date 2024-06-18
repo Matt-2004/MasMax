@@ -29,7 +29,7 @@ const InputUI = (props: IInput) => {
       />
       <label
         ref={labelRef}
-        className='absolute left-1 cursor-text top-8 text-white peer-focus:text-[#2eade7] peer-focus:top-1 peer-focus:text-sm transition-all'
+        className='absolute left-1 cursor-text top-8 text-[#2eade7] peer-focus:text-[#2eade7] peer-focus:top-1 peer-focus:text-sm transition-all'
         htmlFor={text}
       >
         {text}
