@@ -34,9 +34,9 @@ const SliderMovie = () => {
   }
 
   return (
-    <div className='cursor-pointer w-[100%] xl:h-[40rem] lg:h-[35rem] md:h-[30rem] max-sm:h-[22rem]  overflow-hidden'>
+    <div className='cursor-pointer relative w-[100%] xl:h-[40rem] lg:h-[35rem] md:h-[30rem] max-sm:h-[22rem]  overflow-hidden'>
       <div
-        className='flex transition-transform ease-in-out duration-1000'
+        className='flex  transition-transform ease-in-out duration-1000'
         style={{
           transform: `translateX(-${imageWidth * x}px)`,
         }}
@@ -73,16 +73,17 @@ const SliderMovie = () => {
           </div>
         ))}
       </div>
-      <div className='absolute flex w-[100%] h-[10rem] z-50 justify-between xl:top-[42%] lg:top-[38%] md:top-[30%] sm:top-[25%]  max-sm:top-[26%]'>
+
+      <div className='absolute flex w-[100%] h-[10rem] xl:left-[47%] z-50 items-center xl:top-[70%] lg:top-[38%] md:top-[30%] sm:top-[25%]  max-sm:top-[26%]'>
         <span
           onClick={() => prev()}
-          className='bg-[#26262e] opacity-85 max-sm:opacity-50 hover:opacity-100  w-10 h-11 mx-5  text-center pt-[0.65rem] text-[#2eade7]'
+          className='bg-[#26262e] opacity-85 rounded-md border border-[#2eade7] w-11 h-11 mx-5  text-center pt-[0.65rem] text-[#2eade7]'
         >
           <ArrowLeftOutlined className='text-xl max-sm:text-lg' />
         </span>
         <span
           onClick={() => next()}
-          className=' bg-[#26262e] opacity-85 max-sm:opacity-50 hover:opacity-100 w-10 h-11 mx-5 text-center pt-[0.65rem] text-[#2eade7]'
+          className=' bg-[#26262e] opacity-85 rounded-md border border-[#2eade7]  w-11 h-11 mx-5 text-center pt-[0.65rem] text-[#2eade7]'
         >
           <ArrowRightOutlined className='text-xl max-sm:text-lg' />
         </span>

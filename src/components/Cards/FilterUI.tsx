@@ -37,16 +37,16 @@ const FilterUI = (props: IFilterUI) => {
   return (
     <section
       className='w-[9rem] relative'
-      onMouseEnter={() => handleDropDown()}
+      onClick={() => handleDropDown()}
       onMouseLeave={() => handleDropDown()}
     >
-      <div className='text-white text-lg h-[2.5rem] items-center cursor-pointer flex justify-between   font-roboto px-6   hover:bg-[#858588]  hover:bg-opacity-30 py-2 rounded-md'>
+      <div className='text-white text-lg h-[2.5rem] items-center cursor-pointer flex justify-around   font-roboto px-6   hover:bg-[#858588]  hover:bg-opacity-30 py-2 rounded-md'>
         <div>{select}</div>
         <span>{icon}</span>
       </div>
       <ul
         ref={dropDownRef}
-        className='text-white hidden cursor-pointer  rounded-md  font-roboto bg-[#26262e]  shadow-lg w-[10rem] z-20  text-center'
+        className='text-white hidden border cursor-pointer  rounded-sm  font-roboto bg-[#26262e] w-[10rem] z-20  text-center'
       >
         {FilterType.map((types, i) => (
           <li

@@ -31,7 +31,17 @@ const Login = () => {
         setLoading(false);
         navigate("/");
       }, 1500);
+      /* 
+      
+          Login || register --> set Token in Cookie
 
+          TokenChecker() {
+            if(broswer.cookie.token == True) {
+              return ValidAuth
+            }
+          }
+
+      */
       console.log("Login success");
     } catch (error) {
       console.log(error);

@@ -51,7 +51,7 @@ function AutoComplete() {
         onSubmit={(e) => {
           handleSearch(e);
         }}
-        className='flex h-[2.25rem] sm:w-[17rem] max-sm:w-[12rem] rounded-md items-center border border-gray-600'
+        className='flex h-[2.25rem] sm:w-[17rem] max-sm:w-[12rem]  rounded-sm  items-center py-1'
       >
         <input
           id='search'
@@ -59,7 +59,7 @@ function AutoComplete() {
           onChange={(e) => setSearchValue(e.target.value)}
           placeholder='Search...'
           autoComplete='off'
-          className='py-1 bg-[#26262e] relative outline-none pl-3  sm:w-[17rem] max-sm:w-[12rem]'
+          className=' focus:outline focus:outline-[#2eade7] focus:border-none border border-gray-600 py-1 bg-[#26262e] relative outline-none pl-3 rounded-sm sm:w-[17rem] max-sm:w-[12rem] '
         />
         {searchValue.length > 0 && (
           <>

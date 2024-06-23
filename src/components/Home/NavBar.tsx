@@ -1,15 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import AutoComplete from "./AutoComplete";
-import FilterUI from "../Cards/FilterUI";
-import CaretDownOutlined from "@ant-design/icons/CaretDownOutlined";
 import { useState } from "react";
 
 const NavBar = () => {
   return (
-    <div className='w-[100%] bg-[#26262e] relative'>
+    <div className='w-[100%] bg-[#26262e]'>
       <div className='flex justify-between md:px-5 sm:px-3 max-sm:px-1 sm:h-14 max-sm:h-14 items-center '>
-        <LogoUI />
-        <TicketUI />
+        <div className='flex items-center w-[25%] justify-around'>
+          <LogoUI />
+          <DropDownMenu />
+        </div>
+
         <div className='bg-[#26262e] h-9 sm:gap-6 max-sm:gap-1 flex text-white'>
           <AutoComplete />
           <LoginUI />
@@ -19,24 +20,9 @@ const NavBar = () => {
   );
 };
 
-function TicketUI() {
-  const labelType = [
-    { label: "Buy", path: "/buy/:buyID" },
-    { label: "Seat", path: "/seat_settings" },
-    { label: "Checkout", path: "/checkout" },
-  ];
-  const [select, setSelect] = useState("Tickets");
-
-  return (
-    <div>
-      <FilterUI
-        FilterType={labelType}
-        icon={<CaretDownOutlined />}
-        select={select}
-        setSelect={setSelect}
-      />
-    </div>
-  );
+function DropDownMenu() {
+  const [dropdown, setDropDown] = useState<boolean>(false);
+  return <div className='text-white font-roboto cursor-pointer'> Ticket</div>;
 }
 
 function LoginUI() {
@@ -44,9 +30,9 @@ function LoginUI() {
   return (
     <button
       onClick={() => navigate("/register")}
-      className='max-sm:hidden bg-[#2eade7] text-[#26262e] px-2 h-[2.25rem] text-center rounded-sm font-medium opacity-80 hover:opacity-100'
+      className='max-sm:hidden text-[#2eade7] px-2 h-[2.25rem] text-center rounded-sm font-medium hover:opacity-100'
     >
-      <span className='text-md font-roboto font-medium px-[10px]'> Login</span>
+      <span className='text-md font-roboto font-medium px-[10px]'>Sign In</span>
     </button>
   );
 }
