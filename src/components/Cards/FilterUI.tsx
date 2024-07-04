@@ -37,22 +37,27 @@ const FilterUI = (props: IFilterUI) => {
   return (
     <section
       className='w-[9rem] relative'
-      onClick={() => handleDropDown()}
+      onMouseEnter={() => handleDropDown()}
       onMouseLeave={() => handleDropDown()}
     >
-      <div className='text-white text-lg h-[2.5rem] items-center cursor-pointer flex justify-around   font-roboto px-6   hover:bg-[#858588]  hover:bg-opacity-30 py-2 rounded-md'>
+      <div
+        data-toggle='dropdown'
+        aria-haspopup='true'
+        aria-expanded='false'
+        className='bg-[#2eade7] text-[#26262e]  text-lg h-[2.5rem] items-center  cursor-pointer flex justify-around   font-roboto px-5  py-2 rounded-lg'
+      >
         <div>{select}</div>
-        <span>{icon}</span>
+        <span className='text-sm mt-1'>{icon}</span>
       </div>
       <ul
         ref={dropDownRef}
-        className='text-white hidden border cursor-pointer  rounded-sm  font-roboto bg-[#26262e] w-[10rem] z-20  text-center'
+        className='text-white hidden h-[5rem]  border border-[#2eade7] cursor-pointer  rounded-lg  font-roboto bg-[#26262e] w-[9rem] py-[3px] z-30  text-center'
       >
         {FilterType.map((types, i) => (
           <li
             key={i}
             onClick={(e) => navi(e, types.path)}
-            className='py-[9px]  bg-[#26262e] hover:bg-[#858588] px-4'
+            className='  bg-[#26262e] py-1   hover:bg-[#858588] '
           >
             {types.label}
           </li>

@@ -2,7 +2,7 @@ import { DetilsResult } from "@/Utils/Interfaces";
 import { fetchSearchMovie } from "../../Utils/FetchAPI";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getImagePath } from "@/Utils/GetImagePath";
+import SearchOutlined from "@ant-design/icons/SearchOutlined";
 
 function AutoComplete() {
   const navigate = useNavigate();
@@ -45,13 +45,17 @@ function AutoComplete() {
     e.preventDefault();
     navigate(`/search/${searchValue}`, { state: { searchValue: searchValue } });
   }
+
   return (
-    <div className='flex sm:flex-row-reverse gap-5'>
+    <div
+      className='flex py-[0.6rem] sm:flex-row-reverse gap-5'
+      onMouseLeave={() => setSearchValue("")}
+    >
       <form
         onSubmit={(e) => {
           handleSearch(e);
         }}
-        className='flex h-[2.25rem] sm:w-[17rem] max-sm:w-[12rem]  rounded-sm  items-center py-1'
+        className='flex justify-between bg-[#2eade7] h-[2.25rem] sm:w-[17rem] max-sm:w-[12rem]  rounded-2xl  items-center '
       >
         <input
           id='search'
@@ -59,8 +63,9 @@ function AutoComplete() {
           onChange={(e) => setSearchValue(e.target.value)}
           placeholder='Search...'
           autoComplete='off'
-          className=' focus:outline focus:outline-[#2eade7] focus:border-none border border-gray-600 py-1 bg-[#26262e] relative outline-none pl-3 rounded-sm sm:w-[17rem] max-sm:w-[12rem] '
+          className=' bg-[#2eade7]  py-1 pl-5 text-[#26262e] placeholder:text-[#26262e] text-md placeholder:text-sm font-roboto rounded-2xl relative outline-none   sm:w-[17rem] max-sm:w-[12rem] '
         />
+        <SearchOutlined className='text-xl text-[#26262e] pr-5' />
         {searchValue.length > 0 && (
           <>
             {autoCompleteValue.length > 0 ? (
@@ -94,18 +99,13 @@ function ShowAutoCompleteUI({ autoCompleteValue }: any) {
   const navigate = useNavigate();
   return (
     <ResultContainer>
-      <div className='h-[100%] '>
+      <div className='h-[100%] rounded-lg border border-[#2eade7] w-full '>
         {autoCompleteValue.slice(0, 7).map((value: DetilsResult) => (
           <div
-            className='flex  hover:bg-slate-500 cursor-pointer'
+            className='flex hover:bg-slate-500 cursor-pointer'
             onClick={() => setIdAndNavigate(value.id)}
           >
-            <img
-              className='w-[4rem] h-fit'
-              src={getImagePath(200, value.poster_path)}
-              alt={value.original_title}
-            />
-            <h1 className=' w-[17rem] pl-3  overflow-hidden text-md'>
+            <h1 className=' w-[17rem] pl-5 py-1 hover:bg-gray-500 font-roboto overflow-hidden text-md'>
               {value.original_title}
             </h1>
           </div>
@@ -117,7 +117,7 @@ function ShowAutoCompleteUI({ autoCompleteValue }: any) {
 
 function ResultContainer({ children }: any) {
   return (
-    <div className='absolute top-[85%] z-30 bg-[#26262e] w-[17rem] '>
+    <div className='absolute top-[5%] z-30 bg-[#26262e] w-[17rem]  '>
       {children}
     </div>
   );

@@ -23,6 +23,7 @@ module.exports = {
       fontFamily: {
         roboto: ["Roboto", "sans-serif"],
         titillium: ["Titillium Web", "sans-serif"],
+        museomoderno: ["MuseoModerno", "sans-serif"],
       },
       keyframes: {
         "accordion-down": {

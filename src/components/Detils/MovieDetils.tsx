@@ -38,7 +38,7 @@ const MovieDetils = () => {
   return (
     <>
       {detils ? (
-        <div className='relative h-[100%] w-[100%] bg-[#26262e]'>
+        <div className='relative h-[100%] w-[100%] bg-[#26262e] dark:bg-[#dff2fa]'>
           <BackDropPath backdrop_path={detils.backdrop_path} />
           <div className='md:absolute  top-[9%] left-[15%] sm:left-[10%] flex'>
             <section className='flex lg:w-[56.25rem] md:w-[37.5rem] sm:w-[31.25rem] max-sm:w-[25rem] justify-evenly '>
@@ -64,11 +64,11 @@ const MovieDetils = () => {
           <Videos videos={videos} />
         </div>
       ) : (
-        <>
-          <div className='progress'>
+        <div className='bg-[#26262e] dark:bg-[#dff2fa] min-h-screen'>
+          <div className='progress '>
             <div className='runner'></div>
           </div>
-        </>
+        </div>
       )}
     </>
   );

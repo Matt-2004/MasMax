@@ -1,19 +1,9 @@
 import { getImagePath, getLargeImagePath } from "@/Utils/GetImagePath";
 import getVideoPath from "@/Utils/GetVideoPath";
-import ArrowLeftOutlined from "@ant-design/icons/ArrowLeftOutlined";
-import { useNavigate } from "react-router-dom";
 
 export function BackDropPath({ backdrop_path }: any) {
-  const navigate = useNavigate();
   return (
     <>
-      <div
-        onClick={() => navigate("/")}
-        className='absolute z-40 cursor-pointer top-[3%] left-[2%] text-[#2eade7] bg-[#26262e] bg-opacity-70 py-2 px-3 opacity-80 rounded-sm hover:bg-opacity-100 hover:opaicty-100'
-      >
-        <ArrowLeftOutlined className='text-xl ' />
-      </div>
-
       <section className='relative'>
         <img
           src={getLargeImagePath(backdrop_path)}
@@ -109,7 +99,7 @@ export function Videos({ videos }: any) {
         <section className='mt-10 w-[100%] sm:flex justify-center  max-sm:flex max-sm:justify-center'>
           <div className='max-sm:flex max-sm:w-[95%] sm:w-[80%]  max-sm:flex-col max-sm:justify-center '>
             <HeaderContainer>
-              <h2 className='text-2xl font-medium text-white font-roboto'>
+              <h2 className='text-2xl font-medium text-white font-roboto dark:text-black'>
                 Trailer
               </h2>
               <span className='text-lg hover:underline font-medium text-white font-titillium'>

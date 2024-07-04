@@ -2,6 +2,8 @@ import { useState } from "react";
 import Button from "./Button";
 import FormUI from "./FormUI";
 import InputUI, { InputContainer } from "./InputUI";
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { auth, provider } from "./../../Utils/FirebaseConfig";
 
 const Register = () => {
   const [username, setUsername] = useState<string>();
@@ -59,6 +61,7 @@ const Register = () => {
             loading={loading}
             onClick={(e) => registration(e)}
           ></Button>
+          <GoogleAuth />
           <div className='text-center font-roboto text-white mt-5'>
             Have an accout?{" "}
             <a href='/login' className='underline text-[#2eade7]'>
@@ -72,3 +75,40 @@ const Register = () => {
 };
 
 export default Register;
+
+export function GoogleAuth() {
+  async function handleGoogleLogin(e: any) {
+    e.preventDefault();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential?.accessToken;
+        console.log(token);
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        console.error(errorCode);
+        const errorMessage = error.message;
+        console.error(errorMessage);
+        // The email of the user's account used.
+        const email = error.customData.email;
+        console.log(email);
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        console.error(credential);
+      });
+    // ...
+  }
+
+  return (
+    <section>
+      <button
+        onClick={(e) => handleGoogleLogin(e)}
+        className='text-white px-2 py-2'
+      >
+        Google Login
+      </button>
+    </section>
+  );
+}
