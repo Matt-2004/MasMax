@@ -1,15 +1,57 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "./Button";
 import FormUI from "./FormUI";
 import InputUI, { InputContainer } from "./InputUI";
-import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { auth, provider } from "./../../Utils/FirebaseConfig";
+import GoogleAuth from "./FireBaseAuth";
 
 const Register = () => {
-  const [username, setUsername] = useState<string>();
-  const [email, setEmail] = useState<string>();
-  const [password, setPasswrod] = useState<string>();
+  const userRegex = /^[a-zA-Z0-9_]{3,20}$/;
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$/;
+  const PasswordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[@$!%*?&])[A-Za-zd@$!%*?&]{8,}$/;
+
+  const [validate, setValidate] = useState<number>(0);
+
+  const [username, setUsername] = useState<string>("");
+  const [usernameErr] = useState<string>("*3 - 20 words");
+
+  const [email, setEmail] = useState<string>("");
+  const [emailErr] = useState<string>("");
+
+  const [password, setPasswrod] = useState<string>("");
+  const [passwordErr] = useState<string>("");
+
   const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
+
+  function regexCheck(regex: RegExp, value: string, error: string) {
+    if (!regex.test(value)) {
+      setError(error);
+    } else {
+      setValidate((v) => v + 1);
+      setError("");
+    }
+  }
+
+  useEffect(() => {
+    regexCheck(userRegex, username, usernameErr);
+  }, [username]);
+
+  useEffect(() => {
+    regexCheck(PasswordRegex, password, passwordErr);
+  }, [password]);
+
+  useEffect(() => {
+    regexCheck(emailRegex, email, emailErr);
+  }, [email]);
+
+  useEffect(() => {
+    if (validate === 3) {
+      setError("");
+    }
+  }, [validate]);
+
+  useEffect(() => {});
   const registration = async (e: any) => {
     e.preventDefault();
     try {
@@ -35,80 +77,52 @@ const Register = () => {
 
   return (
     <FormUI>
-      <div className='w-[100%] flex justify-evenly h-[100%] items-center'>
-        <span className='italic text-center mb-10 text-white w-[30%] font-titillium text-8xl font-semibold'>
-          Create a new account
-        </span>
-        <InputContainer>
-          <InputUI
-            text='Username'
-            type='string'
-            onChange={(e) => setUsername(e.currentTarget.value)}
-          />
-          <InputUI
-            text='Email'
-            type='email'
-            onChange={(e) => setEmail(e.currentTarget.value)}
-          />
-          <InputUI
-            text='Password'
-            type='password'
-            autoComplete='off'
-            onChange={(e) => setPasswrod(e.currentTarget.value)}
-          />
-          <Button
-            text='Register'
-            loading={loading}
-            onClick={(e) => registration(e)}
-          ></Button>
-          <GoogleAuth />
-          <div className='text-center font-roboto text-white mt-5'>
-            Have an accout?{" "}
-            <a href='/login' className='underline text-[#2eade7]'>
-              Login here.
-            </a>
-          </div>
-        </InputContainer>
-      </div>
+      <span className=' italic text-center  text-white  font-titillium xl:text-8xl max-sm:text-3xl font-semibold'>
+        Create a new account
+      </span>
+      <InputContainer>
+        <p className=' text-red-500'>{error}</p>
+        <InputUI
+          text='Username'
+          type='string'
+          onChange={(e) => setUsername(e.currentTarget.value)}
+          onClick={() => {
+            setError(usernameErr);
+          }}
+        />
+        <InputUI
+          text='Email'
+          type='email'
+          onChange={(e) => setEmail(e.currentTarget.value)}
+          onClick={() => {
+            setError(emailErr);
+          }}
+        />
+        <InputUI
+          text='Password'
+          type='password'
+          autoComplete='off'
+          onChange={(e) => setPasswrod(e.currentTarget.value)}
+          onClick={() => {
+            setError(passwordErr);
+          }}
+        />
+        <Button
+          text='Register'
+          loading={loading}
+          onClick={(e) => registration(e)}
+        ></Button>
+
+        <div className='text-center font-roboto text-white mt-5'>
+          Have an accout?{" "}
+          <a href='/login' className='underline text-[#2eade7]'>
+            Login here.
+          </a>
+        </div>
+        <GoogleAuth />
+      </InputContainer>
     </FormUI>
   );
 };
 
 export default Register;
-
-export function GoogleAuth() {
-  async function handleGoogleLogin(e: any) {
-    e.preventDefault();
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential?.accessToken;
-        console.log(token);
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        console.error(errorCode);
-        const errorMessage = error.message;
-        console.error(errorMessage);
-        // The email of the user's account used.
-        const email = error.customData.email;
-        console.log(email);
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        console.error(credential);
-      });
-    // ...
-  }
-
-  return (
-    <section>
-      <button
-        onClick={(e) => handleGoogleLogin(e)}
-        className='text-white px-2 py-2'
-      >
-        Google Login
-      </button>
-    </section>
-  );
-}

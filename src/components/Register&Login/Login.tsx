@@ -49,35 +49,33 @@ const Login = () => {
   };
   return (
     <FormUI>
-      <div className='w-[100%] flex justify-evenly h-[100%] items-center'>
-        <span className='italic text-center mb-10 text-white w-[30%] font-titillium text-8xl font-semibold'>
-          Login
-        </span>
-        <InputContainer>
-          <InputUI
-            text='Email'
-            type='email'
-            onChange={(e) => setEmail(e.currentTarget.value)}
-          />
-          <InputUI
-            text='Password'
-            type='password'
-            autoComplete='off'
-            onChange={(e) => setPassword(e.currentTarget.value)}
-          />
-          <Button
-            text='Login'
-            loading={loading}
-            onClick={(e) => login(e)}
-          ></Button>
-          <div className='text-center font-roboto text-white mt-5'>
-            Dont' have an accout?{" "}
-            <a href='/register' className='underline text-[#2eade7]'>
-              Register here.
-            </a>
-          </div>
-        </InputContainer>
-      </div>
+      <span className='italic text-center mb-10 text-white w-[30%] font-titillium text-8xl font-semibold'>
+        Login
+      </span>
+      <InputContainer>
+        <InputUI
+          text='Email'
+          type='email'
+          onChange={(e) => setEmail(e.currentTarget.value)}
+        />
+        <InputUI
+          text='Password'
+          type='password'
+          autoComplete='off'
+          onChange={(e) => setPassword(e.currentTarget.value)}
+        />
+        <Button
+          text='Login'
+          loading={loading}
+          onClick={(e) => login(e)}
+        ></Button>
+        <div className='text-center font-roboto text-white mt-5'>
+          Dont' have an accout?{" "}
+          <a href='/register' className='underline text-[#2eade7]'>
+            Register here.
+          </a>
+        </div>
+      </InputContainer>
     </FormUI>
   );
 };

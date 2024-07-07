@@ -2,7 +2,6 @@ import Home from "./components/Home/Home";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import "./index.css";
-import NavBar from "./components/Home/NavBar";
 
 const Register = lazy(() => import("./components/Register&Login/Register"));
 const Login = lazy(() => import("./components/Register&Login/Login"));
@@ -27,7 +26,6 @@ const elements = [
 function App() {
   return (
     <BrowserRouter>
-      <NavBar />
       <Routes>
         <Route path='/' element={<Home />} />
         {elements.map((ele, i) => (

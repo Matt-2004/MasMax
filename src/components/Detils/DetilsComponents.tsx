@@ -82,8 +82,10 @@ export function VoteAverage({ vote_average }: any) {
   }
 
   return (
-    <div className='text-[#181816] flex flex-col justify-center items-center px-7 text-center font-bold font-titillium bg-white rounded-sm'>
-      <span className='text-lg'>{roundNumber(vote_average)}</span>
+    <div className='text-[#181816] flex flex-col justify-center items-center  text-center font-bold font-titillium '>
+      <span className='text-lg px-3 bg-gray-200 rounded-xl'>
+        {roundNumber(vote_average)}
+      </span>
     </div>
   );
 }
@@ -128,5 +130,13 @@ export function Videos({ videos }: any) {
         <span className='text-white'>Loading</span>
       )}
     </>
+  );
+}
+
+export function FavouriteAndWatchlistContainer({ children }: any) {
+  return (
+    <div className='text-white flex  font-roboto  rounded-lg mt-3'>
+      {children}
+    </div>
   );
 }

@@ -9,7 +9,7 @@ import MenuOutlined from "@ant-design/icons/MenuOutlined";
 const NavBar = () => {
   return (
     <section className='w-[100%] bg-[#26262e] dark:bg-[#dff2fa]'>
-      <div className='flex max-sm:px-5 justify-between md:px-5 sm:px-3 max-sm:px-1 sm:h-14 max-sm:h-14 items-center '>
+      <div className='flex max-sm:px-5 justify-between md:px-5 sm:px-3 sm:h-14 max-sm:h-14 items-center '>
         <div className='flex items-center w-[23%] justify-around'>
           <LogoUI />
         </div>
