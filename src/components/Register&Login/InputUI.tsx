@@ -1,25 +1,27 @@
 interface IInput extends React.InputHTMLAttributes<HTMLInputElement> {
   text: string;
+  icon: any;
 }
 
 const InputUI = (props: IInput) => {
-  const { text } = props;
+  const { text, icon } = props;
 
   return (
-    <div className='flex flex-col mb-3'>
+    <section className='flex flex-col mb-3' {...props}>
       <label
         className='pl-2 mb-1 cursor-text text-sm text-[#2eade7] '
         htmlFor={text}
       >
-        {text}
+        <section className='flex w-full justify-between'>
+          {text} {icon}
+        </section>
       </label>
       <input
         id={text}
         type='string'
-        className='border-b text-white px-3  bg-[#26262e]  w-[22rem]  border-[#2eade7] focus:outline-none focus:border-b-2 '
-        {...props}
+        className='border-b text-white px-3  bg-[#26262e]  max-w-[22rem]  border-[#2eade7] focus:outline-none focus:border-b-2 '
       />
-    </div>
+    </section>
   );
 };
 

@@ -3,53 +3,68 @@ import Button from "./Button";
 import FormUI from "./FormUI";
 import InputUI, { InputContainer } from "./InputUI";
 import GoogleAuth from "./FireBaseAuth";
+import CloseCircleFilled from "@ant-design/icons/CloseCircleFilled";
+import CheckCircleFilled from "@ant-design/icons/CheckCircleFilled";
+import { userRegex, passwordRegex, emailRegex } from "./Requirement";
 
 const Register = () => {
-  const userRegex = /^[a-zA-Z0-9_]{3,20}$/;
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$/;
-  const PasswordRegex =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[@$!%*?&])[A-Za-zd@$!%*?&]{8,}$/;
-
-  const [validate, setValidate] = useState<number>(0);
-
-  const [username, setUsername] = useState<string>("");
-  const [usernameErr] = useState<string>("*3 - 20 words");
+  const [username, setUsername] = useState("");
+  const [userIcon, setUserIcon] = useState(
+    <CloseCircleFilled className='text-red-600' />
+  );
+  const [userNameValid, setUserNameValid] = useState<boolean>(false);
 
   const [email, setEmail] = useState<string>("");
-  const [emailErr] = useState<string>("");
+  const [emailIcon, setEmailIcon] = useState(
+    <CloseCircleFilled className='text-red-600' />
+  );
+  const [passwordValid, setPasswordValid] = useState<boolean>(false);
 
   const [password, setPasswrod] = useState<string>("");
-  const [passwordErr] = useState<string>("");
+  const [passwordIcon, setPasswordIcon] = useState(
+    <CloseCircleFilled className='text-red-600' />
+  );
+  const [emailValid, setEmailValid] = useState<boolean>(false);
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
+  const [btnLoader, setBtnLoader] = useState<boolean>(false);
 
-  function regexCheck(regex: RegExp, value: string, error: string) {
-    if (!regex.test(value)) {
-      setError(error);
+  function regexCheck(
+    regex: RegExp,
+    value: string,
+    setIcon: any,
+    setValidation: any
+  ) {
+    if (regex.test(value)) {
+      setIcon(<CheckCircleFilled className='text-green-600' />);
+      setValidation(true);
     } else {
-      setValidate((v) => v + 1);
-      setError("");
+      setIcon(<CloseCircleFilled className='text-red-600' />);
     }
+    // if regex true -> add greenTrueMark icon
+    // if not -> add redWrongMark icon
   }
 
   useEffect(() => {
-    regexCheck(userRegex, username, usernameErr);
+    regexCheck(userRegex, username, setUserIcon, setUserNameValid);
+    console.log(username);
   }, [username]);
 
   useEffect(() => {
-    regexCheck(PasswordRegex, password, passwordErr);
+    regexCheck(passwordRegex, password, setPasswordIcon, setPasswordValid);
   }, [password]);
 
   useEffect(() => {
-    regexCheck(emailRegex, email, emailErr);
+    regexCheck(emailRegex, email, setEmailIcon, setEmailValid);
   }, [email]);
 
   useEffect(() => {
-    if (validate === 3) {
-      setError("");
+    if (userNameValid && passwordValid && emailValid) {
+      setLoading(true);
     }
-  }, [validate]);
+  });
+
+  useEffect(() => {});
 
   useEffect(() => {});
   const registration = async (e: any) => {
@@ -77,40 +92,38 @@ const Register = () => {
 
   return (
     <FormUI>
-      <span className=' italic text-center  text-white  font-titillium xl:text-8xl max-sm:text-3xl font-semibold'>
+      <span className=' italic text-center  text-white  font-titillium xl:text-8xl md:text-4xl max-sm:text-3xl font-semibold'>
         Create a new account
       </span>
       <InputContainer>
-        <p className=' text-red-500'>{error}</p>
         <InputUI
+          icon={userIcon}
           text='Username'
           type='string'
-          onChange={(e) => setUsername(e.currentTarget.value)}
-          onClick={() => {
-            setError(usernameErr);
+          onChange={(e) => {
+            setUsername(e.currentTarget.value), console.log(typeof username);
           }}
         />
         <InputUI
+          icon={emailIcon}
           text='Email'
           type='email'
-          onChange={(e) => setEmail(e.currentTarget.value)}
-          onClick={() => {
-            setError(emailErr);
+          onChange={(e) => {
+            setEmail(e.currentTarget.value), console.log(email);
           }}
         />
         <InputUI
+          icon={passwordIcon}
           text='Password'
           type='password'
-          autoComplete='off'
           onChange={(e) => setPasswrod(e.currentTarget.value)}
-          onClick={() => {
-            setError(passwordErr);
-          }}
         />
         <Button
           text='Register'
           loading={loading}
-          onClick={(e) => registration(e)}
+          onClick={(e) => {
+            registration(e), setBtnLoader(!btnLoader);
+          }}
         ></Button>
 
         <div className='text-center font-roboto text-white mt-5'>

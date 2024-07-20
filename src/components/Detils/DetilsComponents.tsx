@@ -1,5 +1,7 @@
 import { getImagePath, getLargeImagePath } from "@/Utils/GetImagePath";
 import getVideoPath from "@/Utils/GetVideoPath";
+import StarFilled from "@ant-design/icons/StarFilled";
+import PlusOutlined from "@ant-design/icons/PlusOutlined";
 
 export function BackDropPath({ backdrop_path }: any) {
   return (
@@ -7,9 +9,9 @@ export function BackDropPath({ backdrop_path }: any) {
       <section className='relative'>
         <img
           src={getLargeImagePath(backdrop_path)}
-          className='flex lg:h-[37.5rem] max-sm:h-[19rem] w-[100%] object-cover object-top brightness-50'
+          className='flex lg:h-[37.5rem] blur-lg max-sm:h-[19rem] w-[100%] object-cover object-top '
         />
-        <div className='absolute inset-0 bg-gradient-to-b from-gray-200/0 via-gray-900/40 to-[#1A1C29]/80' />
+        <div className='absolute inset-0 bg-gradient-to-t from-gray-200/0 via-gray-900/40 to-[#1A1C29]/80' />
       </section>
     </>
   );
@@ -25,10 +27,15 @@ export function LanguageAndVoteContainer({ children }: any) {
 
 export function Poster_path({ poster_path }: { poster_path: string }) {
   return (
-    <img
-      src={getImagePath(300, poster_path)}
-      className='rounded-md md:static sm:absolute max-sm:absolute sm:top-[3%] sm:left-[37%] max-sm:top-[1%]  lg:h-[25rem] sm:h-[18rem] max-sm:h-[15.62rem] md:h-[20rem] '
-    />
+    <>
+      <img
+        src={getImagePath(300, poster_path)}
+        className='relative md:static sm:absolute max-sm:absolute sm:top-[3%] sm:left-[37%] max-sm:top-[1%]  lg:h-[25rem] sm:h-[18rem] max-sm:h-[15.62rem] md:h-[20rem] '
+      />
+      <span className='absolute cursor-pointer top-0 left-0 px-2 py-2 bg-gray-600 opacity-80 hover:opacity-90 text-white'>
+        <PlusOutlined />
+      </span>
+    </>
   );
 }
 
@@ -42,38 +49,30 @@ export function Title({ title, release_date }: any) {
 
 export function Genres({ genres }: any) {
   return (
-    <div className='text-slate-300 mt-2  flex xl:text-lg md:text-md'>
-      {genres.map((genre: any, index: any) => (
-        <div key={genre.key} className='hover:text-slate-400'>
+    <div className='text-slate-300 mt-4  flex xl:text-lg md:text-md'>
+      {genres.map((genre: any) => (
+        <div
+          key={genre.key}
+          className='hover:text-slate-500 px-3 text-[1rem] font-semibold  border border-slate-400 hover:border-slate-500 mr-2 rounded-2xl'
+        >
           {genre.name}
-          {index !== genres.length - 1 ? " ," : " "}
         </div>
       ))}
     </div>
   );
 }
 
-export function Status({ status }: any) {
-  return (
-    <div className='ml-1 lg:text-xl md:text-lg lg:font-bold md:font-semibold mt-2 text-white'>
-      Status : <span className='font-semibold'> {status}</span>
-    </div>
-  );
-}
-
 export function OverView({ overview }: any) {
   return (
-    <div className='lg:text-3xl  sm:text-2xl max-sm:text-xl font-roboto text-white overflow-hidden md:font-bold sm:font-semibold max-sm:font-semibold mt-4'>
-      Overview
-      <div className='text-white block overflow-scroll mt-1 no-scrollbar font-normal font-titillium leading-loose sm:leading-6 max-sm:leading-6 md:text-[1rem] sm:text-[0.9rem] max-sm:text-[0.9rem]  lg:w-[37.5rem] md:w-[25rem] max-sm:w-[19rem]'>
-        {overview}
+    <section className='mt-10 w-[100%] sm:flex justify-center  max-sm:flex max-sm:justify-center'>
+      <div className='lg:text-2xl max-sm:w-[95%] sm:w-[80%]  sm:text-2xl max-sm:text-xl font-roboto text-white overflow-hidden  sm:font-semibold max-sm:font-semibold mt-4'>
+        Overview
+        <div className='text-white  mt-6 no-scrollbar font-normal font-roboto leading-loose sm:leading-6 max-sm:leading-6 text-lg  max-sm:text-[0.9rem] xl:w-[52rem] lg:w-[37.5rem] md:w-[25rem] max-sm:w-[19rem]'>
+          {overview}
+        </div>
       </div>
-    </div>
+    </section>
   );
-}
-
-export function OriginalLanguage() {
-  return <div className='text-white py-2 text-center font-roboto'>Rating</div>;
 }
 
 export function VoteAverage({ vote_average }: any) {
@@ -82,9 +81,13 @@ export function VoteAverage({ vote_average }: any) {
   }
 
   return (
-    <div className='text-[#181816] flex flex-col justify-center items-center  text-center font-bold font-titillium '>
-      <span className='text-lg px-3 bg-gray-200 rounded-xl'>
-        {roundNumber(vote_average)}
+    <div className=' flex flex-col justify-center items-center mt-4  text-center  '>
+      <span className='text-lg px-3  '>
+        <StarFilled className='text-yellow-400' />{" "}
+        <span className='text-2xl font-semibold text-white'>
+          {roundNumber(vote_average)}
+        </span>
+        <span className='text-gray-400'>/10</span>
       </span>
     </div>
   );
@@ -92,7 +95,7 @@ export function VoteAverage({ vote_average }: any) {
 
 export function Videos({ videos }: any) {
   function HeaderContainer({ children }: any) {
-    return <div className='flex justify-between w-[90%]'>{children}</div>;
+    return <div className=''>{children}</div>;
   }
 
   return (
@@ -104,19 +107,14 @@ export function Videos({ videos }: any) {
               <h2 className='text-2xl font-medium text-white font-roboto dark:text-black'>
                 Trailer
               </h2>
-              <span className='text-lg hover:underline font-medium text-white font-titillium'>
-                More {"->"}
-              </span>
             </HeaderContainer>
             <ul className='flex w-[90%] sm:overflow-hidden pt-5 '>
               <div className='flex overflow-x-scroll no-scrollbar gap-3'>
                 {videos.map((video: any) => (
                   <li key={video.id}>
                     <iframe
-                      className='xl:w-[35rem] rounded-md lg:w-[28rem] md:w-[24rem] max-sm:w-[23rem]  xl:h-[18.7rem] lg:h-[16rem] md:h-[14rem] max-sm:h-[14rem]'
+                      className='xl:w-[40rem] rounded-md lg:w-[28rem] md:w-[24rem] max-sm:w-[23rem]  xl:h-[28rem] lg:h-[16rem] md:h-[14rem] max-sm:h-[14rem]'
                       title={video.name}
-                      width={560}
-                      height={315}
                       src={getVideoPath(video.key)}
                       allowFullScreen
                     />

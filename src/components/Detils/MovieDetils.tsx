@@ -7,11 +7,9 @@ import {
   FavouriteAndWatchlistContainer,
   Genres,
   LanguageAndVoteContainer,
-  OriginalLanguage,
   OverView,
   Poster_path,
   RightInfoContainer,
-  Status,
   Title,
   Videos,
   VoteAverage,
@@ -52,24 +50,15 @@ const MovieDetils = () => {
                     release_date={detils.release_date}
                   />
                   <Genres genres={detils.genres} />
-                  <Status status={detils.status} />
-                  <OverView overview={detils.overview} />
 
                   <LanguageAndVoteContainer>
-                    <OriginalLanguage />
                     <VoteAverage vote_average={detils.vote_average} />
                   </LanguageAndVoteContainer>
                   <FavouriteAndWatchlistContainer>
-                    <div className='w-28 bg-[#2eade7] px-1 mr-2 py-2 rounded-md'>
+                    <div className=' bg-[#2eade7] px-3 ml-2 py-2 rounded-sm '>
                       <div className='flex justify-around items-center'>
                         <PlusOutlined />
-                        <p>Favourite</p>
-                      </div>
-                    </div>
-                    <div className='w-28 bg-[#2eade7] px-1 ml-2 py-2 rounded-md'>
-                      <div className='flex justify-around items-center'>
-                        <PlusOutlined />
-                        <p>WatchList</p>
+                        <p className='pl-2'>Add to WatchList</p>
                       </div>
                     </div>
                   </FavouriteAndWatchlistContainer>
@@ -77,6 +66,7 @@ const MovieDetils = () => {
               </div>
             </section>
           </div>
+          <OverView overview={detils.overview} />
           <Videos videos={videos} />
         </div>
       ) : (
