@@ -5,7 +5,6 @@ import ArrowRightOutlined from "@ant-design/icons/ArrowRightOutlined";
 import ArrowLeftOutlined from "@ant-design/icons/ArrowLeftOutlined";
 
 const SliderMovie = () => {
-  const [loading, setLoading] = useState(true);
   const imageRef = useRef<HTMLImageElement>(null);
   const imageWidth = imageRef.current?.offsetWidth || 0;
   const [x, setX] = useState(0);
@@ -22,11 +21,6 @@ const SliderMovie = () => {
   }, []);
 
   // checker
-  useEffect(() => {
-    if (upComing) {
-      setLoading(false);
-    }
-  }, [upComing]);
 
   function next() {
     if (x !== upComing.length - 1) setX((x) => x + 1);
