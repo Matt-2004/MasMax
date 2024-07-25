@@ -55,11 +55,13 @@ const Login = () => {
       <InputContainer>
         <InputUI
           text='Email'
+          icon={""}
           type='email'
           onChange={(e) => setEmail(e.currentTarget.value)}
         />
         <InputUI
           text='Password'
+          icon={""}
           type='password'
           autoComplete='off'
           onChange={(e) => setPassword(e.currentTarget.value)}

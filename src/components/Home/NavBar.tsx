@@ -33,10 +33,6 @@ function Menu() {
   );
 }
 
-function MenuUI() {
-  return <></>;
-}
-
 function DarkMode() {
   const [darkMode, setDarkMode] = useState(() => {
     const savedMode = localStorage.getItem("darkMode");

@@ -5,6 +5,7 @@ import "@/index.css";
 import {
   BackDropPath,
   FavouriteAndWatchlistContainer,
+  FavouriteBtn,
   Genres,
   LanguageAndVoteContainer,
   OverView,
@@ -42,7 +43,13 @@ const MovieDetils = () => {
           <BackDropPath backdrop_path={detils.backdrop_path} />
           <div className='md:absolute  top-[9%] left-[15%] sm:left-[10%] flex'>
             <section className='flex lg:w-[56.25rem] md:w-[37.5rem] sm:w-[31.25rem] max-sm:w-[25rem] justify-evenly '>
-              <Poster_path poster_path={detils.poster_path} />
+              <div className=' sm:absolute max-sm:absolute sm:top-[3%] sm:left-[37%] max-sm:top-[1%]  '>
+                <Poster_path
+                  poster_path={detils.poster_path}
+                  width={25}
+                  movie_id={detils.id.toString()}
+                />
+              </div>
               <div className='max-sm:w-[20rem] md:w-[100%] sm:w-[27rem] sm:flex sm:justify-center sm:mt-3 max-sm:mt-4 max-sm:flex max-sm:justify-center'>
                 <RightInfoContainer>
                   <Title
@@ -55,12 +62,13 @@ const MovieDetils = () => {
                     <VoteAverage vote_average={detils.vote_average} />
                   </LanguageAndVoteContainer>
                   <FavouriteAndWatchlistContainer>
-                    <div className=' bg-[#2eade7] px-3 ml-2 py-2 rounded-sm '>
-                      <div className='flex justify-around items-center'>
-                        <PlusOutlined />
-                        <p className='pl-2'>Add to WatchList</p>
-                      </div>
-                    </div>
+                    <FavouriteBtn
+                      hover_color='bg-[#5799ef]'
+                      color='bg-[#2eade7]'
+                      text='Add to WatchList'
+                      width='0'
+                      icon={<PlusOutlined />}
+                    />
                   </FavouriteAndWatchlistContainer>
                 </RightInfoContainer>
               </div>
@@ -70,7 +78,7 @@ const MovieDetils = () => {
           <Videos videos={videos} />
         </div>
       ) : (
-        <div className='bg-[#26262e] dark:bg-[#dff2fa] min-h-screen'>
+        <div className='bg-[#26262e] dark:bg-[#dff2fa] min-h-screen cursor-wait'>
           <div className='progress '>
             <div className='runner'></div>
           </div>

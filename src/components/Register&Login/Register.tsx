@@ -6,9 +6,11 @@ import GoogleAuth from "./FireBaseAuth";
 import CloseCircleFilled from "@ant-design/icons/CloseCircleFilled";
 import CheckCircleFilled from "@ant-design/icons/CheckCircleFilled";
 import { userRegex, passwordRegex, emailRegex } from "./Requirement";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
-  const [username, setUsername] = useState("");
+  const navigate = useNavigate();
+  const [username, setUsername] = useState<string>("");
   const [userIcon, setUserIcon] = useState(
     <CloseCircleFilled className='text-red-600' />
   );
@@ -26,8 +28,8 @@ const Register = () => {
   );
   const [emailValid, setEmailValid] = useState<boolean>(false);
 
+  const [allValidate, setAllValidate] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [btnLoader, setBtnLoader] = useState<boolean>(false);
 
   function regexCheck(
     regex: RegExp,
@@ -60,16 +62,16 @@ const Register = () => {
 
   useEffect(() => {
     if (userNameValid && passwordValid && emailValid) {
-      setLoading(true);
+      setAllValidate(true);
     }
   });
 
-  useEffect(() => {});
-
-  useEffect(() => {});
   const registration = async (e: any) => {
     e.preventDefault();
     try {
+      if (allValidate) {
+        setLoading(true);
+      }
       const response = await fetch("https://auth-2ngh.onrender.com/register", {
         method: "POST",
         headers: {
@@ -83,6 +85,28 @@ const Register = () => {
       });
       if (!response.ok) {
         throw new Error("Registration Failed!");
+      }
+      setInterval(() => {
+        setLoading(false);
+        localStorage.setItem("username", username);
+        localStorage.setItem("email", email);
+      }, 1400);
+      const welcome = await fetch("https://auth-2ngh.onrender.com/welcome");
+      console.log(welcome);
+      if (!loading) {
+        // This is the state that user login successfully
+        // After that the login icon will change to profile icon
+        // then if the user click the profile icon
+        // the user can manipulate the profile at userImage, userName,
+        // if the user want to change the password
+        // -> have to fetch the password from database
+        // -> have to type old password
+        // --> if the user forgot
+        // -> link send to email -- there will have a link that can add another password
+      }
+
+      if (welcome.ok) {
+        navigate("/");
       }
       console.log("Registration success");
     } catch (error) {
@@ -101,7 +125,7 @@ const Register = () => {
           text='Username'
           type='string'
           onChange={(e) => {
-            setUsername(e.currentTarget.value), console.log(typeof username);
+            setUsername(e.target.value);
           }}
         />
         <InputUI
@@ -109,20 +133,20 @@ const Register = () => {
           text='Email'
           type='email'
           onChange={(e) => {
-            setEmail(e.currentTarget.value), console.log(email);
+            setEmail(e.target.value);
           }}
         />
         <InputUI
           icon={passwordIcon}
           text='Password'
           type='password'
-          onChange={(e) => setPasswrod(e.currentTarget.value)}
+          onChange={(e) => setPasswrod(e.target.value)}
         />
         <Button
           text='Register'
           loading={loading}
           onClick={(e) => {
-            registration(e), setBtnLoader(!btnLoader);
+            registration(e);
           }}
         ></Button>
 
