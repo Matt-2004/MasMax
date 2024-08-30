@@ -1,7 +1,6 @@
+import { PlusIcon, StarIcon } from "@/icons/icons";
 import { getImagePath, getLargeImagePath } from "@/Utils/GetImagePath";
 import getVideoPath from "@/Utils/GetVideoPath";
-import StarFilled from "@ant-design/icons/StarFilled";
-import PlusOutlined from "@ant-design/icons/PlusOutlined";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -67,7 +66,7 @@ export function Poster_path({ poster_path, width, movie_id }: PosterProps) {
         className='absolute cursor-pointer top-0 left-0 px-2 py-2 bg-gray-600 opacity-80 hover:opacity-90 text-white'
         onClick={() => console.log(movie_id)}
       >
-        <PlusOutlined />
+        <PlusIcon />
       </span>
     </>
   );
@@ -117,7 +116,7 @@ export function VoteAverage({ vote_average }: any) {
   return (
     <div className=' flex flex-col justify-center items-center mt-4  text-center  '>
       <span className='text-lg px-3  '>
-        <StarFilled className='text-yellow-400' />{" "}
+        <StarIcon />{" "}
         <span className='text-2xl font-semibold text-white'>
           {roundNumber(vote_average)}
         </span>
@@ -191,7 +190,7 @@ export function FavouriteBtn(props: IButton) {
       <div className=' items-center'>
         <div className='flex'>
           {icon}
-          <p className='pl-2'>{text}</p>
+          <p className='pl-[2px]'>{text}</p>
         </div>
       </div>
     </div>

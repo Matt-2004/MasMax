@@ -4,8 +4,7 @@ import {
   Poster_path,
   roundNumber,
 } from "../Detils/DetilsComponents";
-import PlusOutlined from "@ant-design/icons/PlusOutlined";
-import StarFilled from "@ant-design/icons/StarFilled";
+import { PlusIcon, StarIcon } from "@/icons/icons";
 
 const ImageUI = ({ data }: { data: MovieResult[] }) => {
   return (
@@ -15,27 +14,25 @@ const ImageUI = ({ data }: { data: MovieResult[] }) => {
           <div>
             <div>
               <Image path={p.poster_path} movie_id={p.id.toString()} />
-              <section className=' w-full text-white font-roboto sm:h-[18rem] max-sm:h-[15.62rem] md:h-[20rem] lg:h-[10rem] bg-gray-800'>
+              <section className=' w-full pb-3 text-white font-roboto  bg-slate-800'>
                 <div className=''>
-                  <p className='flex pl-3 py-3 items-center '>
-                    <StarFilled className='text-yellow-400 text-sm' />
-                    <p className='pl-1 text-gray-300'>
+                  <p className='flex pl-3 py-1 items-center '>
+                    <StarIcon />
+                    <p className='pl-[2px] mt-[2px] text-gray-200 text-sm'>
                       {roundNumber(p.vote_average)}
                     </p>
                   </p>
-                  <p className='pl-3 cursor-pointer  font-normal text-lg  pb-3'>
+                  <p className='pl-3 cursor-pointer pb-3 font-semibold leading-8 text-lg'>
                     {p.original_title}
                   </p>
                   <div className='flex justify-center cursor-pointer'>
-                    <div className='w-[80%]  text-[#5799ef] font-semibold text-[0.9rem] '>
+                    <div className='w-[90%]  text-[#2eade7]  font-semibold text-sm '>
                       <FavouriteBtn
-                        hover_color='bg-gray-600'
+                        hover_color='bg-gray-500'
                         color='bg-gray-700'
                         text='Watchlist'
                         width='3'
-                        icon={
-                          <PlusOutlined className='text-[1.1rem] font-semibold' />
-                        }
+                        icon={<PlusIcon />}
                       />
                     </div>
                   </div>

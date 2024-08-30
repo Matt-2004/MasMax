@@ -48,14 +48,14 @@ function AutoComplete() {
 
   return (
     <div
-      className='flex py-[0.6rem] sm:flex-row-reverse gap-5'
+      className='flex items-center sm:flex-row-reverse gap-5'
       onMouseLeave={() => setSearchValue("")}
     >
       <form
         onSubmit={(e) => {
           handleSearch(e);
         }}
-        className='flex justify-between bg-[#2eade7] h-[2.25rem] sm:w-[17rem] max-sm:w-[12rem]  rounded-2xl  items-center '
+        className=''
       >
         <input
           id='search'
@@ -63,7 +63,7 @@ function AutoComplete() {
           onChange={(e) => setSearchValue(e.target.value)}
           placeholder='Search...'
           autoComplete='off'
-          className=' bg-[#2eade7]  py-1 pl-5 text-[#26262e] placeholder:text-[#26262e] text-md placeholder:text-sm font-roboto rounded-2xl relative outline-none   sm:w-[17rem] max-sm:w-[12rem] '
+          className=' py-[3px] rounded-sm pl-2 text-[#26262e] placeholder:text-[#26262e] text-md font-roboto relative outline-none   sm:w-[14rem]'
         />
         <SearchOutlined className='text-xl text-[#26262e] pr-5' />
         {searchValue.length > 0 && (

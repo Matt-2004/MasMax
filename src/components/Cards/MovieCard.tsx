@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import CaretDownOutlined from "@ant-design/icons/CaretDownOutlined";
 import ImageUI, { ImageUIContainer } from "@/components/Cards/ImageUI";
 import FilterUI from "./FilterUI";
 
@@ -46,12 +45,6 @@ const MovieCard = () => {
             <div className='mb-8 lg:text-3xl font-bold  md:text-2xl sm:text-xl max-sm:text-3xl text-[#2eade7]'>
               Movies
             </div>
-            <FilterUI
-              FilterType={movieType}
-              icon={<CaretDownOutlined />}
-              select={select}
-              setSelect={setSelect}
-            />
           </div>
           <ImageUI data={display} />
         </ImageUIContainer>

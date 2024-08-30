@@ -1,115 +1,218 @@
+import {
+  AngleRightIcon,
+  FilmIcon,
+  MenuIcon,
+  SearchIcon,
+  TicketIcon,
+  Xicon,
+} from "@/icons/icons";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AutoComplete from "./AutoComplete";
-import UserOutlined from "@ant-design/icons/UserOutlined";
-import SunOutlined from "@ant-design/icons/SunOutlined";
-import MoonOutlined from "@ant-design/icons/MoonOutlined";
-import { useEffect, useState } from "react";
-import MenuOutlined from "@ant-design/icons/MenuOutlined";
+import axios from "axios";
+
+interface IItems {
+  [item: string]: IItem;
+}
+
+interface IItem {
+  id: number;
+  path: string;
+  icon: React.ReactNode;
+  subMenu?: string[];
+}
+
+interface ExpandedState {
+  [key: number]: boolean;
+}
 
 const NavBar = () => {
+  const navigate = useNavigate();
+  const navbarItems: IItems = {
+    Movies: {
+      id: 1,
+      path: "/",
+      icon: <FilmIcon />,
+      subMenu: [
+        "Popular Movies",
+        "Trending Movies",
+        "Upcoming Movies",
+        "Top Rated Movies",
+        "Now Playing Movies",
+      ],
+    },
+    Series: { id: 2, path: "/", icon: <FilmIcon /> },
+
+    Tickets: { id: 3, path: "/", icon: <TicketIcon /> },
+  };
+  const [activeMenu, setActiveMenu] = useState<boolean>(false);
+  const [searchInput, setSearchInput] = useState<string>("");
+  const [activeSearch, setActiveSearch] = useState<boolean>(false);
+  const [activeDrop, setActiveDrop] = useState<string>("Movies");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [expandedMenus, setExpandedMenus] = useState<ExpandedState>({
+    1: false,
+    2: false,
+    3: false,
+  });
+  function handleMenu() {
+    setActiveMenu(!activeMenu);
+  }
+
+  const toggleMenu = (id: number) => {
+    setExpandedMenus((prevState) => {
+      // Create a new state object with the specific menu item set to true
+      const newState = Object.keys(prevState).reduce(
+        (acc, key) => {
+          acc[Number(key)] = Number(key) === id;
+          return acc;
+        },
+        {} as { [key: number]: boolean }
+      );
+
+      return newState;
+    });
+  };
   return (
-    <section className='w-[100%] bg-[#26262e] dark:bg-[#dff2fa]'>
-      <div className='flex max-sm:px-5 justify-between md:px-5 sm:px-3 sm:h-14 max-sm:h-14 items-center '>
-        <div className='flex items-center w-[23%] justify-around'>
-          <LogoUI />
+    <section className=' w-full h-[3.5rem] items-center flex justify-between '>
+      <div className='flex items-center gap-6 ml-4'>
+        <div onClick={handleMenu} className='h-5 w-5 sm:hidden mb-1'>
+          <MenuIcon />
         </div>
-        <DropDownMenu />
-        <Menu />
-        <div className='h-[100%] max-sm:hidden min-w-[24%] md:gap-2 sm:gap-1 max-sm:gap-1 flex text-white'>
-          <AutoComplete />
-          <DarkMode />
-          <LoginUI />
+        <h1 className='text-3xl font-semibold font-roboto text-[#2eade7]'>
+          MASMAX
+        </h1>
+      </div>
+      <div className='flex items-center gap-6'>
+        <div onClick={() => setActiveSearch(true)}>
+          <SearchIcon />
+        </div>
+        <div className='mr-4 text-[0.95rem] font-roboto font-semibold text-white'>
+          Sign In
+        </div>
+      </div>
+
+      {activeMenu && (
+        <div className='fixed inset-0 bg-gradient-to-br from-transparent to-black/50' />
+      )}
+      <div
+        aria-disabled={activeSearch}
+        className={`w-screen h-[3.5rem] bg-[#26262e] ${
+          activeSearch ? "translate-y-0" : "-translate-y-full"
+        } transition-all duration-200 ease-in-out absolute`}
+      >
+        <form className='flex justify-around h-full items-center '>
+          <input
+            onChange={(e) => setSearchInput(e.currentTarget.value)}
+            type='text'
+            className='w-[80%] h-[2.3rem] outline-none px-3 font-roboto bg-[#26262e] text-white'
+            placeholder='Search'
+          />
+          <div onClick={() => setActiveSearch(false)}>
+            <Xicon />
+          </div>
+        </form>
+      </div>
+      <div
+        className={`absolute z-50 bg-[#26262e] ${
+          activeMenu ? "translate-x-0 " : "-translate-x-full "
+        }  top-0 w-[70%] h-full transition-all duration-200 ease-in-out`}
+      >
+        <div className='w-full h-screen '>
+          <div
+            onClick={handleMenu}
+            className='flex justify-end h-[2.9rem] items-center bg-[#2eade7] pr-4'
+          >
+            <Xicon />
+          </div>
+          <div className='font-roboto  text-sm text-white mt-2'>
+            {Object.entries(navbarItems).map(([itemName, item], i) => (
+              <div
+                key={i}
+                id={itemName}
+                onClick={(e) => {
+                  navigate(item.path),
+                    setActiveDrop(e.currentTarget.id),
+                    toggleMenu(item.id);
+                }}
+                className=' flex justify-between h-10 items-center px-4 '
+              >
+                <div
+                  className={`font-medium text-base ${
+                    activeDrop === itemName ? "text-white" : "text-[#B0B0B8]"
+                  } flex gap-4 h-10 items-center`}
+                >
+                  {item.icon}
+                  {itemName}
+                </div>
+                <div
+                  className={`transform ${
+                    activeDrop === itemName ? "opacity-100" : " opacity-70"
+                  } ${
+                    expandedMenus[item.id] ? "rotate-90" : "-rotate-90"
+                  } transition-transform duration-200 ease-in-out`}
+                >
+                  <AngleRightIcon />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
   );
 };
 
-function Menu() {
-  return (
-    <section className='sm:hidden max-sm:block'>
-      <MenuOutlined className='text-white text-2xl' />
-    </section>
-  );
+interface IMovieList {
+  [key: string]: string[];
 }
 
-function DarkMode() {
-  const [darkMode, setDarkMode] = useState(() => {
-    const savedMode = localStorage.getItem("darkMode");
-    return savedMode ? JSON.parse(savedMode) : false;
-  });
-
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-    localStorage.setItem("darkMode", JSON.stringify(darkMode));
-  }, [darkMode]);
-
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
+const DropDownMenu = () => {
+  const MenuList: IMovieList = {
+    Movies: [],
   };
+  const [isOpen, setIsOpen] = useState(false);
 
+  const toggleDropdown = () => setIsOpen(!isOpen);
   return (
-    <section className='h-6 px-3 py-[0.5rem] mt-1 ml-3'>
-      <div>
-        {darkMode ? (
-          <MoonOutlined
-            onClick={toggleDarkMode}
-            className='text-lg rounded-[50%] bg-[#26262e] px-[5px] py-[5px]'
-          />
-        ) : (
-          <SunOutlined
-            onClick={toggleDarkMode}
-            className={`text-lg  text-yellow-700 rounded-2xl items-center bg-[#dff2fa] px-[5px] py-[5px]`}
-          />
-        )}
-      </div>
-    </section>
-  );
-}
-
-function DropDownMenu() {
-  const navigate = useNavigate();
-  return (
-    <div className='flex max-md:hidden'>
-      <p
-        onClick={() => navigate("/")}
-        className='text-white px-6 py-[1rem] hover:dark:bg-gray-200 dark:text-black hover:bg-gray-600 font-roboto text-[1rem]  cursor-pointer'
+    <div className='relative  text-left '>
+      {/* Dropdown Toggle Button */}
+      <button
+        onClick={toggleDropdown}
+        className='inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
       >
-        Home
-      </p>
-      <p className='text-white px-6 py-[1rem] font-roboto hover:dark:bg-gray-200 dark:text-black hover:bg-gray-600 text-[1rem]  cursor-pointer'>
-        Ticket
-      </p>
+        Options
+      </button>
+
+      {/* Dropdown Menu */}
+      <div
+        className={`origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none transition-transform transform ${
+          isOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"
+        }`}
+        style={{ transformOrigin: "top left" }}
+      >
+        <div className='py-1'>
+          <a
+            href='#'
+            className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+          >
+            Account settings
+          </a>
+          <a
+            href='#'
+            className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+          >
+            Support
+          </a>
+          <a
+            href='#'
+            className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+          >
+            License
+          </a>
+        </div>
+      </div>
     </div>
   );
-}
-
-function LoginUI() {
-  const navigate = useNavigate();
-  return (
-    <button
-      onClick={() => navigate("/register")}
-      className='max-sm:hidden text-[#2eade7] px-2 py-[1rem] h-[2.25rem] text-center rounded-sm font-medium hover:opacity-100'
-    >
-      <UserOutlined className='text-xl' />
-    </button>
-  );
-}
-
-function LogoUI() {
-  const navigate = useNavigate();
-  return (
-    <h1
-      onClick={() => navigate("/")}
-      className='text-cener text-[#2eade7] font-museomoderno lg:text-[2.5rem] sm:text-4xl max-sm:text-4xl font-bold'
-    >
-      MASMAX
-    </h1>
-  );
-}
+};
 
 export default NavBar;
