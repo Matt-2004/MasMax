@@ -15,7 +15,6 @@ import {
   Videos,
   VoteAverage,
 } from "./DetilsComponents";
-import PlusOutlined from "@ant-design/icons/PlusOutlined";
 
 const MovieDetils = () => {
   const [detils, setDetils] = useState<DetilsResult>();
@@ -67,7 +66,6 @@ const MovieDetils = () => {
                       color='bg-[#2eade7]'
                       text='Add to WatchList'
                       width='0'
-                      icon={<PlusOutlined />}
                     />
                   </FavouriteAndWatchlistContainer>
                 </RightInfoContainer>
