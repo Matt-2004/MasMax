@@ -7,9 +7,9 @@ import {
   TVIcon,
   Xicon,
 } from "@/icons/icons";
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+
 
 interface IItems {
   [item: string]: IItem;
