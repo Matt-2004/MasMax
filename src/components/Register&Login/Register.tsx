@@ -5,7 +5,7 @@ import InputUI, { InputContainer } from "./InputUI";
 import GoogleAuth from "./FireBaseAuth";
 import CloseCircleFilled from "@ant-design/icons/CloseCircleFilled";
 import CheckCircleFilled from "@ant-design/icons/CheckCircleFilled";
-import { userRegex, passwordRegex, emailRegex } from "./Requirement";
+import { userRegex, passwordRegex, emailRegex } from "./helper";
 import { useNavigate } from "react-router-dom";
 
 const Register = () => {
