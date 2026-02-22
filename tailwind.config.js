@@ -14,21 +14,7 @@ module.exports = {
       fontFamily: {
         roboto: ["Roboto", "sans-serif"],
       },
-      colors: {
-        "tap-highlight": "rgba(0, 0, 0, 0.1)", // Customize your highlight color here
-      },
     },
   },
-  plugins: [
-    require("tailwindcss-animate"),
-    function ({ addUtilities }) {
-      const newUtilities = {
-        ".focus\\:tap-highlight": {
-          "-webkit-tap-highlight-color": "rgba(0, 0, 0, 0.1)", // Customize your highlight color here
-        },
-      };
-
-      addUtilities(newUtilities, ["focus"]);
-    },
-  ],
+  plugins: [require("tailwindcss-animate")],
 };

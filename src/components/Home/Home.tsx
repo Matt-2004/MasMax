@@ -16,7 +16,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div className='bg-[#26262e] dark:bg-[#dff2fa] overflow-hidden'>
+    <div className='bg-[#26262e] dark:bg-[#dff2fa] '>
       <NavBar />
       <Carousels carouselData={carouselData} />
     </div>
