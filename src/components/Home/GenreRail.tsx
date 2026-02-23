@@ -1,5 +1,6 @@
 import { fetchMovieGenres } from "@/Utils/FetchAPI";
-import { useEffect, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface Genre {
@@ -8,23 +9,15 @@ interface Genre {
 }
 
 const GenreRail = () => {
-    const [genres, setGenres] = useState<Genre[]>([]);
-    const [loading, setLoading] = useState(true);
     const scrollRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        let cancelled = false;
-        (async () => {
-            try {
-                const data = await fetchMovieGenres();
-                if (!cancelled) setGenres(data ?? []);
-            } finally {
-                if (!cancelled) setLoading(false);
-            }
-        })();
-        return () => { cancelled = true; };
-    }, []);
+    // useQuery caches genres for 5 min — never re-fetches on every home visit
+    const { data: genres = [], isLoading: loading } = useQuery<Genre[]>({
+        queryKey: ["movie-genres"],
+        queryFn: fetchMovieGenres,
+        staleTime: 1000 * 60 * 10, // genres don't change — cache for 10 min
+    });
 
     function handleGenreClick(genre: Genre) {
         navigate(`/genres/${genre.id}`, {

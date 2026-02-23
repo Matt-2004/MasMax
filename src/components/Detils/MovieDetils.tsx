@@ -1,17 +1,23 @@
 import { DetilsResult } from "@/Utils/Interfaces";
-import { useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchMovieDetils, fetchVideo } from "../../Utils/FetchAPI";
-import NavBar from "../Home/NavBar";
-import {
-  BackdropHero,
-  GenreList,
-  OverviewSection,
-  PosterCard,
-  RatingBadge,
-  VideosSection,
-  WatchlistButton,
-} from "./DetilsComponents";
+
+// NavBar: shared heavy chunk, lazy so it doesn't block content render
+const NavBar = lazy(() => import("../Home/NavBar"));
+
+// DetilsComponents: single network request (module cached by browser),
+// each export wrapped so React.lazy gets a { default } shape.
+// All 7 imports resolve from the same cached module chunk.
+const DC = {
+  BackdropHero: lazy(() => import("./DetilsComponents").then(m => ({ default: m.BackdropHero }))),
+  PosterCard: lazy(() => import("./DetilsComponents").then(m => ({ default: m.PosterCard }))),
+  GenreList: lazy(() => import("./DetilsComponents").then(m => ({ default: m.GenreList }))),
+  RatingBadge: lazy(() => import("./DetilsComponents").then(m => ({ default: m.RatingBadge }))),
+  WatchlistButton: lazy(() => import("./DetilsComponents").then(m => ({ default: m.WatchlistButton }))),
+  OverviewSection: lazy(() => import("./DetilsComponents").then(m => ({ default: m.OverviewSection }))),
+  VideosSection: lazy(() => import("./DetilsComponents").then(m => ({ default: m.VideosSection }))),
+};
 
 const MovieDetils = () => {
   const { movieId } = useParams<{ movieId: string }>();
@@ -57,7 +63,9 @@ const MovieDetils = () => {
   if (loading) {
     return (
       <div className="min-h-screen" style={{ background: "var(--bg-base)" }}>
-        <NavBar />
+        <Suspense fallback={<div style={{ height: 64, background: "var(--bg-nav)" }} />}>
+          <NavBar />
+        </Suspense>
         <div className="animate-pulse">
           {/* Backdrop skeleton */}
           <div className="w-full h-[50vw] max-h-[520px] bg-white/5" />
@@ -82,7 +90,7 @@ const MovieDetils = () => {
   if (!detils) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: "var(--bg-base)" }}>
-        <NavBar />
+        <Suspense fallback={null}><NavBar /></Suspense>
         <p className="text-white/40 font-roboto text-lg">Movie not found.</p>
       </div>
     );
@@ -90,10 +98,14 @@ const MovieDetils = () => {
 
   return (
     <div className="min-h-screen text-white" style={{ background: "var(--bg-base)" }}>
-      <NavBar />
+      <Suspense fallback={<div style={{ height: 64, background: "var(--bg-nav)" }} />}>
+        <NavBar />
+      </Suspense>
 
       {/* ── Hero backdrop ── */}
-      <BackdropHero backdrop_path={detils.backdrop_path} title={detils.title} />
+      <Suspense fallback={<div className="w-full h-[40vw] max-h-[520px] bg-white/5" />}>
+        <DC.BackdropHero backdrop_path={detils.backdrop_path} title={detils.title} />
+      </Suspense>
 
       {/* ── Main content card ── */}
       <div className="max-w-6xl mx-auto px-3 sm:px-6 lg:px-10">
@@ -102,11 +114,13 @@ const MovieDetils = () => {
 
           {/* Poster */}
           <div className="flex-shrink-0 self-start mx-auto sm:mx-0">
-            <PosterCard
-              poster_path={detils.poster_path}
-              movie_id={detils.id.toString()}
-              title={detils.title}
-            />
+            <Suspense fallback={<div className="w-36 sm:w-48 lg:w-60 aspect-[2/3] rounded-2xl bg-white/10" />}>
+              <DC.PosterCard
+                poster_path={detils.poster_path}
+                movie_id={detils.id.toString()}
+                title={detils.title}
+              />
+            </Suspense>
           </div>
 
           {/* Info */}
@@ -127,13 +141,19 @@ const MovieDetils = () => {
             </div>
 
             {/* Genres */}
-            <GenreList genres={detils.genres} />
+            <Suspense fallback={null}>
+              <DC.GenreList genres={detils.genres} />
+            </Suspense>
 
             {/* Rating */}
-            <RatingBadge vote_average={detils.vote_average} vote_count={detils.vote_count} />
+            <Suspense fallback={null}>
+              <DC.RatingBadge vote_average={detils.vote_average} vote_count={detils.vote_count} />
+            </Suspense>
 
             {/* Watchlist button */}
-            <WatchlistButton movie_id={detils.id.toString()} />
+            <Suspense fallback={null}>
+              <DC.WatchlistButton movie_id={detils.id.toString()} />
+            </Suspense>
 
             {/* Overview — shown inline on desktop */}
             <div className="hidden sm:block">
@@ -147,11 +167,15 @@ const MovieDetils = () => {
 
         {/* Overview — shown below on mobile */}
         <div className="sm:hidden mt-6">
-          <OverviewSection overview={detils.overview} />
+          <Suspense fallback={null}>
+            <DC.OverviewSection overview={detils.overview} />
+          </Suspense>
         </div>
 
-        {/* Videos */}
-        <VideosSection videos={videos} />
+        {/* Videos — heaviest section (iframes), loaded last */}
+        <Suspense fallback={null}>
+          <DC.VideosSection videos={videos} />
+        </Suspense>
       </div>
 
       <div className="h-16" />

@@ -1,10 +1,11 @@
 import { SearchResultsSkeleton } from "@/components/Skeletons";
 import { getImagePath } from "@/Utils/GetImagePath";
 import { MovieResult } from "@/Utils/Interfaces";
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import NavBar from "../Home/NavBar";
 import { capitalizeFirstLetterEachWord } from "../Search/SearchPage";
+
+const NavBar = lazy(() => import("../Home/NavBar"));
 
 const GenrePage = () => {
   const location = useLocation();
@@ -43,7 +44,9 @@ const GenrePage = () => {
 
   return (
     <div className="min-h-screen" style={{ background: "var(--bg-base)" }}>
-      <NavBar />
+      <Suspense fallback={<div style={{ height: 64, background: "var(--bg-nav)" }} />}>
+        <NavBar />
+      </Suspense>
       <div className="max-w-6xl mx-auto px-3 sm:px-6 lg:px-10 py-6 sm:py-8">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">

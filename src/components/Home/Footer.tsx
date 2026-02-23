@@ -15,7 +15,7 @@ const Footer = () => {
           </div>
           {/* Links */}
           <div className='flex flex-wrap gap-x-5 gap-y-2 text-sm font-roboto text-white/50'>
-            {['Movies', 'Series', 'Tickets', 'About'].map((link) => (
+            {['Movies', 'Series', 'About'].map((link) => (
               <span
                 key={link}
                 className='hover:text-white cursor-pointer transition-colors duration-200'

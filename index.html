@@ -1,49 +1,98 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/M.png" />
+    <!-- Preconnect to TMDB image CDN so image requests start immediately -->
+    <link rel="preconnect" href="https://image.tmdb.org" />
+    <link rel="dns-prefetch" href="https://image.tmdb.org" />
+    <!-- Preconnect to TMDB API -->
+    <link rel="preconnect" href="https://api.themoviedb.org" />
+    <link rel="dns-prefetch" href="https://api.themoviedb.org" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- font-display=swap: text paints immediately with fallback font, no render-blocking -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=MuseoModerno:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media = 'all'"
+    />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=MuseoModerno:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+    <!-- Material Icons: load async, not render-blocking -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      media="print"
+      onload="this.media = 'all'"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MasMax</title>
+    <style>
+      /* ── Critical CSS: paint background & font immediately ───────────── */
+      html {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+      }
 
-<head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=MuseoModerno:ital,wght@0,100..900;1,100..900&display=swap"
-    rel="stylesheet">
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap"
-    rel="stylesheet" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MasMax</title>
-  <style>
-    html {
-      padding: 0;
-      margin: 0;
-      height: 100%;
-    }
+      body {
+        /* Inline the dark-theme bg so there's no flash of white before CSS bundle */
+        background-color: #111115;
+        color: #ffffff;
+        font-family: "Titillium Web", ui-sans-serif, system-ui, sans-serif;
+        user-select: none;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+      }
 
-    body {
-      font-family: "Titillium Web", "sans-serif";
-      user-select: none;
-    }
+      /* Prevent layout shift before React mounts */
+      #root {
+        min-height: 100svh;
+      }
 
-    .no-scrollbar {
-      overflow: hidden;
-    }
+      .no-scrollbar {
+        overflow: hidden;
+      }
 
-    .no-scrollbar::-webkit-scrollbar {
-      width: 0;
-      /* Remove scrollbar space */
-      background: transparent;
-      /* Optional: transparent background */
-    }
-  </style>
-</head>
+      .no-scrollbar::-webkit-scrollbar {
+        width: 0;
+        /* Remove scrollbar space */
+        background: transparent;
+        /* Optional: transparent background */
+      }
+    </style>
+  </head>
 
-<body>
-  <div id="root"></div>
-  <script type="module" src="/src/main.tsx"></script>
-</body>
-
+  <body>
+    <div id="root"></div>
+    <!-- Kick off the hero data fetch immediately — before React parses — so
+         by the time HeroSection mounts the data (or most of it) is ready. -->
+    <script>
+      (function () {
+        var BEARER =
+          "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0OWE1YWI2MjRiZDAxMjhiZGJiMzdjZDNhMmYzNmFhOCIsInN1YiI6IjY1OGFhOThlMzI1YTUxNTc3ZTAzMmI5NyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.bi_2IPf0bZph00Qj5URE-wIk-9bjrm3mMuDSRVg3K58";
+        window.__heroPromise = fetch(
+          "https://api.themoviedb.org/3/trending/movie/day?language=en-US",
+          { headers: { Authorization: "Bearer " + BEARER } },
+        )
+          .then(function (r) {
+            return r.json();
+          })
+          .then(function (d) {
+            return d.results || [];
+          })
+          .catch(function () {
+            return [];
+          });
+      })();
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>

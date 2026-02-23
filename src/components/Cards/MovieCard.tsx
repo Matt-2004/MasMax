@@ -1,5 +1,6 @@
 import ImageUI, { ImageUIContainer } from "@/components/Cards/ImageUI";
 import { CardGridSkeleton } from "@/components/Skeletons";
+import { fetchPopularMovie, fetchTopRatedMovie } from "@/Utils/FetchAPI";
 import { useTheme } from "@/Utils/ThemeContext";
 import { useEffect, useState } from "react";
 
@@ -12,14 +13,13 @@ const MovieCard = () => {
   const [display, setDisplay] = useState<any[]>([]);
   const [select, setSelect] = useState("Popular");
   const [loading, setLoading] = useState(true);
-  useTheme(); // subscribe so CSS vars re-render on theme change
+  useTheme();
 
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
     (async () => {
       try {
-        const { fetchPopularMovie, fetchTopRatedMovie } = await import("@/Utils/FetchAPI");
         const res = select.toLowerCase() === "popular"
           ? await fetchPopularMovie(1)
           : await fetchTopRatedMovie(1);
@@ -46,8 +46,8 @@ const MovieCard = () => {
               onClick={() => setSelect(type.label)}
               disabled={loading}
               className={`px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-semibold font-roboto transition-all duration-200 disabled:opacity-60 ${select === type.label
-                  ? "text-white"
-                  : "bg-white/5 text-white/60 hover:bg-white/10 hover:text-white border border-white/10"
+                ? "text-white"
+                : "bg-white/5 text-white/60 hover:bg-white/10 hover:text-white border border-white/10"
                 }`}
               style={select === type.label ? { background: "var(--accent)" } : {}}
             >

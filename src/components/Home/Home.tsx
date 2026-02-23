@@ -1,49 +1,88 @@
+import { SectionSkeleton } from "@/components/Skeletons";
 import { fetchTrendMovie } from "@/Utils/FetchAPI";
 import { MovieResult } from "@/Utils/Interfaces";
-import { useEffect, useState } from "react";
-import MovieCard from "../Cards/MovieCard";
-import Trending from "../Cards/Trending";
-import Footer from "./Footer";
-import GenreRail from "./GenreRail";
+import { lazy, Suspense, useEffect, useState } from "react";
 import HeroSection from "./HeroSection";
-import NavBar from "./NavBar";
+
+// ── Lazy chunks ────────────────────────────────────────────────────────────
+// NavBar: 556 lines + ThemeToggle + autocomplete — split so it doesn't block hero paint
+const NavBar = lazy(() => import("./NavBar"));
+// GenreRail: below-fold genre pill strip
+const GenreRail = lazy(() => import("./GenreRail"));
+// Footer: entirely below the fold
+const Footer = lazy(() => import("./Footer"));
+// Content sections: only needed after hero is visible
+const Trending = lazy(() => import("../Cards/Trending"));
+const MovieCard = lazy(() => import("../Cards/MovieCard"));
+
+// Grab the early-fired promise from index.html's inline <script>.
+// By the time Home mounts, the fetch is already in-flight (or done).
+declare global { interface Window { __heroPromise?: Promise<MovieResult[]> } }
 
 const Home = () => {
   const [heroMovies, setHeroMovies] = useState<MovieResult[]>([]);
   const [heroLoading, setHeroLoading] = useState(true);
 
   useEffect(() => {
+    // Use the early fetch kicked off in index.html if available, otherwise fall back.
+    // Do NOT guard with a ref — StrictMode double-invokes effects and a ref guard
+    // would cause the second run to skip, leaving heroLoading=true forever.
+    const dataPromise: Promise<MovieResult[]> =
+      window.__heroPromise ?? fetchTrendMovie();
+
     let cancelled = false;
-    (async () => {
-      try {
-        const trending = await fetchTrendMovie();
-        if (!cancelled) setHeroMovies(trending ?? []);
-      } finally {
+    dataPromise
+      .then((results) => {
+        if (!cancelled) setHeroMovies(results ?? []);
+      })
+      .catch(() => {
+        // fetch failed — fall back to real fetch
+        if (!cancelled) {
+          fetchTrendMovie()
+            .then((r) => { if (!cancelled) setHeroMovies(r ?? []); })
+            .catch(() => { });
+        }
+      })
+      .finally(() => {
+        // Always clear loading regardless of cancel — the component is still
+        // mounted at this point because cancel only fires on unmount.
         if (!cancelled) setHeroLoading(false);
-      }
-    })();
+      });
+
     return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <div className="min-h-screen overflow-x-hidden" style={{ background: "var(--bg-base)" }}>
-      {/* Navbar sits above the hero */}
-      <NavBar />
+      {/* NavBar is lazy — placeholder keeps layout stable while chunk loads */}
+      <Suspense fallback={<div style={{ height: 64, background: "var(--bg-nav)" }} />}>
+        <NavBar />
+      </Suspense>
 
-      {/* Hero — full bleed, no extra top spacing needed (NavBar is sticky) */}
+      {/* Hero — full bleed */}
       <HeroSection movies={heroMovies} loading={heroLoading} />
 
-      {/* Genre rail */}
+      {/* Genre rail — lazy, minimal fallback height to avoid layout shift */}
       <div className="h-px" style={{ background: "linear-gradient(to right, transparent, color-mix(in srgb, var(--accent) 25%, transparent), transparent)" }} />
-      <GenreRail />
+      <Suspense fallback={<div style={{ height: 80 }} />}>
+        <GenreRail />
+      </Suspense>
 
-      {/* Content sections */}
+      {/* Below-fold — lazy loaded */}
       <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mx-3 sm:mx-5 lg:mx-8" />
-      <Trending />
+      <Suspense fallback={<SectionSkeleton count={8} />}>
+        {/* Pass the already-fetched trending data so Trending never re-fetches */}
+        <Trending prefetchedData={heroLoading ? undefined : heroMovies} />
+      </Suspense>
       <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mx-3 sm:mx-5 lg:mx-8" />
-      <MovieCard />
+      <Suspense fallback={<SectionSkeleton count={8} />}>
+        <MovieCard />
+      </Suspense>
 
-      <Footer />
+      <Suspense fallback={null}>
+        <Footer />
+      </Suspense>
     </div>
   );
 };

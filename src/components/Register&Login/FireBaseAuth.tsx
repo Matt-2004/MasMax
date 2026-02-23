@@ -22,10 +22,7 @@ const GoogleAuth = () => {
     try {
       const provider = new GoogleAuthProvider();
       // 1. Sign in with Google via Firebase popup
-      const result = await signInWithPopup(auth, provider);
-      const firebaseUser = result.user;
-      const idToken = await firebaseUser.getIdToken();
-
+      await signInWithPopup(auth, provider);
 
       navigate("/");
     } catch (err: any) {

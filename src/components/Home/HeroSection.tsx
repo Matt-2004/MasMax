@@ -1,8 +1,7 @@
 import { PlayIcon, StarIcon } from "@/icons/icons";
-import { getImagePath, getLargeImagePath } from "@/Utils/GetImagePath";
+import { getBackdropSrcSet, getImagePath, getLargeImagePath } from "@/Utils/GetImagePath";
 import { MovieResult } from "@/Utils/Interfaces";
-import { useTheme } from "@/Utils/ThemeContext";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface HeroSectionProps {
@@ -14,38 +13,41 @@ const HeroSection = ({ movies, loading }: HeroSectionProps) => {
     const [current, setCurrent] = useState(0);
     const [animating, setAnimating] = useState(false);
     const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+    const animatingRef = useRef(false);
     const navigate = useNavigate();
-    useTheme(); // subscribe to theme changes so CSS vars re-render
 
     const featured = movies.slice(0, 5);
+
+    const advance = useCallback((dir: 1 | -1) => {
+        if (animatingRef.current) return;
+        animatingRef.current = true;
+        setAnimating(true);
+        setTimeout(() => {
+            setCurrent((c) => (c + dir + featured.length) % featured.length);
+            setAnimating(false);
+            animatingRef.current = false;
+        }, 300);
+    }, [featured.length]);
+
+    const goTo = useCallback((i: number) => {
+        if (animatingRef.current) return;
+        if (intervalRef.current) clearInterval(intervalRef.current);
+        animatingRef.current = true;
+        setAnimating(true);
+        setTimeout(() => { setCurrent(i); setAnimating(false); animatingRef.current = false; }, 300);
+    }, []);
+
+    const handleWatchNow = useCallback((movie: MovieResult) => {
+        localStorage.setItem("id", movie.id.toString());
+        navigate(`/movie/${movie.id}`);
+    }, [navigate]);
 
     // Auto-cycle every 6s
     useEffect(() => {
         if (!featured.length) return;
         intervalRef.current = setInterval(() => advance(1), 6000);
         return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
-    }, [featured.length, current]);
-
-    function advance(dir: 1 | -1) {
-        if (animating) return;
-        setAnimating(true);
-        setTimeout(() => {
-            setCurrent((c) => (c + dir + featured.length) % featured.length);
-            setAnimating(false);
-        }, 300);
-    }
-
-    function goTo(i: number) {
-        if (i === current || animating) return;
-        if (intervalRef.current) clearInterval(intervalRef.current);
-        setAnimating(true);
-        setTimeout(() => { setCurrent(i); setAnimating(false); }, 300);
-    }
-
-    function handleWatchNow(movie: MovieResult) {
-        localStorage.setItem("id", movie.id.toString());
-        navigate(`/movie/${movie.id}`);
-    }
+    }, [featured.length, advance]);
 
     // ── Skeleton ──────────────────────────────────────────────────────────
     if (loading) {
@@ -77,9 +79,16 @@ const HeroSection = ({ movies, loading }: HeroSectionProps) => {
                 <img
                     key={m.id}
                     src={getLargeImagePath(m.backdrop_path)}
+                    srcSet={getBackdropSrcSet(m.backdrop_path)}
+                    // Full-bleed hero: 100vw on all breakpoints
+                    sizes="100vw"
                     alt=""
-                    loading={i === 0 ? "eager" : "lazy"}
-                    decoding="async"
+                    // Only the first two slides load eagerly; the rest defer
+                    loading={i <= 1 ? "eager" : "lazy"}
+                    decoding={i === 0 ? "sync" : "async"}
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore fetchpriority is valid HTML but not yet in TS lib
+                    fetchpriority={i === 0 ? "high" : "low"}
                     className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-700 ${i === current ? "opacity-100" : "opacity-0"
                         }`}
                 />

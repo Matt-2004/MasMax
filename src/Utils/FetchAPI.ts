@@ -1,4 +1,10 @@
+// Simple in-memory request cache — deduplicate identical URLs within the same session
+const _cache = new Map<string, Promise<any>>();
+
 export const fetchFromTMDB = async (url: URL) => {
+  const key = url.toString();
+  if (_cache.has(key)) return _cache.get(key)!;
+
   const options = {
     method: "GET",
     headers: {
@@ -7,13 +13,16 @@ export const fetchFromTMDB = async (url: URL) => {
         "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0OWE1YWI2MjRiZDAxMjhiZGJiMzdjZDNhMmYzNmFhOCIsInN1YiI6IjY1OGFhOThlMzI1YTUxNTc3ZTAzMmI5NyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.bi_2IPf0bZph00Qj5URE-wIk-9bjrm3mMuDSRVg3K58",
     },
   };
-  try {
-    const response = await fetch(url, options);
-    const data = response.json();
-    return data;
-  } catch (err) {
-    console.error("Error while fetching");
-  }
+
+  const promise = fetch(url, options)
+    .then((res) => res.json())
+    .catch((err) => {
+      _cache.delete(key); // don't cache failures
+      console.error("Error while fetching", err);
+    });
+
+  _cache.set(key, promise);
+  return promise;
 };
 
 export const fetchMovieGenres = async () => {
@@ -98,6 +107,19 @@ export const fetchTrendMovie = async (timeLine?: string) => {
       timeLine || "day"
     }?language=en-US`,
   );
+  // If the index.html inline script already fired the same request, reuse it
+  // to avoid a duplicate network call. Seed lazily so module-parse timing
+  // doesn't matter (the inline script always runs before any React code).
+  const key = url.toString();
+  const earlyPromise = (globalThis as any).__heroPromise as
+    | Promise<any[]>
+    | undefined;
+  if (earlyPromise && !_cache.has(key)) {
+    _cache.set(
+      key,
+      earlyPromise.then((results) => ({ results })),
+    );
+  }
   const respones = await fetchFromTMDB(url);
   return respones.results;
 };
@@ -140,4 +162,20 @@ export const fetchTVGenres = async () => {
   const url = new URL("https://api.themoviedb.org/3/genre/tv/list?language=en");
   const response = await fetchFromTMDB(url);
   return response.genres;
+};
+
+export const fetchTVDetails = async (id: number) => {
+  const url = new URL(
+    `https://api.themoviedb.org/3/tv/${id}?language=en-US&append_to_response=aggregate_credits`,
+  );
+  const response = await fetchFromTMDB(url);
+  return response;
+};
+
+export const fetchTVVideos = async (id: number) => {
+  const url = new URL(
+    `https://api.themoviedb.org/3/tv/${id}/videos?language=en-US`,
+  );
+  const response = await fetchFromTMDB(url);
+  return response.results;
 };

@@ -6,14 +6,16 @@ import {
     fetchTopRatedTV,
     fetchTrendingTV,
 } from "@/Utils/FetchAPI";
-import { getImagePath } from "@/Utils/GetImagePath";
+import { getImagePath, getPosterSrcSet, getTinyPosterPath } from "@/Utils/GetImagePath";
 import { TVResult } from "@/Utils/Interfaces";
 import { useTheme } from "@/Utils/ThemeContext";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Footer from "../Home/Footer";
-import NavBar from "../Home/NavBar";
+
+// NavBar and Footer are lazy — they don't affect the series grid render
+const NavBar = lazy(() => import("../Home/NavBar"));
+const Footer = lazy(() => import("../Home/Footer"));
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
@@ -49,9 +51,13 @@ function SeriesCard({ item }: { item: TVResult }) {
         >
             <div className="relative w-full aspect-[2/3] overflow-hidden flex-shrink-0">
                 <img
-                    src={getImagePath(500, item.poster_path)}
+                    src={getImagePath(342, item.poster_path)}
+                    srcSet={getPosterSrcSet(item.poster_path)}
+                    sizes="(max-width: 639px) 45vw, (max-width: 767px) 30vw, (max-width: 1023px) 22vw, 18vw"
                     alt={title}
                     loading="lazy"
+                    decoding="async"
+                    style={{ backgroundImage: `url(${getTinyPosterPath(item.poster_path)})`, backgroundSize: "cover" }}
                     className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
@@ -140,7 +146,9 @@ const SeriesPage = () => {
 
     return (
         <div className="min-h-screen overflow-x-hidden" style={{ background: "var(--bg-base)" }}>
-            <NavBar />
+            <Suspense fallback={<div style={{ height: 64, background: "var(--bg-nav)" }} />}>
+                <NavBar />
+            </Suspense>
 
             <div className="w-full mt-8 sm:mt-12 mb-8 sm:mb-10">
                 <div className="max-w-[90rem] mx-auto px-3 sm:px-5 lg:px-8">
@@ -204,7 +212,9 @@ const SeriesPage = () => {
                 </div>
             </div>
 
-            <Footer />
+            <Suspense fallback={null}>
+                <Footer />
+            </Suspense>
         </div>
     );
 };

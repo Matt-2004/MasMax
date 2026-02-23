@@ -1,10 +1,11 @@
 import { fetchSearchMovie } from "@/Utils/FetchAPI";
 import { MovieResult } from "@/Utils/Interfaces";
 import { SearchResultsSkeleton } from "@/components/Skeletons";
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getImagePath } from "../../Utils/GetImagePath";
-import NavBar from "../Home/NavBar";
+
+const NavBar = lazy(() => import("../Home/NavBar"));
 
 export function capitalizeFirstLetterEachWord(str: string) {
   return str.replace(/\b\w/g, (m) => m.toUpperCase());
@@ -39,7 +40,9 @@ const MoviePage = () => {
 
   return (
     <div className="min-h-screen" style={{ background: "var(--bg-base)" }}>
-      <NavBar />
+      <Suspense fallback={<div style={{ height: 64, background: "var(--bg-nav)" }} />}>
+        <NavBar />
+      </Suspense>
       <div className="max-w-6xl mx-auto px-3 sm:px-6 lg:px-10 py-6 sm:py-8">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">

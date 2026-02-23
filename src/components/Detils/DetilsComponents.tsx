@@ -1,5 +1,5 @@
 import { StarIcon } from "@/icons/icons";
-import { getImagePath, getLargeImagePath } from "@/Utils/GetImagePath";
+import { getBackdropSrcSet, getImagePath, getLargeImagePath, getPosterSrcSet } from "@/Utils/GetImagePath";
 import getVideoPath from "@/Utils/GetVideoPath";
 import { useNavigate } from "react-router-dom";
 
@@ -13,9 +13,14 @@ export function BackdropHero({ backdrop_path, title }: BackdropHeroProps) {
     <div className="relative w-full h-[40vw] min-h-[180px] max-h-[520px] overflow-hidden">
       <img
         src={getLargeImagePath(backdrop_path)}
+        srcSet={getBackdropSrcSet(backdrop_path)}
+        sizes="100vw"
         alt={title}
         loading="eager"
         decoding="async"
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        fetchpriority="high"
         className="w-full h-full object-cover object-center"
       />
       {/* multi-stop gradient: transparent top → heavy dark at bottom */}
@@ -40,6 +45,9 @@ export function PosterCard({ poster_path, movie_id, title }: PosterCardProps) {
     >
       <img
         src={getImagePath(342, poster_path)}
+        srcSet={getPosterSrcSet(poster_path)}
+        // w-36 = 144px, w-48 = 192px, w-60 = 240px
+        sizes="(max-width: 639px) 144px, (max-width: 1023px) 192px, 240px"
         alt={title}
         loading="eager"
         decoding="async"
@@ -59,16 +67,18 @@ export function PosterCard({ poster_path, movie_id, title }: PosterCardProps) {
 
 /* ── Genre pills ───────────────────────────────────────────── */
 export function GenreList({ genres }: { genres: any[] }) {
+  const navigate = useNavigate();
   if (!Array.isArray(genres) || !genres.length) return null;
   return (
     <div className="flex flex-wrap gap-2">
       {genres.map((genre: any) => (
-        <span
+        <button
           key={genre.id ?? genre.name}
-          className="px-3 py-1 text-xs font-semibold font-roboto text-[#60c8f5] border border-[#2eade7]/30 bg-[#2eade7]/8 rounded-full"
+          onClick={() => navigate(`/genres/${genre.id}`, { state: { searchValue: genre.name } })}
+          className="px-3 py-1 text-xs font-semibold font-roboto text-[#60c8f5] border border-[#2eade7]/30 bg-[#2eade7]/8 rounded-full cursor-pointer transition-all duration-150 hover:bg-[#2eade7]/20 hover:border-[#2eade7]/60 active:scale-95"
         >
           {genre.name}
-        </span>
+        </button>
       ))}
     </div>
   );

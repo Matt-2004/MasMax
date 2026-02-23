@@ -1,6 +1,6 @@
 import { CardGridSkeleton } from "@/components/Skeletons";
 import { PlusIcon, StarIcon } from "@/icons/icons";
-import { getImagePath } from "@/Utils/GetImagePath";
+import { getImagePath, getPosterSrcSet, getTinyPosterPath } from "@/Utils/GetImagePath";
 import { MovieResult, TVResult } from "@/Utils/Interfaces";
 import { useNavigate } from "react-router-dom";
 
@@ -39,6 +39,8 @@ function MovieCardItem({ movie: p, mediaType }: { movie: MediaItem; mediaType: "
     }
   }
 
+  const title = getDisplayTitle(p);
+
   return (
     <div className='group flex flex-col rounded-xl overflow-hidden ring-1 ring-white/10 hover:ring-[var(--accent)]/60 transition-all duration-300 hover:-translate-y-1 cursor-pointer' style={{ background: "var(--bg-card)" }}>
       {/* Poster — fixed 2:3 aspect ratio, always fills the slot */}
@@ -47,9 +49,15 @@ function MovieCardItem({ movie: p, mediaType }: { movie: MediaItem; mediaType: "
         onClick={handleNavigate}
       >
         <img
-          src={getImagePath(500, p.poster_path)}
-          alt={getDisplayTitle(p)}
+          src={getImagePath(342, p.poster_path)}
+          srcSet={getPosterSrcSet(p.poster_path)}
+          // Grid is 2 cols on mobile (~45vw), 3 on sm (~30vw), 4 on md (~22vw), 5 on lg (~18vw)
+          sizes="(max-width: 639px) 45vw, (max-width: 767px) 30vw, (max-width: 1023px) 22vw, 18vw"
+          alt={title}
           loading='lazy'
+          decoding='async'
+          // Blur-up: show tiny placeholder colour while real image loads
+          style={{ backgroundImage: `url(${getTinyPosterPath(p.poster_path)})`, backgroundSize: "cover" }}
           className='w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105'
         />
         {/* Dark vignette on hover */}
