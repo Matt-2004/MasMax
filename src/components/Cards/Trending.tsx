@@ -1,30 +1,32 @@
+import ImageUI, { ImageTitleContainer, ImageUIContainer } from "@/components/Cards/ImageUI";
+import { SectionSkeleton } from "@/components/Skeletons";
 import { useEffect, useState } from "react";
-import ImageUI, { ImageUIContainer } from "@/components/Cards/ImageUI";
-import { ImageTitleContainer } from "@/components/Cards/ImageUI";
 
 const Trending = () => {
   const [trend, setTrend] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetching = async () => {
-      const { fetchTrendMovie } = await import("@/Utils/FetchAPI");
-      const trending = await fetchTrendMovie();
-      setTrend(trending);
-    };
-    fetching();
+    let cancelled = false;
+    (async () => {
+      try {
+        const { fetchTrendMovie } = await import("@/Utils/FetchAPI");
+        const trending = await fetchTrendMovie();
+        if (!cancelled) setTrend(trending ?? []);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => { cancelled = true; };
   }, []);
 
+  if (loading) return <SectionSkeleton count={8} />;
+
   return (
-    <>
-      {trend ? (
-        <ImageUIContainer>
-          <ImageTitleContainer titleName={"Trending"} />
-          <ImageUI data={trend} />
-        </ImageUIContainer>
-      ) : (
-        <div className='text-xl text-white'>Loading...</div>
-      )}
-    </>
+    <ImageUIContainer>
+      <ImageTitleContainer titleName="Trending" />
+      <ImageUI data={trend} />
+    </ImageUIContainer>
   );
 };
 

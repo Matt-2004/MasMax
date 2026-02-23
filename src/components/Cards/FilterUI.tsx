@@ -44,20 +44,20 @@ const FilterUI = (props: IFilterUI) => {
         data-toggle='dropdown'
         aria-haspopup='true'
         aria-expanded='false'
-        className='bg-[#2eade7] text-[#26262e]  text-lg h-[2.5rem] items-center  cursor-pointer flex justify-around   font-roboto px-5  py-2 rounded-lg'
+        className='bg-gradient-to-r from-[#2eade7] to-[#1a8fc7] text-white text-sm h-[2.4rem] items-center cursor-pointer flex justify-between font-roboto font-semibold px-4 py-2 rounded-lg gap-2 hover:from-[#1a8fc7] hover:to-[#2eade7] transition-all duration-200'
       >
         <div>{select}</div>
-        <span className='text-sm mt-1'>{icon}</span>
+        <span className='text-xs opacity-80'>{icon}</span>
       </div>
       <ul
         ref={dropDownRef}
-        className='text-white hidden h-[5rem]  border border-[#2eade7] cursor-pointer  rounded-lg  font-roboto bg-[#26262e] w-[9rem] py-[3px] z-30  text-center'
+        className='text-white hidden border border-[#2eade7]/40 cursor-pointer rounded-lg font-roboto bg-[#1e1e26] w-[9rem] py-1 z-30 text-center overflow-hidden'
       >
         {FilterType.map((types, i) => (
           <li
             key={i}
             onClick={(e) => navi(e, types.path)}
-            className='  bg-[#26262e] py-1   hover:bg-[#858588] '
+            className='py-2 px-3 hover:bg-[#2eade7]/20 hover:text-[#2eade7] transition-colors duration-150 text-sm'
           >
             {types.label}
           </li>

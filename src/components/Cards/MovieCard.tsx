@@ -1,57 +1,64 @@
-import { useEffect, useState } from "react";
 import ImageUI, { ImageUIContainer } from "@/components/Cards/ImageUI";
-import FilterUI from "./FilterUI";
+import { CardGridSkeleton } from "@/components/Skeletons";
+import { useTheme } from "@/Utils/ThemeContext";
+import { useEffect, useState } from "react";
+
+const movieType = [
+  { label: "Popular", id: 1 },
+  { label: "Top rated", id: 2 },
+];
 
 const MovieCard = () => {
-  // to store a data from fetch
-  const [display, setDisplay] = useState([]);
-
-  // to store a type of filter as Paramater
+  const [display, setDisplay] = useState<any[]>([]);
   const [select, setSelect] = useState("Popular");
-
-  // types for filter
-  const movieType = [
-    {
-      label: "Popular",
-      id: 1,
-    },
-    {
-      label: "Top rated",
-      id: 2,
-    },
-  ];
+  const [loading, setLoading] = useState(true);
+  useTheme(); // subscribe so CSS vars re-render on theme change
 
   useEffect(() => {
-    const fetching = async () => {
-      const { fetchPopularMovie, fetchTopRatedMovie } = await import(
-        "@/Utils/FetchAPI"
-      );
-      if (select.toLowerCase() === "popular") {
-        const res = await fetchPopularMovie(1);
-        setDisplay(res);
-      } else {
-        const res = await fetchTopRatedMovie(1);
-        setDisplay(res);
+    let cancelled = false;
+    setLoading(true);
+    (async () => {
+      try {
+        const { fetchPopularMovie, fetchTopRatedMovie } = await import("@/Utils/FetchAPI");
+        const res = select.toLowerCase() === "popular"
+          ? await fetchPopularMovie(1)
+          : await fetchTopRatedMovie(1);
+        if (!cancelled) setDisplay(res ?? []);
+      } finally {
+        if (!cancelled) setLoading(false);
       }
-    };
-    fetching();
+    })();
+    return () => { cancelled = true; };
   }, [select]);
 
   return (
-    <>
-      {display ? (
-        <ImageUIContainer>
-          <div className='flex justify-between mx-2'>
-            <div className='mb-8 lg:text-3xl font-bold  md:text-2xl sm:text-xl max-sm:text-3xl text-[#2eade7]'>
-              Movies
-            </div>
-          </div>
-          <ImageUI data={display} />
-        </ImageUIContainer>
-      ) : (
-        <div className='text-xl text-white'>Loading...</div>
-      )}
-    </>
+    <ImageUIContainer>
+      {/* Header row — always visible so filter buttons don't disappear during load */}
+      <div className='flex items-center justify-between mb-4 sm:mb-6 flex-wrap gap-3'>
+        <div className='flex items-center gap-2 sm:gap-3'>
+          <div className='w-1 h-7 sm:h-8 rounded-full flex-shrink-0' style={{ background: "linear-gradient(to bottom, var(--accent), var(--accent-dark))" }} />
+          <div className='text-xl sm:text-2xl md:text-3xl font-bold text-white'>Movies</div>
+        </div>
+        <div className='flex gap-2 flex-wrap'>
+          {movieType.map((type) => (
+            <button
+              key={type.id}
+              onClick={() => setSelect(type.label)}
+              disabled={loading}
+              className={`px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-semibold font-roboto transition-all duration-200 disabled:opacity-60 ${select === type.label
+                  ? "text-white"
+                  : "bg-white/5 text-white/60 hover:bg-white/10 hover:text-white border border-white/10"
+                }`}
+              style={select === type.label ? { background: "var(--accent)" } : {}}
+            >
+              {type.label}
+            </button>
+          ))}
+        </div>
+      </div>
+      {/* Grid or skeleton */}
+      {loading ? <CardGridSkeleton count={8} /> : <ImageUI data={display} />}
+    </ImageUIContainer>
   );
 };
 

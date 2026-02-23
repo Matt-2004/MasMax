@@ -1,41 +1,74 @@
-import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { auth, provider } from "../../Utils/FirebaseConfig";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { auth } from "../../Utils/FirebaseConfig";
+import { useUser } from "../../Utils/UserContext";
 
 const GoogleAuth = () => {
-  const handleGoogleLogin = async (e: any) => {
+  const navigate = useNavigate();
+  // UserContext listens to onAuthStateChanged automatically;
+  // we just need to trigger navigate after sign-in.
+  useUser();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+
+
+  const handleGoogleLogin = async (e: React.MouseEvent) => {
     e.preventDefault();
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential?.accessToken;
-        console.log(token);
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        console.error(errorCode);
-        const errorMessage = error.message;
-        console.error(errorMessage);
-        // The email of the user's account used.
-        const email = error.customData.email;
-        console.log(email);
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        console.error(credential);
-      });
-    // ...
+    setError("");
+    setLoading(true);
+
+    try {
+      const provider = new GoogleAuthProvider();
+      // 1. Sign in with Google via Firebase popup
+      const result = await signInWithPopup(auth, provider);
+      const firebaseUser = result.user;
+      const idToken = await firebaseUser.getIdToken();
+
+
+      navigate("/");
+    } catch (err: any) {
+      // Supabase OIDC not configured — fall back to Firebase-only session
+      if (err?.message?.includes("IdP is not enabled")) {
+        const fbUser = auth.currentUser;
+        if (fbUser) {
+          localStorage.setItem("user_id", fbUser.uid);
+          localStorage.setItem("user_email", fbUser.email ?? "");
+          localStorage.setItem("username", fbUser.displayName ?? fbUser.email ?? "");
+          navigate("/");
+          return;
+        }
+      }
+      const msg = err?.code === "auth/popup-closed-by-user"
+        ? "Sign-in popup was closed."
+        : (err?.message ?? "Google sign-in failed. Please try again.");
+      setError(msg);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <section className=' flex mt-5 justify-center font-roboto '>
+    <div className="flex flex-col items-center gap-2 w-full">
       <button
-        onClick={(e) => handleGoogleLogin(e)}
-        className='text-black px-2 flex hover:opacity-90 justify-around font-semibold rounded-3xl  items-center text-lg  py-2 w-[15rem] bg-white '
+        onClick={handleGoogleLogin}
+        disabled={loading}
+        className="w-full flex items-center justify-center gap-3 px-4 py-2.5 rounded-xl bg-white hover:bg-white/90 active:scale-[0.98] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
       >
-        <GoogleIcon />
-        <p className='text-[1rem]'>Sign in with Google</p>
+        {loading ? (
+          <span className="w-5 h-5 border-2 border-gray-300 border-t-gray-700 rounded-full animate-spin" />
+        ) : (
+          <GoogleIcon />
+        )}
+        <span className="text-gray-800 font-semibold text-sm font-roboto">
+          {loading ? "Signing in…" : "Continue with Google"}
+        </span>
       </button>
-    </section>
+      {error && (
+        <p className="text-red-400 text-xs font-roboto text-center">{error}</p>
+      )}
+    </div>
   );
 };
 

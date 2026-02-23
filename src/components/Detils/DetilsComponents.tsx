@@ -1,198 +1,198 @@
-import { PlusIcon, StarIcon } from "@/icons/icons";
+import { StarIcon } from "@/icons/icons";
 import { getImagePath, getLargeImagePath } from "@/Utils/GetImagePath";
 import getVideoPath from "@/Utils/GetVideoPath";
-import React from "react";
 import { useNavigate } from "react-router-dom";
 
-export function BackDropPath({ backdrop_path }: any) {
+/* ── Backdrop hero ─────────────────────────────────────────── */
+interface BackdropHeroProps {
+  backdrop_path: string;
+  title: string;
+}
+export function BackdropHero({ backdrop_path, title }: BackdropHeroProps) {
   return (
-    <>
-      <section className='relative'>
-        <img
-          src={getLargeImagePath(backdrop_path)}
-          className='flex lg:h-[37.5rem] blur-lg max-sm:h-[19rem] w-[100%] object-cover object-top '
-        />
-        <div className='absolute inset-0 bg-gradient-to-t from-gray-200/0 via-gray-900/40 to-[#1A1C29]/80' />
-      </section>
-    </>
+    <div className="relative w-full h-[40vw] min-h-[180px] max-h-[520px] overflow-hidden">
+      <img
+        src={getLargeImagePath(backdrop_path)}
+        alt={title}
+        loading="eager"
+        decoding="async"
+        className="w-full h-full object-cover object-center"
+      />
+      {/* multi-stop gradient: transparent top → heavy dark at bottom */}
+      <div className="absolute inset-0 bg-gradient-to-t from-[#111115] via-[#111115]/60 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#111115]/40 to-transparent" />
+    </div>
   );
 }
 
-export function RightInfoContainer({ children }: any) {
-  return <div className='pl-[1.25rem]'>{children}</div>;
-}
-
-export function LanguageAndVoteContainer({ children }: any) {
-  return <div className='flex gap-3'>{children}</div>;
-}
-
-interface PosterProps {
+/* ── Poster card ───────────────────────────────────────────── */
+interface PosterCardProps {
   poster_path: string;
-  width: number;
   movie_id: string;
+  title: string;
 }
-
-// const addFavourite = async (movie_id: string) => {
-//   const user_id = localStorage.getItem("user_Id"); // have to set the user_id
-//   const response = await fetch("https://auth-2ngh.onrender.com/addFavID", {
-//     method: "PUT",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify({
-//       _id: user_id,
-//       favID: movie_id,
-//     }),
-//   });
-//   if (!response.ok) {
-//     throw new Error("Add Favourite Failed!");
-//   }
-//   console.log("Add Favourite success!");
-// };
-
-export function Poster_path({ poster_path, width, movie_id }: PosterProps) {
+export function PosterCard({ poster_path, movie_id, title }: PosterCardProps) {
   const navigate = useNavigate();
   return (
-    <>
+    <div
+      onClick={() => navigate(`/movie/${movie_id}`)}
+      className="group relative w-36 sm:w-48 lg:w-60 aspect-[2/3] rounded-2xl overflow-hidden ring-2 ring-white/10 hover:ring-[#2eade7]/60 transition-all duration-300 cursor-pointer shadow-2xl shadow-black/60 flex-shrink-0"
+    >
       <img
-        onClick={() => {
-          localStorage.setItem("id", movie_id.toString()),
-            navigate(`/movie/${movie_id}`);
-        }}
-        src={getImagePath(300, poster_path)}
-        className={`relative md:static sm:h-[18rem] max-sm:h-[15.62rem] md:h-[20rem] lg:h-[${width}rem] `}
+        src={getImagePath(342, poster_path)}
+        alt={title}
+        loading="eager"
+        decoding="async"
+        className="w-full h-full object-cover"
       />
-      <span
-        className='absolute cursor-pointer top-0 left-0 px-2 py-2 bg-gray-600 opacity-80 hover:opacity-90 text-white'
-        onClick={() => console.log(movie_id)}
-      >
-        <PlusIcon />
-      </span>
-    </>
+      {/* Hover overlay */}
+      <div className="absolute inset-0 bg-[#2eade7]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+        <span className="w-10 h-10 rounded-full bg-[#2eade7]/80 flex items-center justify-center">
+          <svg className="w-4 h-4 fill-white ml-0.5" viewBox="0 0 384 512">
+            <path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80L0 432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z" />
+          </svg>
+        </span>
+      </div>
+    </div>
   );
 }
 
-export function Title({ title, release_date }: any) {
+/* ── Genre pills ───────────────────────────────────────────── */
+export function GenreList({ genres }: { genres: any[] }) {
+  if (!Array.isArray(genres) || !genres.length) return null;
   return (
-    <span className='lg:text-4xl md:text-3xl sm:text-2xl max-sm:text-2xl font-roboto font-semibold text-slate-200'>
-      {title} ({release_date.slice(0, 4)})
-    </span>
-  );
-}
-
-export function Genres({ genres }: any) {
-  return (
-    <div className='text-slate-300 mt-4  flex xl:text-lg md:text-md'>
+    <div className="flex flex-wrap gap-2">
       {genres.map((genre: any) => (
-        <div
-          key={genre.key}
-          className='hover:text-slate-500 px-3 text-[1rem] font-semibold  border border-slate-400 hover:border-slate-500 mr-2 rounded-2xl'
+        <span
+          key={genre.id ?? genre.name}
+          className="px-3 py-1 text-xs font-semibold font-roboto text-[#60c8f5] border border-[#2eade7]/30 bg-[#2eade7]/8 rounded-full"
         >
           {genre.name}
-        </div>
+        </span>
       ))}
     </div>
   );
 }
 
-export function OverView({ overview }: any) {
+/* ── Rating badge ──────────────────────────────────────────── */
+export function RatingBadge({
+  vote_average,
+  vote_count,
+}: {
+  vote_average: number;
+  vote_count?: number;
+}) {
+  const score = Math.round(vote_average * 10) / 10;
+  const pct = (vote_average / 10) * 100;
+
   return (
-    <section className='mt-10 w-[100%] sm:flex justify-center  max-sm:flex max-sm:justify-center'>
-      <div className='lg:text-2xl max-sm:w-[95%] sm:w-[80%]  sm:text-2xl max-sm:text-xl font-roboto text-white overflow-hidden  sm:font-semibold max-sm:font-semibold mt-4'>
-        Overview
-        <div className='text-white  mt-6 no-scrollbar font-normal font-roboto leading-loose sm:leading-6 max-sm:leading-6 text-lg  max-sm:text-[0.9rem] xl:w-[52rem] lg:w-[37.5rem] md:w-[25rem] max-sm:w-[19rem]'>
-          {overview}
+    <div className="flex items-center gap-3">
+      {/* Circular progress */}
+      <div className="relative w-12 h-12 flex-shrink-0">
+        <svg className="w-full h-full -rotate-90" viewBox="0 0 40 40">
+          <circle cx="20" cy="20" r="16" strokeWidth="3.5" className="stroke-white/10 fill-none" />
+          <circle
+            cx="20" cy="20" r="16"
+            strokeWidth="3.5"
+            strokeLinecap="round"
+            className="fill-none"
+            stroke={pct >= 70 ? "#22c55e" : pct >= 45 ? "#eab308" : "#ef4444"}
+            strokeDasharray={`${(pct / 100) * 100.53} 100.53`}
+          />
+        </svg>
+        <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white font-roboto">
+          {score}
+        </span>
+      </div>
+      <div>
+        <div className="flex items-center gap-1">
+          <StarIcon />
+          <span className="text-white font-semibold font-roboto text-lg">{score}</span>
+          <span className="text-white/35 font-roboto text-sm">/10</span>
         </div>
+        {vote_count !== undefined && (
+          <p className="text-white/35 font-roboto text-xs mt-0.5">
+            {vote_count.toLocaleString()} votes
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ── Watchlist button ──────────────────────────────────────── */
+export function WatchlistButton({ movie_id }: { movie_id: string }) {
+  return (
+    <button
+      onClick={() => console.log("watchlist", movie_id)}
+      className="self-start flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#2eade7] to-[#1a8fc7] hover:from-[#3bbef5] hover:to-[#2eade7] rounded-xl font-roboto font-semibold text-sm text-white transition-all duration-200 active:scale-95"
+    >
+      <svg className="w-4 h-4 fill-white" viewBox="0 0 448 512">
+        <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z" />
+      </svg>
+      Add to Watchlist
+    </button>
+  );
+}
+
+/* ── Overview ─────────────────────────────────────────────── */
+export function OverviewSection({ overview }: { overview: string }) {
+  return (
+    <div>
+      <p className="text-white/45 font-roboto text-sm font-semibold uppercase tracking-widest mb-2">
+        Overview
+      </p>
+      <p className="text-white/75 font-roboto text-base leading-relaxed">
+        {overview}
+      </p>
+    </div>
+  );
+}
+
+/* ── Videos / trailers ─────────────────────────────────────── */
+export function VideosSection({ videos }: { videos: any[] }) {
+  if (!Array.isArray(videos) || !videos.length) return null;
+
+  // Prioritise official trailers
+  const sorted = [...videos].sort((a, b) => {
+    const score = (v: any) =>
+      v.type === "Trailer" && v.official ? 2 :
+        v.type === "Trailer" ? 1 : 0;
+    return score(b) - score(a);
+  });
+
+  return (
+    <section className="mt-12">
+      <h2 className="text-xl font-bold font-roboto text-white mb-5">
+        Trailers &amp; Videos
+        <span className="text-white/30 font-normal text-base ml-2">({sorted.length})</span>
+      </h2>
+      <div className="flex gap-3 sm:gap-4 overflow-x-auto no-scrollbar pb-2" style={{ touchAction: "pan-x" }}>
+        {sorted.map((video: any) => (
+          <div key={video.id} className="flex-shrink-0 w-[85vw] sm:w-[min(70vw,420px)] md:w-[min(55vw,480px)]">
+            <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-white/5 ring-1 ring-white/10">
+              <iframe
+                title={video.name}
+                src={getVideoPath(video.key)}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                loading="lazy"
+                className="absolute inset-0 w-full h-full"
+              />
+            </div>
+            <p className="mt-2 text-white/55 font-roboto text-xs truncate px-1">{video.name}</p>
+          </div>
+        ))}
       </div>
     </section>
   );
 }
 
-export function roundNumber(number: number) {
-  return Math.round(number * 10) / 10;
-}
-
-export function VoteAverage({ vote_average }: any) {
-  return (
-    <div className=' flex flex-col justify-center items-center mt-4  text-center  '>
-      <span className='text-lg px-3  '>
-        <StarIcon />{" "}
-        <span className='text-2xl font-semibold text-white'>
-          {roundNumber(vote_average)}
-        </span>
-        <span className='text-gray-400'>/10</span>
-      </span>
-    </div>
-  );
-}
-
-export function Videos({ videos }: any) {
-  function HeaderContainer({ children }: any) {
-    return <div className=''>{children}</div>;
-  }
-
-  return (
-    <>
-      {videos ? (
-        <section className='mt-10 w-[100%] sm:flex justify-center  max-sm:flex max-sm:justify-center'>
-          <div className='max-sm:flex max-sm:w-[95%] sm:w-[80%]  max-sm:flex-col max-sm:justify-center '>
-            <HeaderContainer>
-              <h2 className='text-2xl font-medium text-white font-roboto dark:text-black'>
-                Trailer
-              </h2>
-            </HeaderContainer>
-            <ul className='flex w-[90%] sm:overflow-hidden pt-5 '>
-              <div className='flex overflow-x-scroll no-scrollbar gap-3'>
-                {videos.map((video: any) => (
-                  <li key={video.id}>
-                    <iframe
-                      className='xl:w-[40rem] rounded-md lg:w-[28rem] md:w-[24rem] max-sm:w-[23rem]  xl:h-[28rem] lg:h-[16rem] md:h-[14rem] max-sm:h-[14rem]'
-                      title={video.name}
-                      src={getVideoPath(video.key)}
-                      allowFullScreen
-                    />
-                  </li>
-                ))}
-              </div>
-            </ul>
-          </div>
-        </section>
-      ) : (
-        <span className='text-white'>Loading</span>
-      )}
-    </>
-  );
-}
-
-export function FavouriteAndWatchlistContainer({ children }: any) {
-  return (
-    <div className='text-white flex  font-roboto  rounded-lg mt-3'>
-      {children}
-    </div>
-  );
-}
-
-interface IButton extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  text: string;
-  width: string;
-  icon?: React.SVGAttributes<SVGAElement>;
-  color: string;
-  hover_color: string;
-}
-
-export function FavouriteBtn(props: IButton) {
-  const { text, width, icon, color, hover_color } = props;
-  // Note: Have to give rem value to width
-  return (
-    <div
-      className={`${color} px-3 items-center hover:${hover_color} w-[${width}rem] flex justify-center py-2 rounded-sm `}
-    >
-      <div className=' items-center'>
-        <div className='flex'>
-          {icon}
-          <p className='pl-[2px]'>{text}</p>
-        </div>
-      </div>
-    </div>
-  );
-}
+/* ── Legacy exports (keep other pages building) ──────────────── */
+export const BackDropPath = BackdropHero;
+export const Poster_path = PosterCard;
+export const Genres = GenreList;
+export const VoteAverage = RatingBadge;
+export const OverView = OverviewSection;
+export const Videos = VideosSection;
+export { };

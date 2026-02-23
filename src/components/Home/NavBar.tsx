@@ -3,16 +3,15 @@ import {
   FilmIcon,
   MenuIcon,
   SearchIcon,
-  TicketIcon,
-  Xicon,
+  Xicon
 } from "@/icons/icons";
-<<<<<<< HEAD
-import { Dispatch, SetStateAction, useState } from "react";
-=======
-import { useState } from "react";
->>>>>>> parent of 30daecd (Update: Navbar animation)
-import { useNavigate } from "react-router-dom";
-
+import { fetchSearchMovie } from "@/Utils/FetchAPI";
+import { getImagePath } from "@/Utils/GetImagePath";
+import { DetilsResult } from "@/Utils/Interfaces";
+import { useUser } from "@/Utils/UserContext";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import ThemeToggle from "./ThemeToggle";
 
 interface IItems {
   [item: string]: IItem;
@@ -22,201 +21,535 @@ interface IItem {
   id: number;
   path: string;
   icon: React.ReactNode;
-  subMenu?: string[];
-}
-
-interface ExpandedState {
-  [key: number]: boolean;
 }
 
 const NavBar = () => {
   const navigate = useNavigate();
-  const navbarItems: IItems = {
-    Movies: {
-      id: 1,
-      path: "/",
-      icon: <FilmIcon />,
-      subMenu: [
-        "Popular Movies",
-        "Trending Movies",
-        "Upcoming Movies",
-        "Top Rated Movies",
-        "Now Playing Movies",
-      ],
-    },
-    Series: { id: 2, path: "/", icon: <FilmIcon /> },
+  const location = useLocation();
 
-    Tickets: { id: 3, path: "/", icon: <TicketIcon /> },
+  const navbarItems: IItems = {
+    Movies: { id: 1, path: "/", icon: <FilmIcon /> },
+    Series: { id: 2, path: "/series", icon: <FilmIcon /> },
   };
-  const [activeMenu, setActiveMenu] = useState<boolean>(false);
-  const [searchInput, setSearchInput] = useState<string>("");
-  const [activeSearch, setActiveSearch] = useState<boolean>(false);
-  const [activeDrop, setActiveDrop] = useState<string>("Movies");
-  const [loading, setLoading] = useState<boolean>(false);
-  const [expandedMenus, setExpandedMenus] = useState<ExpandedState>({
-    1: false,
-    2: false,
-    3: false,
-  });
-  function handleMenu() {
-    setActiveMenu(!activeMenu);
+
+  const { user, logout } = useUser();
+  const [activeMenu, setActiveMenu] = useState(false);
+  const [activeSearch, setActiveSearch] = useState(false);
+  const [avatarOpen, setAvatarOpen] = useState(false);
+  const avatarRef = useRef<HTMLDivElement>(null);
+  const [searchInput, setSearchInput] = useState("");
+  const [scrolled, setScrolled] = useState(false);
+  const [suggestions, setSuggestions] = useState<DetilsResult[]>([]);
+  const [acLoading, setAcLoading] = useState(false);
+  const [activeIdx, setActiveIdx] = useState(-1);
+  const searchRef = useRef<HTMLInputElement>(null);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const activeDrop = Object.entries(navbarItems).find(
+    ([, item]) => item.path === location.pathname
+  )?.[0] ?? "Movies";
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    if (activeSearch) {
+      searchRef.current?.focus();
+    } else {
+      setSuggestions([]);
+      setSearchInput("");
+      setActiveIdx(-1);
+    }
+  }, [activeSearch]);
+
+  useEffect(() => {
+    setActiveMenu(false);
+    setAvatarOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (avatarRef.current && !avatarRef.current.contains(e.target as Node)) {
+        setAvatarOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const fetchSuggestions = useCallback((query: string) => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    if (!query.trim()) { setSuggestions([]); setAcLoading(false); return; }
+    setAcLoading(true);
+    debounceRef.current = setTimeout(async () => {
+      try {
+        const results: DetilsResult[] = await fetchSearchMovie(query);
+        const filtered = results
+          .filter((r) => r.original_language === "en" && r.poster_path)
+          .sort((a, b) => new Date(b.release_date).getTime() - new Date(a.release_date).getTime())
+          .slice(0, 7);
+        setSuggestions(filtered);
+      } catch {
+        setSuggestions([]);
+      } finally {
+        setAcLoading(false);
+      }
+    }, 300);
+  }, []);
+
+  function handleSearchSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const query = searchInput.trim();
+    if (!query) return;
+    setActiveSearch(false);
+    navigate(`/search/${query}`, { state: { searchValue: query } });
   }
 
-  const toggleMenu = (id: number) => {
-    setExpandedMenus((prevState) => {
-      // Create a new state object with the specific menu item set to true
-      const newState = Object.keys(prevState).reduce(
-        (acc, key) => {
-          acc[Number(key)] = Number(key) === id;
-          return acc;
-        },
-        {} as { [key: number]: boolean }
-      );
+  function handleSuggestionClick(item: DetilsResult) {
+    setActiveSearch(false);
+    localStorage.setItem("id", item.id.toString());
+    navigate(`/movie/${item.id}`);
+  }
 
-      return newState;
-    });
-  };
+  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (!suggestions.length) return;
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setActiveIdx((i) => Math.min(i + 1, suggestions.length - 1));
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setActiveIdx((i) => Math.max(i - 1, -1));
+    } else if (e.key === "Enter" && activeIdx >= 0) {
+      e.preventDefault();
+      handleSuggestionClick(suggestions[activeIdx]);
+    } else if (e.key === "Escape") {
+      setActiveSearch(false);
+    }
+  }
+
   return (
-    <section className=' w-full h-[3.5rem] items-center flex justify-between '>
-      <div className='flex items-center gap-6 ml-4'>
-        <div onClick={handleMenu} className='h-5 w-5 sm:hidden mb-1'>
-          <MenuIcon />
+    <>
+      {/* ── Main bar ─────────────────────────────────────────────── */}
+      <header
+        className="w-full sticky top-0 z-40 transition-all duration-300"
+        style={{
+          background: scrolled
+            ? "color-mix(in srgb, var(--bg-nav-scroll) 96%, transparent)"
+            : "transparent",
+          borderBottom: scrolled ? "1px solid rgba(255,255,255,0.07)" : "1px solid transparent",
+          backdropFilter: scrolled ? "blur(20px)" : "blur(0px)",
+          WebkitBackdropFilter: scrolled ? "blur(20px)" : "blur(0px)",
+        }}
+      >
+        <div className="max-w-[90rem] mx-auto h-16 flex items-center justify-between px-4 sm:px-6 lg:px-10">
+
+          {/* ── Left: hamburger (mobile) + logo ── */}
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setActiveMenu(true)}
+              className="sm:hidden w-5 h-5 text-white/70 hover:text-white transition-colors flex-shrink-0"
+              aria-label="Open menu"
+            >
+              <MenuIcon />
+            </button>
+
+            <span
+              onClick={() => navigate("/")}
+              className="font-roboto font-bold text-xl sm:text-2xl tracking-widest cursor-pointer select-none bg-clip-text text-transparent"
+              style={{ backgroundImage: "linear-gradient(135deg, var(--accent-light) 0%, var(--accent) 60%)" }}
+            >
+              MASMAX
+            </span>
+          </div>
+
+          {/* ── Center: nav links (desktop) ── */}
+          <nav className="hidden sm:flex items-center gap-1 h-full">
+            {Object.entries(navbarItems).map(([itemName, item]) => {
+              const active = activeDrop === itemName;
+              return (
+                <button
+                  key={itemName}
+                  onClick={() => navigate(item.path)}
+                  className="relative h-16 flex items-center px-4 font-roboto text-[0.85rem] font-medium tracking-wide transition-colors duration-200 group"
+                  style={{ color: active ? "#fff" : "rgba(255,255,255,0.45)" }}
+                  onMouseEnter={(e) => { if (!active) (e.currentTarget as HTMLButtonElement).style.color = "rgba(255,255,255,0.85)"; }}
+                  onMouseLeave={(e) => { if (!active) (e.currentTarget as HTMLButtonElement).style.color = "rgba(255,255,255,0.45)"; }}
+                >
+                  {itemName}
+                  {/* Active underline */}
+                  <span
+                    className="absolute bottom-0 left-4 right-4 h-[2px] rounded-full transition-all duration-300"
+                    style={{
+                      background: active ? "var(--accent)" : "transparent",
+                      transform: active ? "scaleX(1)" : "scaleX(0)",
+                      transformOrigin: "center",
+                    }}
+                  />
+                  {/* Hover underline */}
+                  {!active && (
+                    <span
+                      className="absolute bottom-0 left-4 right-4 h-[2px] rounded-full opacity-0 group-hover:opacity-40 transition-opacity duration-200"
+                      style={{ background: "var(--accent)" }}
+                    />
+                  )}
+                </button>
+              );
+            })}
+          </nav>
+
+          {/* ── Right: actions ── */}
+          <div className="flex items-center gap-1 sm:gap-2">
+            {/* Search */}
+            <button
+              onClick={() => setActiveSearch(true)}
+              className="p-2 rounded-lg text-white/50 hover:text-white hover:bg-white/8 transition-all duration-200"
+              aria-label="Search"
+            >
+              <SearchIcon />
+            </button>
+
+            {/* Theme toggle */}
+            <ThemeToggle />
+
+            {/* Divider */}
+            <div className="hidden sm:block w-px h-5 bg-white/10 mx-1" />
+
+            {/* Auth */}
+            {user ? (
+              <div ref={avatarRef} className="relative">
+                <button
+                  onClick={() => setAvatarOpen((v) => !v)}
+                  className="flex items-center gap-2.5 pl-1 pr-3 py-1 rounded-full transition-all duration-200 hover:bg-white/8"
+                  aria-label="User menu"
+                >
+                  <div
+                    className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 transition-all duration-200"
+                    style={{ boxShadow: `0 0 0 2px color-mix(in srgb, var(--accent) 50%, transparent)` }}
+                  >
+                    {user.photoURL ? (
+                      <img src={user.photoURL} alt="avatar" className="w-full h-full object-cover" />
+                    ) : (
+                      <div
+                        className="w-full h-full flex items-center justify-center text-white font-roboto font-bold text-xs"
+                        style={{ background: "linear-gradient(135deg, var(--accent), var(--accent-dark))" }}
+                      >
+                        {(user.displayName ?? user.email ?? "U").charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                  </div>
+                  <span className="hidden md:block font-roboto text-sm text-white/70 max-w-[90px] truncate">
+                    {user.displayName?.split(" ")[0] ?? "Account"}
+                  </span>
+                  <svg className="hidden md:block w-3 h-3 text-white/40 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                {/* Dropdown */}
+                {avatarOpen && (
+                  <div
+                    className="absolute right-0 top-12 w-56 rounded-2xl overflow-hidden z-50 border"
+                    style={{
+                      background: "var(--bg-surface)",
+                      borderColor: "var(--border)",
+                      boxShadow: "0 16px 48px rgba(0,0,0,0.6)",
+                    }}
+                  >
+                    {/* User info header */}
+                    <div className="flex items-center gap-3 px-4 py-3.5 border-b" style={{ borderColor: "var(--border)" }}>
+                      <div
+                        className="w-9 h-9 rounded-full overflow-hidden flex-shrink-0"
+                        style={{ boxShadow: `0 0 0 2px color-mix(in srgb, var(--accent) 50%, transparent)` }}
+                      >
+                        {user.photoURL ? (
+                          <img src={user.photoURL} alt="avatar" className="w-full h-full object-cover" />
+                        ) : (
+                          <div
+                            className="w-full h-full flex items-center justify-center text-white font-roboto font-bold text-sm"
+                            style={{ background: "linear-gradient(135deg, var(--accent), var(--accent-dark))" }}
+                          >
+                            {(user.displayName ?? user.email ?? "U").charAt(0).toUpperCase()}
+                          </div>
+                        )}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="font-roboto font-semibold text-white text-sm truncate">
+                          {user.displayName ?? "User"}
+                        </p>
+                        <p className="font-roboto text-white/35 text-xs truncate mt-0.5">
+                          {user.email}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="py-1">
+                      <button
+                        onClick={() => { navigate("/profile"); setAvatarOpen(false); }}
+                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-roboto text-white/65 hover:text-white hover:bg-white/5 transition-colors"
+                      >
+                        <svg className="w-4 h-4 flex-shrink-0 fill-current opacity-70" viewBox="0 0 448 512">
+                          <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z" />
+                        </svg>
+                        My Profile
+                      </button>
+                      <button
+                        onClick={async () => { await logout(); setAvatarOpen(false); }}
+                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-roboto text-red-400/80 hover:text-red-300 hover:bg-red-500/8 transition-colors border-t mt-1 pt-2"
+                        style={{ borderColor: "var(--border)" }}
+                      >
+                        <svg className="w-4 h-4 flex-shrink-0 fill-current opacity-70" viewBox="0 0 512 512">
+                          <path d="M502.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 224 192 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l210.7 0-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128zM160 96c17.7 0 32-14.3 32-32s-14.3-32-32-32L96 32C43 32 0 75 0 128L0 384c0 53 43 96 96 96l64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0c-17.7 0-32-14.3-32-32l0-256c0-17.7 14.3-32 32-32l64 0z" />
+                        </svg>
+                        Sign Out
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => navigate("/login")}
+                  className="hidden sm:block font-roboto text-sm font-medium text-white/55 hover:text-white transition-colors duration-200 px-2"
+                >
+                  Sign In
+                </button>
+                <button
+                  onClick={() => navigate("/register")}
+                  className="font-roboto text-sm font-semibold text-white px-4 py-1.5 rounded-lg transition-all duration-200 active:scale-95"
+                  style={{
+                    background: "linear-gradient(135deg, var(--accent), var(--accent-dark))",
+                    boxShadow: "0 2px 12px color-mix(in srgb, var(--accent) 30%, transparent)",
+                  }}
+                >
+                  Get Started
+                </button>
+              </div>
+            )}
+          </div>
         </div>
-        <h1 className='text-3xl font-semibold font-roboto text-[#2eade7]'>
-          MASMAX
-        </h1>
-      </div>
-      <div className='flex items-center gap-6'>
-        <div onClick={() => setActiveSearch(true)}>
-          <SearchIcon />
-        </div>
-        <div className='mr-4 text-[0.95rem] font-roboto font-semibold text-white'>
-          Sign In
-        </div>
+      </header>
+
+      {/* ── Search overlay ───────────────────────────────────────── */}
+      <div
+        className={`fixed inset-x-0 top-0 z-50 transition-all duration-200 ease-in-out ${activeSearch ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0 pointer-events-none"}`}
+      >
+        <form
+          onSubmit={handleSearchSubmit}
+          className="h-16 flex items-center gap-3 px-4 sm:px-6 lg:px-10 border-b backdrop-blur-xl"
+          style={{
+            background: "color-mix(in srgb, var(--bg-nav-scroll) 97%, transparent)",
+            borderColor: "rgba(255,255,255,0.08)",
+          }}
+        >
+          <span className="flex-shrink-0 text-white/35">
+            <SearchIcon />
+          </span>
+          <input
+            ref={searchRef}
+            value={searchInput}
+            onChange={(e) => {
+              setSearchInput(e.currentTarget.value);
+              setActiveIdx(-1);
+              fetchSuggestions(e.currentTarget.value);
+            }}
+            onKeyDown={handleKeyDown}
+            type="text"
+            autoComplete="off"
+            className="flex-1 h-full bg-transparent outline-none font-roboto text-white text-[0.95rem] placeholder:text-white/30"
+            placeholder="Search movies, series…"
+          />
+          {acLoading && (
+            <span
+              className="flex-shrink-0 w-4 h-4 border-2 border-white/15 rounded-full animate-spin"
+              style={{ borderTopColor: "var(--accent)" }}
+            />
+          )}
+          {searchInput && !acLoading && (
+            <button
+              type="button"
+              onClick={() => { setSearchInput(""); setSuggestions([]); searchRef.current?.focus(); }}
+              className="flex-shrink-0 text-white/35 hover:text-white/70 transition-colors"
+              aria-label="Clear"
+            >
+              <Xicon />
+            </button>
+          )}
+          <div className="w-px h-5 bg-white/10 flex-shrink-0" />
+          <button
+            type="button"
+            onClick={() => setActiveSearch(false)}
+            className="flex-shrink-0 font-roboto text-xs text-white/35 hover:text-white/70 transition-colors px-1"
+            aria-label="Close"
+          >
+            ESC
+          </button>
+        </form>
+
+        {suggestions.length > 0 && (
+          <ul
+            className="border-b backdrop-blur-xl max-h-[min(28rem,62vh)] overflow-y-auto"
+            style={{
+              background: "color-mix(in srgb, var(--bg-nav-scroll) 98%, transparent)",
+              borderColor: "rgba(255,255,255,0.06)",
+            }}
+          >
+            {suggestions.map((item, idx) => (
+              <li
+                key={item.id}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => handleSuggestionClick(item)}
+                className="flex items-center gap-3.5 px-4 sm:px-6 py-2.5 cursor-pointer transition-colors duration-100 border-l-2"
+                style={{
+                  background: idx === activeIdx ? "color-mix(in srgb, var(--accent) 10%, transparent)" : "transparent",
+                  borderLeftColor: idx === activeIdx ? "var(--accent)" : "transparent",
+                }}
+                onMouseEnter={(e) => { if (idx !== activeIdx) (e.currentTarget as HTMLLIElement).style.background = "rgba(255,255,255,0.04)"; }}
+                onMouseLeave={(e) => { if (idx !== activeIdx) (e.currentTarget as HTMLLIElement).style.background = "transparent"; }}
+              >
+                <img
+                  src={getImagePath(92, item.poster_path)}
+                  alt=""
+                  className="w-8 h-12 object-cover rounded-md flex-shrink-0 bg-white/5"
+                />
+                <div className="min-w-0 flex-1">
+                  <p className="font-roboto text-sm text-white font-medium truncate">{item.original_title}</p>
+                  <p className="font-roboto text-xs text-white/35 mt-0.5">{item.release_date?.slice(0, 4) ?? ""}</p>
+                </div>
+                <span className="text-white/20 flex-shrink-0"><AngleRightIcon /></span>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
+      {/* ── Mobile drawer backdrop ───────────────────────────────── */}
       {activeMenu && (
-        <div className='fixed inset-0 bg-gradient-to-br from-transparent to-black/50' />
+        <div
+          onClick={() => setActiveMenu(false)}
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+        />
       )}
-      <div
-        aria-disabled={activeSearch}
-        className={`w-screen h-[3.5rem] bg-[#26262e] ${
-          activeSearch ? "translate-y-0" : "-translate-y-full"
-        } transition-all duration-200 ease-in-out absolute`}
+
+      {/* ── Mobile drawer ─────────────────────────────────────────── */}
+      <aside
+        className={`fixed z-50 top-0 left-0 h-full w-[76%] max-w-[310px] flex flex-col transition-transform duration-300 ease-in-out border-r ${activeMenu ? "translate-x-0" : "-translate-x-full"}`}
+        style={{ background: "var(--bg-surface)", borderColor: "var(--border)" }}
       >
-        <form className='flex justify-around h-full items-center '>
-          <input
-            onChange={(e) => setSearchInput(e.currentTarget.value)}
-            type='text'
-            className='w-[80%] h-[2.3rem] outline-none px-3 font-roboto bg-[#26262e] text-white'
-            placeholder='Search'
-          />
-          <div onClick={() => setActiveSearch(false)}>
-            <Xicon />
-          </div>
-        </form>
-      </div>
-      <div
-        className={`absolute z-50 bg-[#26262e] ${
-          activeMenu ? "translate-x-0 " : "-translate-x-full "
-        }  top-0 w-[70%] h-full transition-all duration-200 ease-in-out`}
-      >
-        <div className='w-full h-screen '>
-          <div
-            onClick={handleMenu}
-            className='flex justify-end h-[2.9rem] items-center bg-[#2eade7] pr-4'
+        {/* Header */}
+        <div
+          className="flex items-center justify-between h-16 px-5 flex-shrink-0 border-b"
+          style={{ borderColor: "var(--border)" }}
+        >
+          <span
+            onClick={() => { navigate("/"); setActiveMenu(false); }}
+            className="font-roboto font-bold text-xl tracking-widest cursor-pointer bg-clip-text text-transparent"
+            style={{ backgroundImage: "linear-gradient(135deg, var(--accent-light), var(--accent))" }}
+          >
+            MASMAX
+          </span>
+          <button
+            onClick={() => setActiveMenu(false)}
+            className="p-1.5 rounded-lg text-white/40 hover:text-white hover:bg-white/8 transition-colors"
+            aria-label="Close"
           >
             <Xicon />
-          </div>
-          <div className='font-roboto  text-sm text-white mt-2'>
-            {Object.entries(navbarItems).map(([itemName, item], i) => (
-              <div
-                key={i}
-                id={itemName}
-                onClick={(e) => {
-                  navigate(item.path),
-                    setActiveDrop(e.currentTarget.id),
-                    toggleMenu(item.id);
+          </button>
+        </div>
+
+        {/* Nav links */}
+        <nav className="flex-1 overflow-y-auto py-3">
+          {Object.entries(navbarItems).map(([itemName, item]) => {
+            const isActive = activeDrop === itemName;
+            return (
+              <button
+                key={itemName}
+                onClick={() => { navigate(item.path); setActiveMenu(false); }}
+                className="w-full flex items-center gap-3.5 h-12 px-5 font-roboto text-[0.9rem] font-medium transition-all duration-150"
+                style={{
+                  color: isActive ? "#fff" : "rgba(255,255,255,0.45)",
+                  background: isActive ? "color-mix(in srgb, var(--accent) 10%, transparent)" : "transparent",
+                  borderLeft: isActive ? "3px solid var(--accent)" : "3px solid transparent",
                 }}
-                className=' flex justify-between h-10 items-center px-4 '
+                onMouseEnter={(e) => { if (!isActive) (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.04)"; }}
+                onMouseLeave={(e) => { if (!isActive) (e.currentTarget as HTMLButtonElement).style.background = "transparent"; }}
               >
+                <span className="w-4 h-4 flex-shrink-0 opacity-70">{item.icon}</span>
+                {itemName}
+              </button>
+            );
+          })}
+        </nav>
+
+        {/* Footer */}
+        <div className="p-5 border-t flex-shrink-0" style={{ borderColor: "var(--border)" }}>
+          {user ? (
+            <>
+              <div className="flex items-center gap-3 mb-4">
                 <div
-                  className={`font-medium text-base ${
-                    activeDrop === itemName ? "text-white" : "text-[#B0B0B8]"
-                  } flex gap-4 h-10 items-center`}
+                  className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0"
+                  style={{ boxShadow: `0 0 0 2px color-mix(in srgb, var(--accent) 50%, transparent)` }}
                 >
-                  {item.icon}
-                  {itemName}
+                  {user.photoURL ? (
+                    <img src={user.photoURL} alt="avatar" className="w-full h-full object-cover" />
+                  ) : (
+                    <div
+                      className="w-full h-full flex items-center justify-center text-white font-roboto font-bold text-sm"
+                      style={{ background: "linear-gradient(135deg, var(--accent), var(--accent-dark))" }}
+                    >
+                      {(user.displayName ?? user.email ?? "U").charAt(0).toUpperCase()}
+                    </div>
+                  )}
                 </div>
-                <div
-                  className={`transform ${
-                    activeDrop === itemName ? "opacity-100" : " opacity-70"
-                  } ${
-                    expandedMenus[item.id] ? "rotate-90" : "-rotate-90"
-                  } transition-transform duration-200 ease-in-out`}
-                >
-                  <AngleRightIcon />
+                <div className="min-w-0">
+                  <p className="font-roboto font-semibold text-white text-sm truncate">
+                    {user.displayName ?? "User"}
+                  </p>
+                  <p className="font-roboto text-white/35 text-xs truncate">{user.email}</p>
                 </div>
               </div>
-            ))}
-          </div>
+              <button
+                onClick={() => { navigate("/profile"); setActiveMenu(false); }}
+                className="w-full py-2.5 rounded-xl font-roboto font-semibold text-sm text-white transition-all duration-200"
+                style={{ background: "linear-gradient(135deg, var(--accent), var(--accent-dark))" }}
+              >
+                My Profile
+              </button>
+              <button
+                onClick={async () => { await logout(); setActiveMenu(false); }}
+                className="w-full mt-2 py-2.5 rounded-xl border font-roboto font-semibold text-sm text-red-400 hover:text-red-300 hover:bg-red-500/8 transition-all duration-200"
+                style={{ borderColor: "rgba(239,68,68,0.25)" }}
+              >
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => { navigate("/register"); setActiveMenu(false); }}
+                className="w-full py-2.5 rounded-xl font-roboto font-semibold text-sm text-white transition-all duration-200"
+                style={{ background: "linear-gradient(135deg, var(--accent), var(--accent-dark))" }}
+              >
+                Get Started
+              </button>
+              <button
+                onClick={() => { navigate("/login"); setActiveMenu(false); }}
+                className="w-full mt-2 py-2.5 rounded-xl border font-roboto font-semibold text-sm text-white/55 hover:text-white hover:bg-white/5 transition-all duration-200"
+                style={{ borderColor: "var(--border)" }}
+              >
+                Sign In
+              </button>
+            </>
+          )}
         </div>
-      </div>
-    </section>
-  );
-};
-
-interface IMovieList {
-  [key: string]: string[];
-}
-
-const DropDownMenu = () => {
-  const MenuList: IMovieList = {
-    Movies: [],
-  };
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggleDropdown = () => setIsOpen(!isOpen);
-  return (
-    <div className='relative  text-left '>
-      {/* Dropdown Toggle Button */}
-      <button
-        onClick={toggleDropdown}
-        className='inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
-      >
-        Options
-      </button>
-
-      {/* Dropdown Menu */}
-      <div
-        className={`origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none transition-transform transform ${
-          isOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"
-        }`}
-        style={{ transformOrigin: "top left" }}
-      >
-        <div className='py-1'>
-          <a
-            href='#'
-            className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
-          >
-            Account settings
-          </a>
-          <a
-            href='#'
-            className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
-          >
-            Support
-          </a>
-          <a
-            href='#'
-            className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
-          >
-            License
-          </a>
-        </div>
-      </div>
-    </div>
+      </aside>
+    </>
   );
 };
 
 export default NavBar;
+
+

@@ -1,38 +1,104 @@
-import { useLocation } from "react-router-dom";
-import { capitalizeFirstLetterEachWord } from "../Search/SearchPage";
+import { SearchResultsSkeleton } from "@/components/Skeletons";
 import { getImagePath } from "@/Utils/GetImagePath";
 import { MovieResult } from "@/Utils/Interfaces";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import NavBar from "../Home/NavBar";
+import { capitalizeFirstLetterEachWord } from "../Search/SearchPage";
 
 const GenrePage = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { genreId } = useParams<{ genreId: string }>();
+
+  const [movies, setMovies] = useState<MovieResult[]>(location.state?.search ?? []);
+  const [loading, setLoading] = useState(!location.state?.search);
+  const [error, setError] = useState("");
+
+  const label: string = location.state?.searchValue ?? genreId ?? "";
+
+  useEffect(() => {
+    // If results were passed via location.state (from DropDownGenres), use them directly
+    if (location.state?.search) {
+      setMovies(location.state.search);
+      setLoading(false);
+      return;
+    }
+    if (!genreId) return;
+    let cancelled = false;
+    setLoading(true);
+    (async () => {
+      try {
+        const { fetchDiscover } = await import("@/Utils/FetchAPI");
+        const res = await fetchDiscover(genreId);
+        if (!cancelled) setMovies(res?.results ?? []);
+      } catch {
+        if (!cancelled) setError("Failed to load genre movies.");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [genreId, location.state]);
+
   return (
-    <div className='bg-[#26262e]'>
-      <h1 className='text-3xl font-semibold ml-[10%] py-[2%] text-[#2eade7]'>
-        Result for {capitalizeFirstLetterEachWord(location.state.searchValue)}
-      </h1>
-      <div className=''>
-        {location.state.search.map((searchs: MovieResult) => (
-          <div
-            onClick={() => localStorage.setItem("id", searchs.id.toString())}
-            className='pt-10  flex max-sm:flex-col sm:justify-center '
-          >
-            <div className='flex justify-center items-center'>
-              <img
-                alt={searchs.original_title}
-                src={getImagePath(300, searchs.backdrop_path)}
-                className=' max-sm:w-[18.75rem] rounded-md hover:translate-x-[-40px] transition-transform duration-300 sm:w-[28.125rem] h-fit'
-              />
-            </div>
-            <div className='pt-4 pl-5 sm:w-[25rem]  flex flex-col overflow-hidden overflow-ellipsis'>
-              <h1 className='sm:text-2xl max-sm:text-xl text-white pb-4'>
-                {searchs.original_title}
-              </h1>
-              <span className='text-white max-sm:text-md h-[12.5rem] overflow-scroll no-scrollbar'>
-                {searchs.overview}
-              </span>
-            </div>
+    <div className="min-h-screen" style={{ background: "var(--bg-base)" }}>
+      <NavBar />
+      <div className="max-w-6xl mx-auto px-3 sm:px-6 lg:px-10 py-6 sm:py-8">
+        {/* Header */}
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-1 h-8 bg-gradient-to-b from-[#2eade7] to-[#1a8fc7] rounded-full" />
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white font-roboto">
+            <span className="text-[#2eade7]">{capitalizeFirstLetterEachWord(label)}</span>
+          </h1>
+        </div>
+
+        {error && (
+          <div className="px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 font-roboto text-sm mb-6">
+            {error}
           </div>
-        ))}
+        )}
+
+        {loading ? (
+          <SearchResultsSkeleton count={5} />
+        ) : movies.length === 0 ? (
+          <p className="text-white/40 font-roboto text-base mt-12 text-center">No movies found.</p>
+        ) : (
+          <div className="flex flex-col gap-3">
+            {movies.map((item: MovieResult) => (
+              <div
+                key={item.id}
+                onClick={() => {
+                  localStorage.setItem("id", item.id.toString());
+                  navigate(`/movie/${item.id}`);
+                }}
+                className="flex gap-3 sm:gap-5 items-start p-3 sm:p-4 rounded-xl ring-1 ring-white/8 hover:ring-[var(--accent)]/40 transition-all duration-200 cursor-pointer group"
+                style={{ background: "var(--bg-surface)" }}
+              >
+                <div className="w-24 sm:w-36 md:w-44 aspect-[16/10] rounded-lg overflow-hidden flex-shrink-0 bg-white/5">
+                  <img
+                    alt={item.original_title}
+                    src={getImagePath(342, item.backdrop_path)}
+                    loading="lazy"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+                <div className="flex-1 min-w-0 flex flex-col gap-1.5 pt-1">
+                  <h2 className="text-white font-semibold font-roboto text-sm sm:text-base leading-snug line-clamp-2 group-hover:text-[#60c8f5] transition-colors">
+                    {item.original_title}
+                  </h2>
+                  <p className="text-white/35 font-roboto text-xs">
+                    {item.release_date?.slice(0, 4)}
+                    {item.vote_average ? ` · ★ ${Math.round(item.vote_average * 10) / 10}` : ""}
+                  </p>
+                  <p className="text-white/55 font-roboto text-xs sm:text-sm leading-relaxed line-clamp-3 mt-0.5">
+                    {item.overview}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

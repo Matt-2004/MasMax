@@ -1,163 +1,179 @@
-import { useEffect, useState } from "react";
-import Button from "./Button";
-import FormUI from "./FormUI";
-import InputUI, { InputContainer } from "./InputUI";
-import GoogleAuth from "./FireBaseAuth";
-import CloseCircleFilled from "@ant-design/icons/CloseCircleFilled";
+import { supabase } from "@/Utils/SupabaseConfig";
 import CheckCircleFilled from "@ant-design/icons/CheckCircleFilled";
-import { userRegex, passwordRegex, emailRegex } from "./helper";
+import CloseCircleFilled from "@ant-design/icons/CloseCircleFilled";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Button from "./Button";
+import GoogleAuth from "./FireBaseAuth";
+import FormUI from "./FormUI";
+import { emailRegex, passwordRegex, userRegex } from "./helper";
+import InputUI, { InputContainer } from "./InputUI";
+
+type ValidationIcon = React.ReactElement;
+
+const INVALID = <CloseCircleFilled className="text-red-500" />;
+const VALID = <CheckCircleFilled className="text-green-500" />;
 
 const Register = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState<string>("");
-  const [userIcon, setUserIcon] = useState(
-    <CloseCircleFilled className='text-red-600' />
-  );
-  const [userNameValid, setUserNameValid] = useState<boolean>(false);
 
-  const [email, setEmail] = useState<string>("");
-  const [emailIcon, setEmailIcon] = useState(
-    <CloseCircleFilled className='text-red-600' />
-  );
-  const [passwordValid, setPasswordValid] = useState<boolean>(false);
+  const [username, setUsername] = useState("");
+  const [userIcon, setUserIcon] = useState<ValidationIcon>(INVALID);
+  const [userNameValid, setUserNameValid] = useState(false);
 
-  const [password, setPasswrod] = useState<string>("");
-  const [passwordIcon, setPasswordIcon] = useState(
-    <CloseCircleFilled className='text-red-600' />
-  );
-  const [emailValid, setEmailValid] = useState<boolean>(false);
+  const [email, setEmail] = useState("");
+  const [emailIcon, setEmailIcon] = useState<ValidationIcon>(INVALID);
+  const [emailValid, setEmailValid] = useState(false);
 
-  const [allValidate, setAllValidate] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [password, setPassword] = useState("");
+  const [passwordIcon, setPasswordIcon] = useState<ValidationIcon>(INVALID);
+  const [passwordValid, setPasswordValid] = useState(false);
+  const [showPass, setShowPass] = useState(false);
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   function regexCheck(
     regex: RegExp,
     value: string,
-    setIcon: any,
-    setValidation: any
+    setIcon: (icon: ValidationIcon) => void,
+    setValid: (v: boolean) => void
   ) {
     if (regex.test(value)) {
-      setIcon(<CheckCircleFilled className='text-green-600' />);
-      setValidation(true);
+      setIcon(VALID);
+      setValid(true);
     } else {
-      setIcon(<CloseCircleFilled className='text-red-600' />);
+      setIcon(INVALID);
+      setValid(false);
     }
-    // if regex true -> add greenTrueMark icon
-    // if not -> add redWrongMark icon
   }
 
-  useEffect(() => {
-    regexCheck(userRegex, username, setUserIcon, setUserNameValid);
-    console.log(username);
-  }, [username]);
+  useEffect(() => { regexCheck(userRegex, username, setUserIcon, setUserNameValid); }, [username]);
+  useEffect(() => { regexCheck(emailRegex, email, setEmailIcon, setEmailValid); }, [email]);
+  useEffect(() => { regexCheck(passwordRegex, password, setPasswordIcon, setPasswordValid); }, [password]);
 
-  useEffect(() => {
-    regexCheck(passwordRegex, password, setPasswordIcon, setPasswordValid);
-  }, [password]);
+  const allValid = userNameValid && emailValid && passwordValid;
 
-  useEffect(() => {
-    regexCheck(emailRegex, email, setEmailIcon, setEmailValid);
-  }, [email]);
-
-  useEffect(() => {
-    if (userNameValid && passwordValid && emailValid) {
-      setAllValidate(true);
-    }
-  });
-
-  const registration = async (e: any) => {
+  const register = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      if (allValidate) {
-        setLoading(true);
-      }
-      const response = await fetch("https://auth-2ngh.onrender.com/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: username,
-          email: email,
-          password: password,
-        }),
-      });
-      if (!response.ok) {
-        throw new Error("Registration Failed!");
-      }
-      setInterval(() => {
-        setLoading(false);
-        localStorage.setItem("username", username);
-        localStorage.setItem("email", email);
-      }, 1400);
-      const welcome = await fetch("https://auth-2ngh.onrender.com/welcome");
-      console.log(welcome);
-      if (!loading) {
-        // This is the state that user login successfully
-        // After that the login icon will change to profile icon
-        // then if the user click the profile icon
-        // the user can manipulate the profile at userImage, userName,
-        // if the user want to change the password
-        // -> have to fetch the password from database
-        // -> have to type old password
-        // --> if the user forgot
-        // -> link send to email -- there will have a link that can add another password
-      }
+    setError("");
+    setSuccess("");
 
-      if (welcome.ok) {
-        navigate("/");
+    if (!allValid) {
+      setError("Please fix the validation errors before continuing.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const { data, error: sbError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { data: { username } },
+      });
+
+      if (sbError) throw sbError;
+
+      if (data.user) {
+        localStorage.setItem("user_id", data.user.id);
+        localStorage.setItem("user_email", data.user.email ?? "");
+        localStorage.setItem("username", username);
+        setSuccess("Account created! Check your email to confirm your address.");
+        setTimeout(() => navigate("/"), 2500);
       }
-      console.log("Registration success");
-    } catch (error) {
-      console.log(error);
+    } catch (err: any) {
+      setError(err?.message ?? "Registration failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <FormUI>
-      <span className=' italic text-center  text-white  font-titillium xl:text-8xl md:text-4xl max-sm:text-3xl font-semibold'>
-        Create a new account
-      </span>
-      <InputContainer>
-        <InputUI
-          icon={userIcon}
-          text='Username'
-          type='string'
-          onChange={(e) => {
-            setUsername(e.target.value);
-          }}
-        />
-        <InputUI
-          icon={emailIcon}
-          text='Email'
-          type='email'
-          onChange={(e) => {
-            setEmail(e.target.value);
-          }}
-        />
-        <InputUI
-          icon={passwordIcon}
-          text='Password'
-          type='password'
-          onChange={(e) => setPasswrod(e.target.value)}
-        />
-        <Button
-          text='Register'
-          loading={loading}
-          onClick={(e) => {
-            registration(e);
-          }}
-        ></Button>
+    <FormUI title="Create account" subtitle="Join MASMAX today">
+      <form onSubmit={register}>
+        <InputContainer>
+          <InputUI
+            text="Username"
+            type="text"
+            placeholder="johndoe"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            icon={username ? userIcon : undefined}
+            error={
+              username && !userNameValid
+                ? "3–20 chars, letters, numbers or underscores only"
+                : undefined
+            }
+          />
+          <InputUI
+            text="Email"
+            type="email"
+            placeholder="you@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            icon={email ? emailIcon : undefined}
+            error={email && !emailValid ? "Enter a valid email address" : undefined}
+          />
+          <InputUI
+            text="Password"
+            type={showPass ? "text" : "password"}
+            placeholder="Min 8 chars, upper, lower, number & symbol"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            icon={
+              <span className="flex items-center gap-1.5">
+                {password ? passwordIcon : null}
+                <button
+                  type="button"
+                  onClick={() => setShowPass((v) => !v)}
+                  className="text-white/40 hover:text-white/80 transition-colors text-xs font-roboto ml-1"
+                >
+                  {showPass ? "Hide" : "Show"}
+                </button>
+              </span>
+            }
+            error={
+              password && !passwordValid
+                ? "Min 8 chars with uppercase, lowercase, number & special char"
+                : undefined
+            }
+          />
 
-        <div className='text-center font-roboto text-white mt-5'>
-          Have an accout?{" "}
-          <a href='/login' className='underline text-[#2eade7]'>
-            Login here.
-          </a>
-        </div>
-        <GoogleAuth />
-      </InputContainer>
+          {error && (
+            <div className="mb-2 px-4 py-2.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm font-roboto">
+              {error}
+            </div>
+          )}
+
+          {success && (
+            <div className="mb-2 px-4 py-2.5 rounded-xl bg-green-500/10 border border-green-500/30 text-green-400 text-sm font-roboto">
+              {success}
+            </div>
+          )}
+
+          <Button text="Create Account" loading={loading} type="submit" />
+
+          <div className="flex items-center gap-3 my-5">
+            <div className="flex-1 h-px bg-white/8" />
+            <span className="text-white/30 text-xs font-roboto">or sign up with</span>
+            <div className="flex-1 h-px bg-white/8" />
+          </div>
+
+          <GoogleAuth />
+
+          <p className="text-center font-roboto text-white/45 text-sm mt-6">
+            Already have an account?{" "}
+            <button
+              type="button"
+              onClick={() => navigate("/login")}
+              className="text-[#2eade7] hover:text-[#60c8f5] font-semibold transition-colors"
+            >
+              Sign in
+            </button>
+          </p>
+        </InputContainer>
+      </form>
     </FormUI>
   );
 };

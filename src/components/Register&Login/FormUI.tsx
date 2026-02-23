@@ -1,13 +1,36 @@
-const FormUI = ({ children }: any) => {
+interface FormUIProps {
+  children: React.ReactNode;
+  title: string;
+  subtitle: string;
+}
+
+const FormUI = ({ children, title, subtitle }: FormUIProps) => {
   return (
-    <form className='w-[100vw] h-[100vh] flex flex-col items-center justify-center bg-white'>
-      <div className='xl:w-[65rem] md:w-[40rem] max-sm:w-full max-sm:h-full relative  h-[40rem] shadow-2xl sm:rounded-lg bg-[#26262e]'>
-        <div className='w-[100%] max-sm:w-full  flex flex-col justify-evenly h-[100%] items-center'>
+    <div className='min-h-screen w-full flex items-center justify-center px-4 py-10' style={{ background: "var(--bg-base)" }}>
+      {/* Card */}
+      <div className='w-full max-w-md'>
+        {/* Brand header */}
+        <div className='text-center mb-8'>
+          <h1
+            className='text-3xl font-bold font-roboto bg-clip-text text-transparent tracking-wide'
+            style={{ backgroundImage: "linear-gradient(to right, var(--accent), var(--accent-light))" }}
+          >
+            MASMAX
+          </h1>
+        </div>
+
+        {/* Form card */}
+        <div className='border rounded-2xl p-7 sm:p-9' style={{ background: "var(--bg-surface)", borderColor: "var(--border)" }}>
+          <div className='mb-7'>
+            <h2 className='text-2xl sm:text-3xl font-bold text-white font-roboto'>{title}</h2>
+            <p className='text-white/45 text-sm mt-1.5 font-roboto'>{subtitle}</p>
+          </div>
           {children}
         </div>
       </div>
-    </form>
+    </div>
   );
 };
 
 export default FormUI;
+

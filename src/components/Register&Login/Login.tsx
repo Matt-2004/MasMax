@@ -1,85 +1,123 @@
-import FormUI from "./FormUI";
-import InputUI, { InputContainer } from "./InputUI";
-import Button from "./Button";
+import { supabase } from "@/Utils/SupabaseConfig";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Button from "./Button";
+import GoogleAuth from "./FireBaseAuth";
+import FormUI from "./FormUI";
+import InputUI, { InputContainer } from "./InputUI";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState<string>();
-  const [password, setPassword] = useState<string>();
-  const [loading, setLoading] = useState<boolean>(false);
 
-  const login = async (e: any) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [showPass, setShowPass] = useState(false);
+
+  const login = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+
+    if (!email.trim() || !password.trim()) {
+      setError("Please fill in all fields.");
+      return;
+    }
+
     setLoading(true);
     try {
-      const response = await fetch("https://auth-2ngh.onrender.com/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        }),
+      const { data, error: sbError } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password,
       });
-      if (!response.ok) {
-        throw new Error("Login Failed!");
+
+      if (sbError) throw sbError;
+
+      if (data.user) {
+        localStorage.setItem("user_id", data.user.id);
+        localStorage.setItem("user_email", data.user.email ?? "");
+        localStorage.setItem(
+          "username",
+          data.user.user_metadata?.username ?? data.user.email ?? ""
+        );
       }
-      setInterval(() => {
-        setLoading(false);
-        navigate("/");
-      }, 1500);
-      /* 
-      
-          Login || register --> set Token in Cookie
 
-          TokenChecker() {
-            if(broswer.cookie.token == True) {
-              return ValidAuth
-            }
-          }
-
-      */
-      console.log("Login success");
-    } catch (error) {
-      console.log(error);
+      navigate("/");
+    } catch (err: any) {
+      setError(err?.message ?? "Login failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
+
   return (
-    <FormUI>
-      <span className='italic text-center mb-10 text-white w-[30%] font-titillium text-8xl font-semibold'>
-        Login
-      </span>
-      <InputContainer>
-        <InputUI
-          text='Email'
-          icon={""}
-          type='email'
-          onChange={(e) => setEmail(e.currentTarget.value)}
-        />
-        <InputUI
-          text='Password'
-          icon={""}
-          type='password'
-          autoComplete='off'
-          onChange={(e) => setPassword(e.currentTarget.value)}
-        />
-        <Button
-          text='Login'
-          loading={loading}
-          onClick={(e) => login(e)}
-        ></Button>
-        <div className='text-center font-roboto text-white mt-5'>
-          Dont' have an accout?{" "}
-          <a href='/register' className='underline text-[#2eade7]'>
-            Register here.
-          </a>
-        </div>
-      </InputContainer>
+    <FormUI title="Welcome back" subtitle="Sign in to your MASMAX account">
+      <form onSubmit={login}>
+        <InputContainer>
+          <InputUI
+            text="Email"
+            type="email"
+            placeholder="you@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <InputUI
+            text="Password"
+            type={showPass ? "text" : "password"}
+            placeholder="••••••••"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            icon={
+              <button
+                type="button"
+                onClick={() => setShowPass((v) => !v)}
+                className="text-white/40 hover:text-white/80 transition-colors text-xs font-roboto"
+              >
+                {showPass ? "Hide" : "Show"}
+              </button>
+            }
+          />
+
+          <div className="flex justify-end -mt-2 mb-4">
+            <button
+              type="button"
+              className="text-xs text-[#2eade7] hover:text-[#60c8f5] font-roboto transition-colors"
+            >
+              Forgot password?
+            </button>
+          </div>
+
+          {error && (
+            <div className="mb-4 px-4 py-2.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm font-roboto">
+              {error}
+            </div>
+          )}
+
+          <Button text="Sign In" loading={loading} type="submit" />
+
+          <div className="flex items-center gap-3 my-5">
+            <div className="flex-1 h-px bg-white/8" />
+            <span className="text-white/30 text-xs font-roboto">or continue with</span>
+            <div className="flex-1 h-px bg-white/8" />
+          </div>
+
+          <GoogleAuth />
+
+          <p className="text-center font-roboto text-white/45 text-sm mt-6">
+            Don&apos;t have an account?{" "}
+            <button
+              type="button"
+              onClick={() => navigate("/register")}
+              className="text-[#2eade7] hover:text-[#60c8f5] font-semibold transition-colors"
+            >
+              Create one
+            </button>
+          </p>
+        </InputContainer>
+      </form>
     </FormUI>
   );
 };
 
 export default Login;
+
