@@ -1,4 +1,4 @@
-import { fetchMovieGenres } from "@/Utils/FetchAPI";
+import { fetchMovieGenres } from "@/lib/FetchAPI";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";

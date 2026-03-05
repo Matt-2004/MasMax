@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchDiscover } from "../../Utils/FetchAPI";
+import { fetchDiscover } from "@/lib/FetchAPI";
 import { useNavigate } from "react-router-dom";
 
 const SliderGenre = () => {

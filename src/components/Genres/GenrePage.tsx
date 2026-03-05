@@ -1,11 +1,11 @@
 import { SearchResultsSkeleton } from "@/components/Skeletons";
-import { getImagePath } from "@/Utils/GetImagePath";
-import { MovieResult } from "@/Utils/Interfaces";
+import { getImagePath } from "@/lib/GetImagePath";
+import { MovieResult } from "@/lib/Interfaces";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { capitalizeFirstLetterEachWord } from "../Search/SearchPage";
+import { capitalizeFirstLetterEachWord } from "../search/SearchPage";
 
-const NavBar = lazy(() => import("../Home/NavBar"));
+const NavBar = lazy(() => import("../layout/NavBar"));
 
 const GenrePage = () => {
   const location = useLocation();
@@ -30,7 +30,7 @@ const GenrePage = () => {
     setLoading(true);
     (async () => {
       try {
-        const { fetchDiscover } = await import("@/Utils/FetchAPI");
+        const { fetchDiscover } = await import("@/lib/FetchAPI");
         const res = await fetchDiscover(genreId);
         if (!cancelled) setMovies(res?.results ?? []);
       } catch {

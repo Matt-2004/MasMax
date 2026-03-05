@@ -1,7 +1,7 @@
-import ImageUI, { ImageTitleContainer, ImageUIContainer } from "@/components/Cards/ImageUI";
+import ImageUI, { ImageTitleContainer, ImageUIContainer } from "@/components/cards/ImageUI";
 import { SectionSkeleton } from "@/components/Skeletons";
-import { fetchTrendMovie } from "@/Utils/FetchAPI";
-import { MovieResult } from "@/Utils/Interfaces";
+import { fetchTrendMovie } from "@/lib/FetchAPI";
+import { MovieResult } from "@/lib/Interfaces";
 import { useEffect, useState } from "react";
 
 interface TrendingProps {

@@ -1,21 +1,21 @@
 import { CardGridSkeleton } from "@/components/Skeletons";
-import { PlusIcon, StarIcon } from "@/icons/icons";
+import { PlusIcon, StarIcon } from "@/lib/icons/icons";
 import {
     fetchOnAirTV,
     fetchPopularTV,
     fetchTopRatedTV,
     fetchTrendingTV,
-} from "@/Utils/FetchAPI";
-import { getImagePath, getPosterSrcSet, getTinyPosterPath } from "@/Utils/GetImagePath";
-import { TVResult } from "@/Utils/Interfaces";
-import { useTheme } from "@/Utils/ThemeContext";
+} from "@/lib/FetchAPI";
+import { getImagePath, getPosterSrcSet, getTinyPosterPath } from "@/lib/GetImagePath";
+import { TVResult } from "@/lib/Interfaces";
+import { useTheme } from "@/lib/ThemeContext";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 // NavBar and Footer are lazy — they don't affect the series grid render
-const NavBar = lazy(() => import("../Home/NavBar"));
-const Footer = lazy(() => import("../Home/Footer"));
+const NavBar = lazy(() => import("../layout/NavBar"));
+const Footer = lazy(() => import("../layout/Footer"));
 
 // ── Constants ────────────────────────────────────────────────────────────────
 

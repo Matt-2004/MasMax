@@ -1,4 +1,4 @@
-import { supabase } from "@/Utils/SupabaseConfig";
+import { supabase } from "@/lib/SupabaseConfig";
 import CheckCircleFilled from "@ant-design/icons/CheckCircleFilled";
 import CloseCircleFilled from "@ant-design/icons/CloseCircleFilled";
 import { useEffect, useState } from "react";
@@ -38,7 +38,7 @@ const Register = () => {
     regex: RegExp,
     value: string,
     setIcon: (icon: ValidationIcon) => void,
-    setValid: (v: boolean) => void
+    setValid: (v: boolean) => void,
   ) {
     if (regex.test(value)) {
       setIcon(VALID);
@@ -49,9 +49,15 @@ const Register = () => {
     }
   }
 
-  useEffect(() => { regexCheck(userRegex, username, setUserIcon, setUserNameValid); }, [username]);
-  useEffect(() => { regexCheck(emailRegex, email, setEmailIcon, setEmailValid); }, [email]);
-  useEffect(() => { regexCheck(passwordRegex, password, setPasswordIcon, setPasswordValid); }, [password]);
+  useEffect(() => {
+    regexCheck(userRegex, username, setUserIcon, setUserNameValid);
+  }, [username]);
+  useEffect(() => {
+    regexCheck(emailRegex, email, setEmailIcon, setEmailValid);
+  }, [email]);
+  useEffect(() => {
+    regexCheck(passwordRegex, password, setPasswordIcon, setPasswordValid);
+  }, [password]);
 
   const allValid = userNameValid && emailValid && passwordValid;
 
@@ -62,6 +68,13 @@ const Register = () => {
 
     if (!allValid) {
       setError("Please fix the validation errors before continuing.");
+      return;
+    }
+
+    if (!supabase) {
+      setError(
+        "Email/password sign-up is not configured. Please use Google sign-in.",
+      );
       return;
     }
 
@@ -79,7 +92,9 @@ const Register = () => {
         localStorage.setItem("user_id", data.user.id);
         localStorage.setItem("user_email", data.user.email ?? "");
         localStorage.setItem("username", username);
-        setSuccess("Account created! Check your email to confirm your address.");
+        setSuccess(
+          "Account created! Check your email to confirm your address.",
+        );
         setTimeout(() => navigate("/"), 2500);
       }
     } catch (err: any) {
@@ -113,7 +128,9 @@ const Register = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             icon={email ? emailIcon : undefined}
-            error={email && !emailValid ? "Enter a valid email address" : undefined}
+            error={
+              email && !emailValid ? "Enter a valid email address" : undefined
+            }
           />
           <InputUI
             text="Password"
@@ -156,7 +173,9 @@ const Register = () => {
 
           <div className="flex items-center gap-3 my-5">
             <div className="flex-1 h-px bg-white/8" />
-            <span className="text-white/30 text-xs font-roboto">or sign up with</span>
+            <span className="text-white/30 text-xs font-roboto">
+              or sign up with
+            </span>
             <div className="flex-1 h-px bg-white/8" />
           </div>
 

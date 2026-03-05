@@ -1,6 +1,11 @@
-import { StarIcon } from "@/icons/icons";
-import { getBackdropSrcSet, getImagePath, getLargeImagePath, getPosterSrcSet } from "@/Utils/GetImagePath";
-import getVideoPath from "@/Utils/GetVideoPath";
+import { StarIcon } from "@/lib/icons/icons";
+import {
+  getBackdropSrcSet,
+  getImagePath,
+  getLargeImagePath,
+  getPosterSrcSet,
+} from "@/lib/GetImagePath";
+import getVideoPath from "@/lib/GetVideoPath";
 import { useNavigate } from "react-router-dom";
 
 /* ── Backdrop hero ─────────────────────────────────────────── */
@@ -16,6 +21,8 @@ export function BackdropHero({ backdrop_path, title }: BackdropHeroProps) {
         srcSet={getBackdropSrcSet(backdrop_path)}
         sizes="100vw"
         alt={title}
+        width="1280"
+        height="720"
         loading="eager"
         decoding="async"
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -40,11 +47,15 @@ export function PosterCard({ poster_path, movie_id, title }: PosterCardProps) {
   const navigate = useNavigate();
   return (
     <div
+      role="button"
+      tabIndex={0}
       onClick={() => navigate(`/movie/${movie_id}`)}
+      onKeyDown={(e) => e.key === "Enter" && navigate(`/movie/${movie_id}`)}
+      aria-label={`View details for ${title}`}
       className="group relative w-36 sm:w-48 lg:w-60 aspect-[2/3] rounded-2xl overflow-hidden ring-2 ring-white/10 hover:ring-[#2eade7]/60 transition-all duration-300 cursor-pointer shadow-2xl shadow-black/60 flex-shrink-0"
     >
       <img
-        src={getImagePath(342, poster_path)}
+        src={getImagePath(185, poster_path)}
         srcSet={getPosterSrcSet(poster_path)}
         // w-36 = 144px, w-48 = 192px, w-60 = 240px
         sizes="(max-width: 639px) 144px, (max-width: 1023px) 192px, 240px"
@@ -74,7 +85,12 @@ export function GenreList({ genres }: { genres: any[] }) {
       {genres.map((genre: any) => (
         <button
           key={genre.id ?? genre.name}
-          onClick={() => navigate(`/genres/${genre.id}`, { state: { searchValue: genre.name } })}
+          onClick={() =>
+            navigate(`/genres/${genre.id}`, {
+              state: { searchValue: genre.name },
+            })
+          }
+          aria-label={`Browse ${genre.name} genre`}
           className="px-3 py-1 text-xs font-semibold font-roboto text-[#60c8f5] border border-[#2eade7]/30 bg-[#2eade7]/8 rounded-full cursor-pointer transition-all duration-150 hover:bg-[#2eade7]/20 hover:border-[#2eade7]/60 active:scale-95"
         >
           {genre.name}
@@ -96,13 +112,28 @@ export function RatingBadge({
   const pct = (vote_average / 10) * 100;
 
   return (
-    <div className="flex items-center gap-3">
+    <div
+      className="flex items-center gap-3"
+      aria-label={`Rating: ${score} out of 10`}
+    >
       {/* Circular progress */}
       <div className="relative w-12 h-12 flex-shrink-0">
-        <svg className="w-full h-full -rotate-90" viewBox="0 0 40 40">
-          <circle cx="20" cy="20" r="16" strokeWidth="3.5" className="stroke-white/10 fill-none" />
+        <svg
+          aria-hidden="true"
+          className="w-full h-full -rotate-90"
+          viewBox="0 0 40 40"
+        >
           <circle
-            cx="20" cy="20" r="16"
+            cx="20"
+            cy="20"
+            r="16"
+            strokeWidth="3.5"
+            className="stroke-white/10 fill-none"
+          />
+          <circle
+            cx="20"
+            cy="20"
+            r="16"
             strokeWidth="3.5"
             strokeLinecap="round"
             className="fill-none"
@@ -117,7 +148,9 @@ export function RatingBadge({
       <div>
         <div className="flex items-center gap-1">
           <StarIcon />
-          <span className="text-white font-semibold font-roboto text-lg">{score}</span>
+          <span className="text-white font-semibold font-roboto text-lg">
+            {score}
+          </span>
           <span className="text-white/35 font-roboto text-sm">/10</span>
         </div>
         {vote_count !== undefined && (
@@ -135,6 +168,7 @@ export function WatchlistButton({ movie_id }: { movie_id: string }) {
   return (
     <button
       onClick={() => console.log("watchlist", movie_id)}
+      aria-label="Add to watchlist"
       className="self-start flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#2eade7] to-[#1a8fc7] hover:from-[#3bbef5] hover:to-[#2eade7] rounded-xl font-roboto font-semibold text-sm text-white transition-all duration-200 active:scale-95"
     >
       <svg className="w-4 h-4 fill-white" viewBox="0 0 448 512">
@@ -166,20 +200,27 @@ export function VideosSection({ videos }: { videos: any[] }) {
   // Prioritise official trailers
   const sorted = [...videos].sort((a, b) => {
     const score = (v: any) =>
-      v.type === "Trailer" && v.official ? 2 :
-        v.type === "Trailer" ? 1 : 0;
+      v.type === "Trailer" && v.official ? 2 : v.type === "Trailer" ? 1 : 0;
     return score(b) - score(a);
   });
 
   return (
-    <section className="mt-12">
+    <section aria-label="Trailers and videos" className="mt-12">
       <h2 className="text-xl font-bold font-roboto text-white mb-5">
         Trailers &amp; Videos
-        <span className="text-white/30 font-normal text-base ml-2">({sorted.length})</span>
+        <span className="text-white/30 font-normal text-base ml-2">
+          ({sorted.length})
+        </span>
       </h2>
-      <div className="flex gap-3 sm:gap-4 overflow-x-auto no-scrollbar pb-2" style={{ touchAction: "pan-x" }}>
+      <div
+        className="flex gap-3 sm:gap-4 overflow-x-auto no-scrollbar pb-2"
+        style={{ touchAction: "pan-x" }}
+      >
         {sorted.map((video: any) => (
-          <div key={video.id} className="flex-shrink-0 w-[85vw] sm:w-[min(70vw,420px)] md:w-[min(55vw,480px)]">
+          <div
+            key={video.id}
+            className="flex-shrink-0 w-[85vw] sm:w-[min(70vw,420px)] md:w-[min(55vw,480px)]"
+          >
             <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-white/5 ring-1 ring-white/10">
               <iframe
                 title={video.name}
@@ -190,7 +231,9 @@ export function VideosSection({ videos }: { videos: any[] }) {
                 className="absolute inset-0 w-full h-full"
               />
             </div>
-            <p className="mt-2 text-white/55 font-roboto text-xs truncate px-1">{video.name}</p>
+            <p className="mt-2 text-white/55 font-roboto text-xs truncate px-1">
+              {video.name}
+            </p>
           </div>
         ))}
       </div>
@@ -205,4 +248,4 @@ export const Genres = GenreList;
 export const VoteAverage = RatingBadge;
 export const OverView = OverviewSection;
 export const Videos = VideosSection;
-export { };
+export {};

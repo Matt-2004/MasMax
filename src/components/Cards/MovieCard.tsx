@@ -1,7 +1,7 @@
-import ImageUI, { ImageUIContainer } from "@/components/Cards/ImageUI";
+import ImageUI, { ImageUIContainer } from "@/components/cards/ImageUI";
 import { CardGridSkeleton } from "@/components/Skeletons";
-import { fetchPopularMovie, fetchTopRatedMovie } from "@/Utils/FetchAPI";
-import { useTheme } from "@/Utils/ThemeContext";
+import { fetchPopularMovie, fetchTopRatedMovie } from "@/lib/FetchAPI";
+import { useTheme } from "@/lib/ThemeContext";
 import { useEffect, useState } from "react";
 
 const movieType = [

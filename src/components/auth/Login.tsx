@@ -1,4 +1,4 @@
-import { supabase } from "@/Utils/SupabaseConfig";
+import { supabase } from "@/lib/SupabaseConfig";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "./Button";
@@ -24,6 +24,13 @@ const Login = () => {
       return;
     }
 
+    if (!supabase) {
+      setError(
+        "Email/password sign-in is not configured. Please use Google sign-in.",
+      );
+      return;
+    }
+
     setLoading(true);
     try {
       const { data, error: sbError } = await supabase.auth.signInWithPassword({
@@ -38,7 +45,7 @@ const Login = () => {
         localStorage.setItem("user_email", data.user.email ?? "");
         localStorage.setItem(
           "username",
-          data.user.user_metadata?.username ?? data.user.email ?? ""
+          data.user.user_metadata?.username ?? data.user.email ?? "",
         );
       }
 
@@ -97,7 +104,9 @@ const Login = () => {
 
           <div className="flex items-center gap-3 my-5">
             <div className="flex-1 h-px bg-white/8" />
-            <span className="text-white/30 text-xs font-roboto">or continue with</span>
+            <span className="text-white/30 text-xs font-roboto">
+              or continue with
+            </span>
             <div className="flex-1 h-px bg-white/8" />
           </div>
 
@@ -120,4 +129,3 @@ const Login = () => {
 };
 
 export default Login;
-

@@ -1,5 +1,5 @@
-import { DetilsResult } from "@/Utils/Interfaces";
-import { fetchSearchMovie } from "../../Utils/FetchAPI";
+import { DetilsResult } from "@/lib/Interfaces";
+import { fetchSearchMovie } from "@/lib/FetchAPI";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SearchOutlined from "@ant-design/icons/SearchOutlined";

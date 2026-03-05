@@ -179,3 +179,57 @@ export const fetchTVVideos = async (id: number) => {
   const response = await fetchFromTMDB(url);
   return response.results;
 };
+
+// ── Movies page — discover with filters ──────────────────────────────────────
+
+export interface MovieDiscoverParams {
+  page: number;
+  sortBy?: string; // e.g. "popularity.desc"
+  genreIds?: number[]; // TMDB genre ids
+  yearFrom?: number;
+  yearTo?: number;
+  minRating?: number; // vote_average.gte
+  minVotes?: number; // vote_count.gte — filter out obscure titles
+}
+
+export interface DiscoverPage {
+  results: import("./Interfaces").MovieResult[];
+  page: number;
+  total_pages: number;
+  total_results: number;
+}
+
+export const fetchDiscoverMoviesPage = async (
+  params: MovieDiscoverParams,
+): Promise<DiscoverPage> => {
+  const url = new URL("https://api.themoviedb.org/3/discover/movie");
+  url.searchParams.set("language", "en-US");
+  url.searchParams.set("include_adult", "false");
+  url.searchParams.set("include_video", "false");
+  url.searchParams.set("page", String(params.page));
+  url.searchParams.set("sort_by", params.sortBy ?? "popularity.desc");
+  if (params.genreIds?.length)
+    url.searchParams.set("with_genres", params.genreIds.join(","));
+  if (params.yearFrom)
+    url.searchParams.set(
+      "primary_release_date.gte",
+      `${params.yearFrom}-01-01`,
+    );
+  if (params.yearTo)
+    url.searchParams.set("primary_release_date.lte", `${params.yearTo}-12-31`);
+  if (params.minRating)
+    url.searchParams.set("vote_average.gte", String(params.minRating));
+  url.searchParams.set("vote_count.gte", String(params.minVotes ?? 50));
+
+  // Discover pages must NOT be deduplicated across param-sets — skip global cache
+  const options = {
+    method: "GET",
+    headers: {
+      accept: "application/json",
+      Authorization:
+        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0OWE1YWI2MjRiZDAxMjhiZGJiMzdjZDNhMmYzNmFhOCIsInN1YiI6IjY1OGFhOThlMzI1YTUxNTc3ZTAzMmI5NyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.bi_2IPf0bZph00Qj5URE-wIk-9bjrm3mMuDSRVg3K58",
+    },
+  };
+  const res = await fetch(url, options);
+  return res.json();
+};

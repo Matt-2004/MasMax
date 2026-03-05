@@ -1,18 +1,18 @@
-import { fetchTVDetails, fetchTVVideos } from "@/Utils/FetchAPI";
+import { fetchTVDetails, fetchTVVideos } from "@/lib/FetchAPI";
 import {
     getBackdropSrcSet,
     getImagePath,
     getLargeImagePath,
     getPosterSrcSet,
-} from "@/Utils/GetImagePath";
-import getVideoPath from "@/Utils/GetVideoPath";
-import { TVDetilsResult } from "@/Utils/Interfaces";
-import { StarIcon } from "@/icons/icons";
+} from "@/lib/GetImagePath";
+import getVideoPath from "@/lib/GetVideoPath";
+import { TVDetilsResult } from "@/lib/Interfaces";
+import { StarIcon } from "@/lib/icons/icons";
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-const NavBar = lazy(() => import("../Home/NavBar"));
-const Footer = lazy(() => import("../Home/Footer"));
+const NavBar = lazy(() => import("../layout/NavBar"));
+const Footer = lazy(() => import("../layout/Footer"));
 
 // ── Skeleton ──────────────────────────────────────────────────────────────────
 function SeriesDetilsSkeleton() {

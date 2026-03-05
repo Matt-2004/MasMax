@@ -1,22 +1,22 @@
-import { DetilsResult } from "@/Utils/Interfaces";
+import { DetilsResult } from "@/lib/Interfaces";
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { fetchMovieDetils, fetchVideo } from "../../Utils/FetchAPI";
+import { fetchMovieDetils, fetchVideo } from "@/lib/FetchAPI";
 
 // NavBar: shared heavy chunk, lazy so it doesn't block content render
-const NavBar = lazy(() => import("../Home/NavBar"));
+const NavBar = lazy(() => import("../layout/NavBar"));
 
 // DetilsComponents: single network request (module cached by browser),
 // each export wrapped so React.lazy gets a { default } shape.
 // All 7 imports resolve from the same cached module chunk.
 const DC = {
-  BackdropHero: lazy(() => import("./DetilsComponents").then(m => ({ default: m.BackdropHero }))),
-  PosterCard: lazy(() => import("./DetilsComponents").then(m => ({ default: m.PosterCard }))),
-  GenreList: lazy(() => import("./DetilsComponents").then(m => ({ default: m.GenreList }))),
-  RatingBadge: lazy(() => import("./DetilsComponents").then(m => ({ default: m.RatingBadge }))),
-  WatchlistButton: lazy(() => import("./DetilsComponents").then(m => ({ default: m.WatchlistButton }))),
-  OverviewSection: lazy(() => import("./DetilsComponents").then(m => ({ default: m.OverviewSection }))),
-  VideosSection: lazy(() => import("./DetilsComponents").then(m => ({ default: m.VideosSection }))),
+  BackdropHero: lazy(() => import("./DetailsComponents").then(m => ({ default: m.BackdropHero }))),
+  PosterCard: lazy(() => import("./DetailsComponents").then(m => ({ default: m.PosterCard }))),
+  GenreList: lazy(() => import("./DetailsComponents").then(m => ({ default: m.GenreList }))),
+  RatingBadge: lazy(() => import("./DetailsComponents").then(m => ({ default: m.RatingBadge }))),
+  WatchlistButton: lazy(() => import("./DetailsComponents").then(m => ({ default: m.WatchlistButton }))),
+  OverviewSection: lazy(() => import("./DetailsComponents").then(m => ({ default: m.OverviewSection }))),
+  VideosSection: lazy(() => import("./DetailsComponents").then(m => ({ default: m.VideosSection }))),
 };
 
 const MovieDetils = () => {

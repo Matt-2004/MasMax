@@ -1,11 +1,11 @@
-import { fetchSearchMovie } from "@/Utils/FetchAPI";
-import { MovieResult } from "@/Utils/Interfaces";
+import { fetchSearchMovie } from "@/lib/FetchAPI";
+import { MovieResult } from "@/lib/Interfaces";
 import { SearchResultsSkeleton } from "@/components/Skeletons";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getImagePath } from "../../Utils/GetImagePath";
+import { getImagePath } from "@/lib/GetImagePath";
 
-const NavBar = lazy(() => import("../Home/NavBar"));
+const NavBar = lazy(() => import("../layout/NavBar"));
 
 export function capitalizeFirstLetterEachWord(str: string) {
   return str.replace(/\b\w/g, (m) => m.toUpperCase());
@@ -35,12 +35,16 @@ const MoviePage = () => {
         if (!cancelled) setLoading(false);
       }
     })();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [query]);
 
   return (
     <div className="min-h-screen" style={{ background: "var(--bg-base)" }}>
-      <Suspense fallback={<div style={{ height: 64, background: "var(--bg-nav)" }} />}>
+      <Suspense
+        fallback={<div style={{ height: 64, background: "var(--bg-nav)" }} />}
+      >
         <NavBar />
       </Suspense>
       <div className="max-w-6xl mx-auto px-3 sm:px-6 lg:px-10 py-6 sm:py-8">
@@ -49,7 +53,9 @@ const MoviePage = () => {
           <div className="w-1 h-8 bg-gradient-to-b from-[#2eade7] to-[#1a8fc7] rounded-full" />
           <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white font-roboto">
             Results for{" "}
-            <span className="text-[#2eade7]">"{capitalizeFirstLetterEachWord(query)}"</span>
+            <span className="text-[#2eade7]">
+              "{capitalizeFirstLetterEachWord(query)}"
+            </span>
           </h1>
         </div>
 
@@ -82,7 +88,7 @@ const MoviePage = () => {
                 <div className="w-24 sm:w-36 md:w-44 aspect-[16/10] rounded-lg overflow-hidden flex-shrink-0 bg-white/5">
                   <img
                     alt={item.original_title}
-                    src={getImagePath(342, item.backdrop_path)}
+                    src={getImagePath(185, item.backdrop_path)}
                     loading="lazy"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
@@ -94,7 +100,9 @@ const MoviePage = () => {
                   </h2>
                   <p className="text-white/35 font-roboto text-xs">
                     {item.release_date?.slice(0, 4)}
-                    {item.vote_average ? ` · ★ ${Math.round(item.vote_average * 10) / 10}` : ""}
+                    {item.vote_average
+                      ? ` · ★ ${Math.round(item.vote_average * 10) / 10}`
+                      : ""}
                   </p>
                   <p className="text-white/55 font-roboto text-xs sm:text-sm leading-relaxed line-clamp-3 mt-0.5">
                     {item.overview}

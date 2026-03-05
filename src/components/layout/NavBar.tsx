@@ -3,12 +3,12 @@ import {
   FilmIcon,
   MenuIcon,
   SearchIcon,
-  Xicon
-} from "@/icons/icons";
-import { fetchSearchMovie } from "@/Utils/FetchAPI";
-import { getImagePath } from "@/Utils/GetImagePath";
-import { DetilsResult } from "@/Utils/Interfaces";
-import { useUser } from "@/Utils/UserContext";
+  Xicon,
+} from "@/lib/icons/icons";
+import { fetchSearchMovie } from "@/lib/FetchAPI";
+import { getImagePath } from "@/lib/GetImagePath";
+import { DetilsResult } from "@/lib/Interfaces";
+import { useUser } from "@/lib/UserContext";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
@@ -28,7 +28,8 @@ const NavBar = () => {
   const location = useLocation();
 
   const navbarItems: IItems = {
-    Movies: { id: 1, path: "/", icon: <FilmIcon /> },
+    Home: { id: 0, path: "/", icon: <FilmIcon /> },
+    Movies: { id: 1, path: "/movies", icon: <FilmIcon /> },
     Series: { id: 2, path: "/series", icon: <FilmIcon /> },
   };
 
@@ -45,9 +46,10 @@ const NavBar = () => {
   const searchRef = useRef<HTMLInputElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const activeDrop = Object.entries(navbarItems).find(
-    ([, item]) => item.path === location.pathname
-  )?.[0] ?? "Movies";
+  const activeDrop =
+    Object.entries(navbarItems).find(
+      ([, item]) => item.path === location.pathname,
+    )?.[0] ?? "Home";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -82,14 +84,22 @@ const NavBar = () => {
 
   const fetchSuggestions = useCallback((query: string) => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    if (!query.trim()) { setSuggestions([]); setAcLoading(false); return; }
+    if (!query.trim()) {
+      setSuggestions([]);
+      setAcLoading(false);
+      return;
+    }
     setAcLoading(true);
     debounceRef.current = setTimeout(async () => {
       try {
         const results: DetilsResult[] = await fetchSearchMovie(query);
         const filtered = results
           .filter((r) => r.original_language === "en" && r.poster_path)
-          .sort((a, b) => new Date(b.release_date).getTime() - new Date(a.release_date).getTime())
+          .sort(
+            (a, b) =>
+              new Date(b.release_date).getTime() -
+              new Date(a.release_date).getTime(),
+          )
           .slice(0, 7);
         setSuggestions(filtered);
       } catch {
@@ -139,13 +149,14 @@ const NavBar = () => {
           background: scrolled
             ? "color-mix(in srgb, var(--bg-nav-scroll) 96%, transparent)"
             : "transparent",
-          borderBottom: scrolled ? "1px solid rgba(255,255,255,0.07)" : "1px solid transparent",
+          borderBottom: scrolled
+            ? "1px solid rgba(255,255,255,0.07)"
+            : "1px solid transparent",
           backdropFilter: scrolled ? "blur(20px)" : "blur(0px)",
           WebkitBackdropFilter: scrolled ? "blur(20px)" : "blur(0px)",
         }}
       >
         <div className="max-w-[90rem] mx-auto h-16 flex items-center justify-between px-4 sm:px-6 lg:px-10">
-
           {/* ── Left: hamburger (mobile) + logo ── */}
           <div className="flex items-center gap-4">
             <button
@@ -156,13 +167,17 @@ const NavBar = () => {
               <MenuIcon />
             </button>
 
-            <span
+            <button
               onClick={() => navigate("/")}
-              className="font-roboto font-bold text-xl sm:text-2xl tracking-widest cursor-pointer select-none bg-clip-text text-transparent"
-              style={{ backgroundImage: "linear-gradient(135deg, var(--accent-light) 0%, var(--accent) 60%)" }}
+              className="font-roboto font-bold text-xl sm:text-2xl tracking-widest cursor-pointer select-none bg-clip-text text-transparent border-none bg-transparent p-0"
+              aria-label="MasMax home"
+              style={{
+                backgroundImage:
+                  "linear-gradient(135deg, var(--accent-light) 0%, var(--accent) 60%)",
+              }}
             >
               MASMAX
-            </span>
+            </button>
           </div>
 
           {/* ── Center: nav links (desktop) ── */}
@@ -175,8 +190,17 @@ const NavBar = () => {
                   onClick={() => navigate(item.path)}
                   className="relative h-16 flex items-center px-4 font-roboto text-[0.85rem] font-medium tracking-wide transition-colors duration-200 group"
                   style={{ color: active ? "#fff" : "rgba(255,255,255,0.45)" }}
-                  onMouseEnter={(e) => { if (!active) (e.currentTarget as HTMLButtonElement).style.color = "rgba(255,255,255,0.85)"; }}
-                  onMouseLeave={(e) => { if (!active) (e.currentTarget as HTMLButtonElement).style.color = "rgba(255,255,255,0.45)"; }}
+                  aria-current={active ? "page" : undefined}
+                  onMouseEnter={(e) => {
+                    if (!active)
+                      (e.currentTarget as HTMLButtonElement).style.color =
+                        "rgba(255,255,255,0.85)";
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!active)
+                      (e.currentTarget as HTMLButtonElement).style.color =
+                        "rgba(255,255,255,0.45)";
+                  }}
                 >
                   {itemName}
                   {/* Active underline */}
@@ -224,33 +248,58 @@ const NavBar = () => {
                   onClick={() => setAvatarOpen((v) => !v)}
                   className="flex items-center gap-2.5 pl-1 pr-3 py-1 rounded-full transition-all duration-200 hover:bg-white/8"
                   aria-label="User menu"
+                  aria-haspopup="menu"
+                  aria-expanded={avatarOpen}
                 >
                   <div
                     className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 transition-all duration-200"
-                    style={{ boxShadow: `0 0 0 2px color-mix(in srgb, var(--accent) 50%, transparent)` }}
+                    style={{
+                      boxShadow: `0 0 0 2px color-mix(in srgb, var(--accent) 50%, transparent)`,
+                    }}
                   >
                     {user.photoURL ? (
-                      <img src={user.photoURL} alt="avatar" className="w-full h-full object-cover" />
+                      <img
+                        src={user.photoURL}
+                        alt="avatar"
+                        className="w-full h-full object-cover"
+                      />
                     ) : (
                       <div
                         className="w-full h-full flex items-center justify-center text-white font-roboto font-bold text-xs"
-                        style={{ background: "linear-gradient(135deg, var(--accent), var(--accent-dark))" }}
+                        style={{
+                          background:
+                            "linear-gradient(135deg, var(--accent), var(--accent-dark))",
+                        }}
                       >
-                        {(user.displayName ?? user.email ?? "U").charAt(0).toUpperCase()}
+                        {(user.displayName ?? user.email ?? "U")
+                          .charAt(0)
+                          .toUpperCase()}
                       </div>
                     )}
                   </div>
                   <span className="hidden md:block font-roboto text-sm text-white/70 max-w-[90px] truncate">
                     {user.displayName?.split(" ")[0] ?? "Account"}
                   </span>
-                  <svg className="hidden md:block w-3 h-3 text-white/40 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  <svg
+                    className="hidden md:block w-3 h-3 text-white/40 flex-shrink-0"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2.5}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M19 9l-7 7-7-7"
+                    />
                   </svg>
                 </button>
 
                 {/* Dropdown */}
                 {avatarOpen && (
                   <div
+                    role="menu"
+                    aria-label="User account menu"
                     className="absolute right-0 top-12 w-56 rounded-2xl overflow-hidden z-50 border"
                     style={{
                       background: "var(--bg-surface)",
@@ -259,19 +308,33 @@ const NavBar = () => {
                     }}
                   >
                     {/* User info header */}
-                    <div className="flex items-center gap-3 px-4 py-3.5 border-b" style={{ borderColor: "var(--border)" }}>
+                    <div
+                      className="flex items-center gap-3 px-4 py-3.5 border-b"
+                      style={{ borderColor: "var(--border)" }}
+                    >
                       <div
                         className="w-9 h-9 rounded-full overflow-hidden flex-shrink-0"
-                        style={{ boxShadow: `0 0 0 2px color-mix(in srgb, var(--accent) 50%, transparent)` }}
+                        style={{
+                          boxShadow: `0 0 0 2px color-mix(in srgb, var(--accent) 50%, transparent)`,
+                        }}
                       >
                         {user.photoURL ? (
-                          <img src={user.photoURL} alt="avatar" className="w-full h-full object-cover" />
+                          <img
+                            src={user.photoURL}
+                            alt="avatar"
+                            className="w-full h-full object-cover"
+                          />
                         ) : (
                           <div
                             className="w-full h-full flex items-center justify-center text-white font-roboto font-bold text-sm"
-                            style={{ background: "linear-gradient(135deg, var(--accent), var(--accent-dark))" }}
+                            style={{
+                              background:
+                                "linear-gradient(135deg, var(--accent), var(--accent-dark))",
+                            }}
                           >
-                            {(user.displayName ?? user.email ?? "U").charAt(0).toUpperCase()}
+                            {(user.displayName ?? user.email ?? "U")
+                              .charAt(0)
+                              .toUpperCase()}
                           </div>
                         )}
                       </div>
@@ -287,20 +350,34 @@ const NavBar = () => {
 
                     <div className="py-1">
                       <button
-                        onClick={() => { navigate("/profile"); setAvatarOpen(false); }}
+                        role="menuitem"
+                        onClick={() => {
+                          navigate("/profile");
+                          setAvatarOpen(false);
+                        }}
                         className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-roboto text-white/65 hover:text-white hover:bg-white/5 transition-colors"
                       >
-                        <svg className="w-4 h-4 flex-shrink-0 fill-current opacity-70" viewBox="0 0 448 512">
+                        <svg
+                          className="w-4 h-4 flex-shrink-0 fill-current opacity-70"
+                          viewBox="0 0 448 512"
+                        >
                           <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z" />
                         </svg>
                         My Profile
                       </button>
                       <button
-                        onClick={async () => { await logout(); setAvatarOpen(false); }}
+                        role="menuitem"
+                        onClick={async () => {
+                          await logout();
+                          setAvatarOpen(false);
+                        }}
                         className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-roboto text-red-400/80 hover:text-red-300 hover:bg-red-500/8 transition-colors border-t mt-1 pt-2"
                         style={{ borderColor: "var(--border)" }}
                       >
-                        <svg className="w-4 h-4 flex-shrink-0 fill-current opacity-70" viewBox="0 0 512 512">
+                        <svg
+                          className="w-4 h-4 flex-shrink-0 fill-current opacity-70"
+                          viewBox="0 0 512 512"
+                        >
                           <path d="M502.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 224 192 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l210.7 0-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128zM160 96c17.7 0 32-14.3 32-32s-14.3-32-32-32L96 32C43 32 0 75 0 128L0 384c0 53 43 96 96 96l64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0c-17.7 0-32-14.3-32-32l0-256c0-17.7 14.3-32 32-32l64 0z" />
                         </svg>
                         Sign Out
@@ -321,8 +398,10 @@ const NavBar = () => {
                   onClick={() => navigate("/register")}
                   className="font-roboto text-sm font-semibold text-white px-4 py-1.5 rounded-lg transition-all duration-200 active:scale-95"
                   style={{
-                    background: "linear-gradient(135deg, var(--accent), var(--accent-dark))",
-                    boxShadow: "0 2px 12px color-mix(in srgb, var(--accent) 30%, transparent)",
+                    background:
+                      "linear-gradient(135deg, var(--accent), var(--accent-dark))",
+                    boxShadow:
+                      "0 2px 12px color-mix(in srgb, var(--accent) 30%, transparent)",
                   }}
                 >
                   Get Started
@@ -339,9 +418,12 @@ const NavBar = () => {
       >
         <form
           onSubmit={handleSearchSubmit}
+          role="search"
+          aria-label="Search movies and series"
           className="h-16 flex items-center gap-3 px-4 sm:px-6 lg:px-10 border-b backdrop-blur-xl"
           style={{
-            background: "color-mix(in srgb, var(--bg-nav-scroll) 97%, transparent)",
+            background:
+              "color-mix(in srgb, var(--bg-nav-scroll) 97%, transparent)",
             borderColor: "rgba(255,255,255,0.08)",
           }}
         >
@@ -357,8 +439,14 @@ const NavBar = () => {
               fetchSuggestions(e.currentTarget.value);
             }}
             onKeyDown={handleKeyDown}
-            type="text"
+            type="search"
             autoComplete="off"
+            aria-label="Search movies, series"
+            aria-autocomplete="list"
+            aria-controls="search-suggestions"
+            aria-activedescendant={
+              activeIdx >= 0 ? `suggestion-${activeIdx}` : undefined
+            }
             className="flex-1 h-full bg-transparent outline-none font-roboto text-white text-[0.95rem] placeholder:text-white/30"
             placeholder="Search movies, series…"
           />
@@ -371,7 +459,11 @@ const NavBar = () => {
           {searchInput && !acLoading && (
             <button
               type="button"
-              onClick={() => { setSearchInput(""); setSuggestions([]); searchRef.current?.focus(); }}
+              onClick={() => {
+                setSearchInput("");
+                setSuggestions([]);
+                searchRef.current?.focus();
+              }}
               className="flex-shrink-0 text-white/35 hover:text-white/70 transition-colors"
               aria-label="Clear"
             >
@@ -391,24 +483,43 @@ const NavBar = () => {
 
         {suggestions.length > 0 && (
           <ul
+            id="search-suggestions"
+            role="listbox"
+            aria-label="Search suggestions"
             className="border-b backdrop-blur-xl max-h-[min(28rem,62vh)] overflow-y-auto"
             style={{
-              background: "color-mix(in srgb, var(--bg-nav-scroll) 98%, transparent)",
+              background:
+                "color-mix(in srgb, var(--bg-nav-scroll) 98%, transparent)",
               borderColor: "rgba(255,255,255,0.06)",
             }}
           >
             {suggestions.map((item, idx) => (
               <li
+                id={`suggestion-${idx}`}
                 key={item.id}
+                role="option"
+                aria-selected={idx === activeIdx}
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={() => handleSuggestionClick(item)}
                 className="flex items-center gap-3.5 px-4 sm:px-6 py-2.5 cursor-pointer transition-colors duration-100 border-l-2"
                 style={{
-                  background: idx === activeIdx ? "color-mix(in srgb, var(--accent) 10%, transparent)" : "transparent",
-                  borderLeftColor: idx === activeIdx ? "var(--accent)" : "transparent",
+                  background:
+                    idx === activeIdx
+                      ? "color-mix(in srgb, var(--accent) 10%, transparent)"
+                      : "transparent",
+                  borderLeftColor:
+                    idx === activeIdx ? "var(--accent)" : "transparent",
                 }}
-                onMouseEnter={(e) => { if (idx !== activeIdx) (e.currentTarget as HTMLLIElement).style.background = "rgba(255,255,255,0.04)"; }}
-                onMouseLeave={(e) => { if (idx !== activeIdx) (e.currentTarget as HTMLLIElement).style.background = "transparent"; }}
+                onMouseEnter={(e) => {
+                  if (idx !== activeIdx)
+                    (e.currentTarget as HTMLLIElement).style.background =
+                      "rgba(255,255,255,0.04)";
+                }}
+                onMouseLeave={(e) => {
+                  if (idx !== activeIdx)
+                    (e.currentTarget as HTMLLIElement).style.background =
+                      "transparent";
+                }}
               >
                 <img
                   src={getImagePath(92, item.poster_path)}
@@ -416,10 +527,16 @@ const NavBar = () => {
                   className="w-8 h-12 object-cover rounded-md flex-shrink-0 bg-white/5"
                 />
                 <div className="min-w-0 flex-1">
-                  <p className="font-roboto text-sm text-white font-medium truncate">{item.original_title}</p>
-                  <p className="font-roboto text-xs text-white/35 mt-0.5">{item.release_date?.slice(0, 4) ?? ""}</p>
+                  <p className="font-roboto text-sm text-white font-medium truncate">
+                    {item.original_title}
+                  </p>
+                  <p className="font-roboto text-xs text-white/35 mt-0.5">
+                    {item.release_date?.slice(0, 4) ?? ""}
+                  </p>
                 </div>
-                <span className="text-white/20 flex-shrink-0"><AngleRightIcon /></span>
+                <span className="text-white/20 flex-shrink-0">
+                  <AngleRightIcon />
+                </span>
               </li>
             ))}
           </ul>
@@ -429,6 +546,7 @@ const NavBar = () => {
       {/* ── Mobile drawer backdrop ───────────────────────────────── */}
       {activeMenu && (
         <div
+          aria-hidden="true"
           onClick={() => setActiveMenu(false)}
           className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
         />
@@ -436,21 +554,34 @@ const NavBar = () => {
 
       {/* ── Mobile drawer ─────────────────────────────────────────── */}
       <aside
+        role="dialog"
+        aria-modal="true"
+        aria-label="Navigation menu"
         className={`fixed z-50 top-0 left-0 h-full w-[76%] max-w-[310px] flex flex-col transition-transform duration-300 ease-in-out border-r ${activeMenu ? "translate-x-0" : "-translate-x-full"}`}
-        style={{ background: "var(--bg-surface)", borderColor: "var(--border)" }}
+        style={{
+          background: "var(--bg-surface)",
+          borderColor: "var(--border)",
+        }}
       >
         {/* Header */}
         <div
           className="flex items-center justify-between h-16 px-5 flex-shrink-0 border-b"
           style={{ borderColor: "var(--border)" }}
         >
-          <span
-            onClick={() => { navigate("/"); setActiveMenu(false); }}
-            className="font-roboto font-bold text-xl tracking-widest cursor-pointer bg-clip-text text-transparent"
-            style={{ backgroundImage: "linear-gradient(135deg, var(--accent-light), var(--accent))" }}
+          <button
+            onClick={() => {
+              navigate("/");
+              setActiveMenu(false);
+            }}
+            className="font-roboto font-bold text-xl tracking-widest cursor-pointer bg-clip-text text-transparent border-none bg-transparent p-0"
+            aria-label="MasMax home"
+            style={{
+              backgroundImage:
+                "linear-gradient(135deg, var(--accent-light), var(--accent))",
+            }}
           >
             MASMAX
-          </span>
+          </button>
           <button
             onClick={() => setActiveMenu(false)}
             className="p-1.5 rounded-lg text-white/40 hover:text-white hover:bg-white/8 transition-colors"
@@ -467,17 +598,35 @@ const NavBar = () => {
             return (
               <button
                 key={itemName}
-                onClick={() => { navigate(item.path); setActiveMenu(false); }}
+                onClick={() => {
+                  navigate(item.path);
+                  setActiveMenu(false);
+                }}
+                aria-current={isActive ? "page" : undefined}
                 className="w-full flex items-center gap-3.5 h-12 px-5 font-roboto text-[0.9rem] font-medium transition-all duration-150"
                 style={{
                   color: isActive ? "#fff" : "rgba(255,255,255,0.45)",
-                  background: isActive ? "color-mix(in srgb, var(--accent) 10%, transparent)" : "transparent",
-                  borderLeft: isActive ? "3px solid var(--accent)" : "3px solid transparent",
+                  background: isActive
+                    ? "color-mix(in srgb, var(--accent) 10%, transparent)"
+                    : "transparent",
+                  borderLeft: isActive
+                    ? "3px solid var(--accent)"
+                    : "3px solid transparent",
                 }}
-                onMouseEnter={(e) => { if (!isActive) (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.04)"; }}
-                onMouseLeave={(e) => { if (!isActive) (e.currentTarget as HTMLButtonElement).style.background = "transparent"; }}
+                onMouseEnter={(e) => {
+                  if (!isActive)
+                    (e.currentTarget as HTMLButtonElement).style.background =
+                      "rgba(255,255,255,0.04)";
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive)
+                    (e.currentTarget as HTMLButtonElement).style.background =
+                      "transparent";
+                }}
               >
-                <span className="w-4 h-4 flex-shrink-0 opacity-70">{item.icon}</span>
+                <span className="w-4 h-4 flex-shrink-0 opacity-70">
+                  {item.icon}
+                </span>
                 {itemName}
               </button>
             );
@@ -485,22 +634,36 @@ const NavBar = () => {
         </nav>
 
         {/* Footer */}
-        <div className="p-5 border-t flex-shrink-0" style={{ borderColor: "var(--border)" }}>
+        <div
+          className="p-5 border-t flex-shrink-0"
+          style={{ borderColor: "var(--border)" }}
+        >
           {user ? (
             <>
               <div className="flex items-center gap-3 mb-4">
                 <div
                   className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0"
-                  style={{ boxShadow: `0 0 0 2px color-mix(in srgb, var(--accent) 50%, transparent)` }}
+                  style={{
+                    boxShadow: `0 0 0 2px color-mix(in srgb, var(--accent) 50%, transparent)`,
+                  }}
                 >
                   {user.photoURL ? (
-                    <img src={user.photoURL} alt="avatar" className="w-full h-full object-cover" />
+                    <img
+                      src={user.photoURL}
+                      alt="avatar"
+                      className="w-full h-full object-cover"
+                    />
                   ) : (
                     <div
                       className="w-full h-full flex items-center justify-center text-white font-roboto font-bold text-sm"
-                      style={{ background: "linear-gradient(135deg, var(--accent), var(--accent-dark))" }}
+                      style={{
+                        background:
+                          "linear-gradient(135deg, var(--accent), var(--accent-dark))",
+                      }}
                     >
-                      {(user.displayName ?? user.email ?? "U").charAt(0).toUpperCase()}
+                      {(user.displayName ?? user.email ?? "U")
+                        .charAt(0)
+                        .toUpperCase()}
                     </div>
                   )}
                 </div>
@@ -508,18 +671,29 @@ const NavBar = () => {
                   <p className="font-roboto font-semibold text-white text-sm truncate">
                     {user.displayName ?? "User"}
                   </p>
-                  <p className="font-roboto text-white/35 text-xs truncate">{user.email}</p>
+                  <p className="font-roboto text-white/35 text-xs truncate">
+                    {user.email}
+                  </p>
                 </div>
               </div>
               <button
-                onClick={() => { navigate("/profile"); setActiveMenu(false); }}
+                onClick={() => {
+                  navigate("/profile");
+                  setActiveMenu(false);
+                }}
                 className="w-full py-2.5 rounded-xl font-roboto font-semibold text-sm text-white transition-all duration-200"
-                style={{ background: "linear-gradient(135deg, var(--accent), var(--accent-dark))" }}
+                style={{
+                  background:
+                    "linear-gradient(135deg, var(--accent), var(--accent-dark))",
+                }}
               >
                 My Profile
               </button>
               <button
-                onClick={async () => { await logout(); setActiveMenu(false); }}
+                onClick={async () => {
+                  await logout();
+                  setActiveMenu(false);
+                }}
                 className="w-full mt-2 py-2.5 rounded-xl border font-roboto font-semibold text-sm text-red-400 hover:text-red-300 hover:bg-red-500/8 transition-all duration-200"
                 style={{ borderColor: "rgba(239,68,68,0.25)" }}
               >
@@ -529,14 +703,23 @@ const NavBar = () => {
           ) : (
             <>
               <button
-                onClick={() => { navigate("/register"); setActiveMenu(false); }}
+                onClick={() => {
+                  navigate("/register");
+                  setActiveMenu(false);
+                }}
                 className="w-full py-2.5 rounded-xl font-roboto font-semibold text-sm text-white transition-all duration-200"
-                style={{ background: "linear-gradient(135deg, var(--accent), var(--accent-dark))" }}
+                style={{
+                  background:
+                    "linear-gradient(135deg, var(--accent), var(--accent-dark))",
+                }}
               >
                 Get Started
               </button>
               <button
-                onClick={() => { navigate("/login"); setActiveMenu(false); }}
+                onClick={() => {
+                  navigate("/login");
+                  setActiveMenu(false);
+                }}
                 className="w-full mt-2 py-2.5 rounded-xl border font-roboto font-semibold text-sm text-white/55 hover:text-white hover:bg-white/5 transition-all duration-200"
                 style={{ borderColor: "var(--border)" }}
               >
@@ -551,5 +734,3 @@ const NavBar = () => {
 };
 
 export default NavBar;
-
-

@@ -1,8 +1,8 @@
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../../Utils/FirebaseConfig";
-import { useUser } from "../../Utils/UserContext";
+import { auth } from "@/lib/FirebaseConfig";
+import { useUser } from "@/lib/UserContext";
 
 const GoogleAuth = () => {
   const navigate = useNavigate();
