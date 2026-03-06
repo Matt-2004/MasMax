@@ -140,7 +140,7 @@ const Home = () => {
   return (
     <div
       className="min-h-screen overflow-x-hidden"
-      style={{ background: "var(--bg-base)" }}
+      style={{ background: "var(--bg-base)", touchAction: "pan-y" }}
     >
       <Suspense
         fallback={<div style={{ height: 64, background: "var(--bg-nav)" }} />}
@@ -162,7 +162,7 @@ const Home = () => {
            for rows fully outside the viewport, cutting scroll jank significantly */}
         <Divider />
         <div
-          style={{ contentVisibility: "auto", containIntrinsicSize: "0 280px" }}
+          style={{ contentVisibility: "auto", containIntrinsicSize: "0 340px" }}
         >
           <HomeRow
             title="Trending This Week"
@@ -177,7 +177,7 @@ const Home = () => {
 
         <Divider />
         <div
-          style={{ contentVisibility: "auto", containIntrinsicSize: "0 280px" }}
+          style={{ contentVisibility: "auto", containIntrinsicSize: "0 340px" }}
         >
           <HomeRow
             title="Now Playing"
@@ -191,7 +191,7 @@ const Home = () => {
 
         <Divider />
         <div
-          style={{ contentVisibility: "auto", containIntrinsicSize: "0 280px" }}
+          style={{ contentVisibility: "auto", containIntrinsicSize: "0 340px" }}
         >
           <HomeRow
             title="Top Rated"
@@ -205,7 +205,7 @@ const Home = () => {
 
         <Divider />
         <div
-          style={{ contentVisibility: "auto", containIntrinsicSize: "0 280px" }}
+          style={{ contentVisibility: "auto", containIntrinsicSize: "0 340px" }}
         >
           <HomeRow
             title="Coming Soon"
@@ -219,7 +219,7 @@ const Home = () => {
 
         <Divider />
         <div
-          style={{ contentVisibility: "auto", containIntrinsicSize: "0 280px" }}
+          style={{ contentVisibility: "auto", containIntrinsicSize: "0 340px" }}
         >
           <HomeRow
             title="Trending TV Shows"

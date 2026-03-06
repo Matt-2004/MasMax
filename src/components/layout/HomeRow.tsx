@@ -1,8 +1,4 @@
-import {
-  getImagePath,
-  getPosterSrcSet,
-  getTinyPosterPath,
-} from "@/lib/GetImagePath";
+import { getImagePath, getPosterSrcSet } from "@/lib/GetImagePath";
 import { MovieResult, TVResult } from "@/lib/Interfaces";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -111,11 +107,7 @@ const RowCard = memo(function RowCard({
           decoding={priority ? "sync" : "async"}
           // @ts-ignore
           fetchpriority={priority ? "high" : "low"}
-          style={{
-            backgroundImage: `url(${getTinyPosterPath(item.poster_path)})`,
-            backgroundSize: "cover",
-          }}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="w-full h-full object-cover transition-transform duration-500 sm:group-hover:scale-105"
         />
         {/* Rating badge — no backdrop-blur (creates a compositor layer per card) */}
         {item.vote_average > 0 && (
@@ -215,7 +207,7 @@ const HomeRow = ({
           io.disconnect();
         }
       },
-      { rootMargin: "200px" }, // start loading 200px before the row scrolls in
+      { rootMargin: "400px" }, // start loading 400px before the row scrolls in
     );
     io.observe(el);
     return () => io.disconnect();

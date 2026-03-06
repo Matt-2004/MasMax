@@ -17,6 +17,8 @@ export default defineConfig({
     },
   },
   build: {
+    // Target modern mobile browsers — avoids legacy polyfill bloat
+    target: "es2020",
     // Inject <link rel="modulepreload"> for all entry chunks automatically
     modulePreload: { polyfill: true },
     // Split CSS per chunk so only the route's CSS loads
@@ -76,6 +78,10 @@ export default defineConfig({
             id.includes("node_modules/@firebase")
           ) {
             return "firebase-vendor";
+          }
+          // Supabase — only used on auth pages, split from main bundle
+          if (id.includes("node_modules/@supabase")) {
+            return "supabase-vendor";
           }
         },
       },

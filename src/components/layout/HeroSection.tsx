@@ -59,12 +59,21 @@ const HeroSection = ({ movies, loading }: HeroSectionProps) => {
     [navigate],
   );
 
-  // Auto-cycle every 6s
+  // Auto-cycle every 6s — pause when tab is hidden to save battery
   useEffect(() => {
     if (!featured.length) return;
-    intervalRef.current = setInterval(() => advance(1), 6000);
-    return () => {
+    const start = () => {
+      intervalRef.current = setInterval(() => advance(1), 6000);
+    };
+    const stop = () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+    start();
+    const onVisibility = () => (document.hidden ? stop() : start());
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      stop();
+      document.removeEventListener("visibilitychange", onVisibility);
     };
   }, [featured.length, advance]);
 
@@ -99,42 +108,38 @@ const HeroSection = ({ movies, loading }: HeroSectionProps) => {
       aria-roledescription="carousel"
     >
       {/* ── Backdrop images (crossfade) ─────────────────────── */}
-      {featured.map((m, i) => (
-        <img
-          key={m.id}
-          src={getLargeImagePath(m.backdrop_path)}
-          srcSet={getBackdropSrcSet(m.backdrop_path)}
-          sizes={BACKDROP_SIZES}
-          alt=""
-          aria-hidden="true"
-          width="1280"
-          height="720"
-          loading={i <= 1 ? "eager" : "lazy"}
-          decoding={i === 0 ? "sync" : "async"}
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore fetchpriority is valid HTML but not yet in TS lib
-          fetchpriority={i === 0 ? "high" : "low"}
-          style={{
-            backgroundImage: `url(https://image.tmdb.org/t/p/w300/${m.backdrop_path})`,
-            backgroundSize: "cover",
-          }}
-          className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-700 ${
-            i === current ? "opacity-100" : "opacity-0"
-          }`}
-        />
-      ))}
+      {featured.map((m, i) => {
+        // Only decode/display slides within 1 of current — skip the rest
+        // so mobile doesn't hold 4 large images in memory simultaneously
+        const near =
+          Math.abs(i - current) <= 1 ||
+          (current === 0 && i === featured.length - 1) ||
+          (current === featured.length - 1 && i === 0);
+        return (
+          <img
+            key={m.id}
+            src={getLargeImagePath(m.backdrop_path)}
+            srcSet={getBackdropSrcSet(m.backdrop_path)}
+            sizes={BACKDROP_SIZES}
+            alt=""
+            aria-hidden="true"
+            width="1280"
+            height="720"
+            loading={i === 0 ? "eager" : "lazy"}
+            decoding={i === 0 ? "sync" : "async"}
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore fetchpriority is valid HTML but not yet in TS lib
+            fetchpriority={i === 0 ? "high" : "low"}
+            className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-700 ${
+              i === current ? "opacity-100" : "opacity-0"
+            } ${!near ? "invisible" : ""}`}
+          />
+        );
+      })}
 
       {/* ── Gradient layers ─────────────────────────────────── */}
-      {/* will-change:transform promotes each to its own compositor layer,
-          so the backdrop image crossfade never triggers a reflow here */}
-      <div
-        className="absolute inset-0 bg-gradient-to-t from-[#111115] via-[#111115]/55 to-transparent pointer-events-none"
-        style={{ willChange: "transform", contain: "strict" }}
-      />
-      <div
-        className="absolute inset-0 bg-gradient-to-r from-[#111115]/80 via-[#111115]/20 to-transparent pointer-events-none"
-        style={{ willChange: "transform", contain: "strict" }}
-      />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#111115] via-[#111115]/55 to-transparent pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#111115]/80 via-[#111115]/20 to-transparent pointer-events-none" />
 
       {/* ── Content ─────────────────────────────────────────── */}
       <div
@@ -192,7 +197,7 @@ const HeroSection = ({ movies, loading }: HeroSectionProps) => {
           <button
             onClick={() => handleWatchNow(movie)}
             aria-label={`More info about ${movie.original_title}`}
-            className="flex items-center gap-2 px-3.5 sm:px-5 py-2 sm:py-2.5 bg-white/10 hover:bg-white/20 text-white font-semibold font-roboto text-xs sm:text-sm rounded-xl backdrop-blur-sm border border-white/15 transition-all duration-200 active:scale-95"
+            className="flex items-center gap-2 px-3.5 sm:px-5 py-2 sm:py-2.5 bg-white/10 hover:bg-white/20 text-white font-semibold font-roboto text-xs sm:text-sm rounded-xl border border-white/15 transition-all duration-200 active:scale-95"
           >
             More Info
           </button>
