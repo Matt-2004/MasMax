@@ -12,7 +12,7 @@ module.exports = {
     container: {},
     extend: {
       fontFamily: {
-        roboto: ["Roboto", "sans-serif"],
+        roboto: ["Roboto", "Roboto Fallback", "Arial", "sans-serif"],
       },
     },
   },

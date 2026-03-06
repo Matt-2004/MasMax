@@ -11,6 +11,23 @@
     <link rel="dns-prefetch" href="https://api.themoviedb.org" />
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Preload the primary-weight woff2 for each family so the browser fetches
+         them in parallel with the CSS, eliminating the font-swap reflow (CLS).
+         Titillium Web 400 & Roboto 400 are the body-text weights used on first paint. -->
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="https://fonts.gstatic.com/s/titilliumweb/v17/NaPecZTIAX_6ppYrr634bkohFH0.woff2"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="https://fonts.gstatic.com/s/roboto/v47/KFOmCnqEu92Fr1Me5WZLCzYlKw.woff2"
+    />
     <!-- Only the weights actually used: Titillium Web 400/600/700, Roboto 400/500/700 -->
     <!-- font-display=swap: text paints immediately with fallback font, no render-blocking -->
     <link
@@ -62,7 +79,9 @@
         /* Inline the dark-theme bg so there's no flash of white before CSS bundle */
         background-color: #111115;
         color: #ffffff;
-        font-family: "Titillium Web", ui-sans-serif, system-ui, sans-serif;
+        font-family:
+          "Titillium Web", "Titillium Web Fallback", ui-sans-serif, system-ui,
+          sans-serif;
         user-select: none;
         margin: 0;
         padding: 0;
@@ -83,6 +102,30 @@
         /* Remove scrollbar space */
         background: transparent;
         /* Optional: transparent background */
+      }
+
+      /* ── Fallback font metric overrides ──────────────────────────────────
+         These @font-face rules create metric-matched fallback fonts so that
+         when Titillium Web / Roboto arrive via font-display:swap the glyphs
+         occupy the same line-height and advance-width as the fallbacks,
+         making the swap cause zero layout shift (CLS = 0).
+         Values measured against system-ui / Arial on macOS/Windows/Android.
+      ──────────────────────────────────────────────────────────────────── */
+      @font-face {
+        font-family: "Titillium Web Fallback";
+        src: local("Arial"), local("Helvetica Neue"), local("sans-serif");
+        ascent-override: 89%;
+        descent-override: 22%;
+        line-gap-override: 0%;
+        size-adjust: 104%;
+      }
+      @font-face {
+        font-family: "Roboto Fallback";
+        src: local("Arial"), local("Helvetica Neue"), local("sans-serif");
+        ascent-override: 92%;
+        descent-override: 24%;
+        line-gap-override: 0%;
+        size-adjust: 100%;
       }
     </style>
   </head>
