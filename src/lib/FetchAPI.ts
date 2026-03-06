@@ -1,6 +1,36 @@
 const _cache = new Map<string, Promise<any>>();
-const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
-export const fetchFromTMDB = async (url: URL, highPriority = false) => {
+const API_KEY = import.meta.env.VITE_TMDB_API_KEY?.trim();
+
+// ── localStorage stale-while-revalidate ──────────────────────────────────────
+// For home-page endpoints: serve stale data instantly, refresh in background.
+// TTL: 5 minutes. Falls back silently if localStorage is unavailable.
+const LS_TTL = 5 * 60 * 1000;
+
+function lsGet<T>(key: string): T | null {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return null;
+    const { ts, data } = JSON.parse(raw) as { ts: number; data: T };
+    if (Date.now() - ts < LS_TTL) return data;
+    return null; // expired
+  } catch {
+    return null;
+  }
+}
+
+function lsSet(key: string, data: unknown): void {
+  try {
+    localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data }));
+  } catch {
+    // quota exceeded or private browsing — ignore
+  }
+}
+
+export const fetchFromTMDB = async (
+  url: URL,
+  highPriority = false,
+  lsKey?: string,
+) => {
   const key = url.toString();
   if (_cache.has(key)) return _cache.get(key)!;
 
@@ -10,14 +40,38 @@ export const fetchFromTMDB = async (url: URL, highPriority = false) => {
       accept: "application/json",
       Authorization: `Bearer ${API_KEY}`,
     },
-    // Leverage browser HTTP cache: serve stale for up to 5 min,
-    // revalidate in background — cuts repeat-visit latency to ~0ms
     cache: "default",
   };
   if (highPriority) (options as any).priority = "high";
 
+  // If a localStorage key is provided, seed the in-memory cache with stale
+  // data immediately so callers get a result on the same microtask tick.
+  if (lsKey) {
+    const stale = lsGet<any>(lsKey);
+    if (stale !== null) {
+      // Return stale instantly; fire network in background to refresh
+      const networkPromise = fetch(url, options)
+        .then((res) => res.json())
+        .then((fresh) => {
+          lsSet(lsKey, fresh);
+          _cache.set(key, Promise.resolve(fresh));
+          return fresh;
+        })
+        .catch(() => stale);
+      // Don't await — callers get stale, cache refreshes silently
+      _cache.set(key, Promise.resolve(stale));
+      // Kick off network refresh without blocking
+      networkPromise.catch(() => {});
+      return stale;
+    }
+  }
+
   const promise = fetch(url, options)
     .then((res) => res.json())
+    .then((data) => {
+      if (lsKey) lsSet(lsKey, data);
+      return data;
+    })
     .catch((err) => {
       _cache.delete(key); // don't cache failures
       console.error("Error while fetching", err);
@@ -39,7 +93,7 @@ export const fetchUpComingMoive = async () => {
   const url = new URL(
     "https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1",
   );
-  const response = await fetchFromTMDB(url);
+  const response = await fetchFromTMDB(url, false, "tmdb_upcoming");
   return response.results;
 };
 
@@ -47,7 +101,7 @@ export const fetchNowPlaying = async () => {
   const url = new URL(
     "https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1",
   );
-  const response = await fetchFromTMDB(url);
+  const response = await fetchFromTMDB(url, false, "tmdb_now_playing");
   return response.results;
 };
 
@@ -67,7 +121,8 @@ export const fetchTopRatedMovie = async (page?: number) => {
       page || 1
     }`,
   );
-  const response = await fetchFromTMDB(url);
+  const lsKey = !page || page === 1 ? "tmdb_top_rated" : undefined;
+  const response = await fetchFromTMDB(url, false, lsKey);
   return response.results;
 };
 
@@ -104,10 +159,9 @@ export const fetchVideo = async (movie_id: string) => {
 };
 
 export const fetchTrendMovie = async (timeLine?: string) => {
+  const tl = timeLine || "day";
   const url = new URL(
-    `https://api.themoviedb.org/3/trending/movie/${
-      timeLine || "day"
-    }?language=en-US`,
+    `https://api.themoviedb.org/3/trending/movie/${tl}?language=en-US`,
   );
   // If the index.html inline script already fired the same request, reuse it
   // to avoid a duplicate network call. Seed lazily so module-parse timing
@@ -122,8 +176,9 @@ export const fetchTrendMovie = async (timeLine?: string) => {
       earlyPromise.then((results) => ({ results })),
     );
   }
-  // hero fetch gets high network priority
-  const respones = await fetchFromTMDB(url, !timeLine /* day = hero */);
+  // hero fetch gets high network priority; cache keyed by timeline
+  const lsKey = `tmdb_trending_${tl}`;
+  const respones = await fetchFromTMDB(url, !timeLine /* day = hero */, lsKey);
   return respones.results;
 };
 
@@ -146,10 +201,12 @@ export const fetchTopRatedTV = async (page?: number) => {
 };
 
 export const fetchTrendingTV = async (timeLine?: string) => {
+  const tl = timeLine || "day";
   const url = new URL(
-    `https://api.themoviedb.org/3/trending/tv/${timeLine || "day"}?language=en-US`,
+    `https://api.themoviedb.org/3/trending/tv/${tl}?language=en-US`,
   );
-  const response = await fetchFromTMDB(url);
+  const lsKey = `tmdb_trending_tv_${tl}`;
+  const response = await fetchFromTMDB(url, false, lsKey);
   return response.results;
 };
 

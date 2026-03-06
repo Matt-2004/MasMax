@@ -94,13 +94,27 @@
          by the time HeroSection mounts the data (or most of it) is ready. -->
     <script>
       (function () {
-        var BEARER =
-          "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0OWE1YWI2MjRiZDAxMjhiZGJiMzdjZDNhMmYzNmFhOCIsInN1YiI6IjY1OGFhOThlMzI1YTUxNTc3ZTAzMmI5NyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.bi_2IPf0bZph00Qj5URE-wIk-9bjrm3mMuDSRVg3K58";
-        window.__heroPromise = fetch(
+        var BEARER = "%VITE_TMDB_API_KEY%";
+        var CACHE_KEY = "__hero_cache";
+        var CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+        // Try to serve stale data immediately from localStorage
+        var stale = null;
+        try {
+          var raw = localStorage.getItem(CACHE_KEY);
+          if (raw) {
+            var parsed = JSON.parse(raw);
+            if (Date.now() - parsed.ts < CACHE_TTL) {
+              stale = parsed.data;
+            }
+          }
+        } catch (e) {}
+
+        // Network fetch — always fires to keep cache fresh
+        var networkFetch = fetch(
           "https://api.themoviedb.org/3/trending/movie/day?language=en-US",
           {
             headers: { Authorization: "Bearer " + BEARER },
-            // @ts-ignore
             priority: "high",
           },
         )
@@ -108,11 +122,25 @@
             return r.json();
           })
           .then(function (d) {
-            return d.results || [];
+            var results = d.results || [];
+            // Persist for next visit
+            try {
+              localStorage.setItem(
+                CACHE_KEY,
+                JSON.stringify({ ts: Date.now(), data: results }),
+              );
+            } catch (e) {}
+            return results;
           })
           .catch(function () {
-            return [];
+            return stale || [];
           });
+
+        // If we have stale data resolve immediately; otherwise wait for network
+        window.__heroPromise = stale ? Promise.resolve(stale) : networkFetch;
+
+        // Always expose the live network result so cache gets updated
+        window.__heroNetworkFetch = networkFetch;
       })();
     </script>
     <script type="module" src="/src/main.tsx"></script>
