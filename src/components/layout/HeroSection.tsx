@@ -5,6 +5,7 @@ import {
   getLargeImagePath,
   getPosterSrcSet,
   getTinyPosterPath,
+  BACKDROP_SIZES,
 } from "@/lib/GetImagePath";
 import { MovieResult } from "@/lib/Interfaces";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -103,7 +104,7 @@ const HeroSection = ({ movies, loading }: HeroSectionProps) => {
           key={m.id}
           src={getLargeImagePath(m.backdrop_path)}
           srcSet={getBackdropSrcSet(m.backdrop_path)}
-          sizes="100vw"
+          sizes={BACKDROP_SIZES}
           alt=""
           aria-hidden="true"
           width="1280"

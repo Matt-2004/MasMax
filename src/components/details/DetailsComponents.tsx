@@ -4,6 +4,7 @@ import {
   getImagePath,
   getLargeImagePath,
   getPosterSrcSet,
+  BACKDROP_SIZES,
 } from "@/lib/GetImagePath";
 import getVideoPath from "@/lib/GetVideoPath";
 import { useNavigate } from "react-router-dom";
@@ -19,7 +20,7 @@ export function BackdropHero({ backdrop_path, title }: BackdropHeroProps) {
       <img
         src={getLargeImagePath(backdrop_path)}
         srcSet={getBackdropSrcSet(backdrop_path)}
-        sizes="100vw"
+        sizes={BACKDROP_SIZES}
         alt={title}
         width="1280"
         height="720"

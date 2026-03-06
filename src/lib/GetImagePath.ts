@@ -3,6 +3,13 @@ const POSTER_WIDTHS = [92, 154, 185, 342, 500, 780] as const;
 // TMDB available backdrop widths
 const BACKDROP_WIDTHS = [300, 780, 1280] as const;
 
+/**
+ * Responsive sizes value for hero / full-bleed backdrop images.
+ * Drives the browser to pick w780 on mobile/tablet instead of always w1280.
+ */
+export const BACKDROP_SIZES =
+  "(max-width: 767px) 100vw, (max-width: 1279px) 100vw, 1280px";
+
 export const getImagePath = (size: number, imagePath?: string) => {
   return imagePath
     ? `https://image.tmdb.org/t/p/w${size}/${imagePath}`

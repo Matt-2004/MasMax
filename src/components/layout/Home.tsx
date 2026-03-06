@@ -5,7 +5,11 @@ import {
   fetchTrendingTV,
   fetchUpComingMoive,
 } from "@/lib/FetchAPI";
-import { getLargeImagePath } from "@/lib/GetImagePath";
+import {
+  getLargeImagePath,
+  getBackdropSrcSet,
+  BACKDROP_SIZES,
+} from "@/lib/GetImagePath";
 import { MovieResult, TVResult } from "@/lib/Interfaces";
 import { lazy, Suspense, useEffect, useState } from "react";
 import HeroSection from "./HeroSection";
@@ -72,6 +76,11 @@ const Home = () => {
               link.rel = "preload";
               link.as = "image";
               link.href = getLargeImagePath(movies[0].backdrop_path);
+              link.setAttribute(
+                "imagesrcset",
+                getBackdropSrcSet(movies[0].backdrop_path),
+              );
+              link.setAttribute("imagesizes", BACKDROP_SIZES);
               link.setAttribute("fetchpriority", "high");
               link.setAttribute("data-hero-preload", "1");
               document.head.appendChild(link);

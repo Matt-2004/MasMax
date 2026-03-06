@@ -4,6 +4,7 @@ import {
   getImagePath,
   getLargeImagePath,
   getPosterSrcSet,
+  BACKDROP_SIZES,
 } from "@/lib/GetImagePath";
 import getVideoPath from "@/lib/GetVideoPath";
 import { TVDetilsResult } from "@/lib/Interfaces";
@@ -425,7 +426,7 @@ const SeriesDetils = () => {
         <img
           src={getLargeImagePath(show.backdrop_path)}
           srcSet={getBackdropSrcSet(show.backdrop_path)}
-          sizes="100vw"
+          sizes={BACKDROP_SIZES}
           alt={title}
           loading="eager"
           decoding="async"
