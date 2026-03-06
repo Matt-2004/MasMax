@@ -4,10 +4,10 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/M.png" />
     <!-- Preconnect to TMDB image CDN so image requests start immediately -->
-    <link rel="preconnect" href="https://image.tmdb.org" />
+    <link rel="preconnect" href="https://image.tmdb.org" crossorigin />
     <link rel="dns-prefetch" href="https://image.tmdb.org" />
-    <!-- Preconnect to TMDB API -->
-    <link rel="preconnect" href="https://api.themoviedb.org" />
+    <!-- Preconnect to TMDB API — crossorigin required for CORS Bearer-auth fetches -->
+    <link rel="preconnect" href="https://api.themoviedb.org" crossorigin />
     <link rel="dns-prefetch" href="https://api.themoviedb.org" />
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -27,6 +27,8 @@
     </noscript>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MasMax</title>
+    <!-- Preload hint for Vite entry JS so parser discovers it before render -->
+    <link rel="modulepreload" href="/src/main.tsx" />
     <style>
       /* Skip-to-main link: visually hidden until focused */
       .skip-link {
@@ -96,7 +98,11 @@
           "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0OWE1YWI2MjRiZDAxMjhiZGJiMzdjZDNhMmYzNmFhOCIsInN1YiI6IjY1OGFhOThlMzI1YTUxNTc3ZTAzMmI5NyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.bi_2IPf0bZph00Qj5URE-wIk-9bjrm3mMuDSRVg3K58";
         window.__heroPromise = fetch(
           "https://api.themoviedb.org/3/trending/movie/day?language=en-US",
-          { headers: { Authorization: "Bearer " + BEARER } },
+          {
+            headers: { Authorization: "Bearer " + BEARER },
+            // @ts-ignore
+            priority: "high",
+          },
         )
           .then(function (r) {
             return r.json();

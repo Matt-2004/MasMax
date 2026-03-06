@@ -17,6 +17,8 @@ export default defineConfig({
     },
   },
   build: {
+    // Inject <link rel="modulepreload"> for all entry chunks automatically
+    modulePreload: { polyfill: true },
     // Split CSS per chunk so only the route's CSS loads
     cssCodeSplit: true,
     minify: "terser",

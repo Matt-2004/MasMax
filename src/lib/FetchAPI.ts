@@ -1,18 +1,20 @@
-// Simple in-memory request cache — deduplicate identical URLs within the same session
 const _cache = new Map<string, Promise<any>>();
-
-export const fetchFromTMDB = async (url: URL) => {
+const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
+export const fetchFromTMDB = async (url: URL, highPriority = false) => {
   const key = url.toString();
   if (_cache.has(key)) return _cache.get(key)!;
 
-  const options = {
+  const options: RequestInit = {
     method: "GET",
     headers: {
       accept: "application/json",
-      Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0OWE1YWI2MjRiZDAxMjhiZGJiMzdjZDNhMmYzNmFhOCIsInN1YiI6IjY1OGFhOThlMzI1YTUxNTc3ZTAzMmI5NyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.bi_2IPf0bZph00Qj5URE-wIk-9bjrm3mMuDSRVg3K58",
+      Authorization: `Bearer ${API_KEY}`,
     },
+    // Leverage browser HTTP cache: serve stale for up to 5 min,
+    // revalidate in background — cuts repeat-visit latency to ~0ms
+    cache: "default",
   };
+  if (highPriority) (options as any).priority = "high";
 
   const promise = fetch(url, options)
     .then((res) => res.json())
@@ -120,7 +122,8 @@ export const fetchTrendMovie = async (timeLine?: string) => {
       earlyPromise.then((results) => ({ results })),
     );
   }
-  const respones = await fetchFromTMDB(url);
+  // hero fetch gets high network priority
+  const respones = await fetchFromTMDB(url, !timeLine /* day = hero */);
   return respones.results;
 };
 
@@ -221,14 +224,13 @@ export const fetchDiscoverMoviesPage = async (
     url.searchParams.set("vote_average.gte", String(params.minRating));
   url.searchParams.set("vote_count.gte", String(params.minVotes ?? 50));
 
-  // Discover pages must NOT be deduplicated across param-sets — skip global cache
-  const options = {
+  const options: RequestInit = {
     method: "GET",
     headers: {
       accept: "application/json",
-      Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0OWE1YWI2MjRiZDAxMjhiZGJiMzdjZDNhMmYzNmFhOCIsInN1YiI6IjY1OGFhOThlMzI1YTUxNTc3ZTAzMmI5NyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.bi_2IPf0bZph00Qj5URE-wIk-9bjrm3mMuDSRVg3K58",
+      Authorization: `Bearer ${API_KEY}`,
     },
+    cache: "default",
   };
   const res = await fetch(url, options);
   return res.json();
