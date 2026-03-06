@@ -78,7 +78,7 @@ function AutoComplete() {
           onChange={(e) => setSearchValue(e.target.value)}
           placeholder="Search..."
           autoComplete="off"
-          className=" py-[3px] rounded-sm pl-2 text-[#26262e] placeholder:text-[#26262e] text-md font-roboto relative outline-none   sm:w-[14rem]"
+          className=" py-[3px] rounded-sm pl-2 text-[#26262e] placeholder:text-[#5a5a66] text-md font-roboto relative outline-none   sm:w-[14rem]"
         />
         <SearchOutlined className="text-xl text-[#26262e] pr-5" />
         {searchValue.length > 0 && (
@@ -117,7 +117,8 @@ function ShowAutoCompleteUI({ autoCompleteValue }: any) {
       <div className="h-[100%] rounded-lg border border-[#2eade7] w-full ">
         {autoCompleteValue.slice(0, 7).map((value: DetilsResult) => (
           <div
-            className="flex hover:bg-slate-500 cursor-pointer"
+            key={value.id}
+            className="flex hover:bg-slate-500 cursor-pointer min-h-[44px] items-center"
             onClick={() => setIdAndNavigate(value.id)}
           >
             <h1 className=" w-[17rem] pl-5 py-1 hover:bg-gray-500 font-roboto overflow-hidden text-md">

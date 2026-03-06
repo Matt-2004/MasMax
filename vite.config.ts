@@ -75,7 +75,6 @@ export default defineConfig({
           ) {
             return "firebase-vendor";
           }
-
         },
       },
     },

@@ -9,7 +9,7 @@
     <!-- Preconnect to TMDB API -->
     <link rel="preconnect" href="https://api.themoviedb.org" />
     <link rel="dns-prefetch" href="https://api.themoviedb.org" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <!-- Only the weights actually used: Titillium Web 400/600/700, Roboto 400/500/700 -->
     <!-- font-display=swap: text paints immediately with fallback font, no render-blocking -->
@@ -28,6 +28,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MasMax</title>
     <style>
+      /* Skip-to-main link: visually hidden until focused */
+      .skip-link {
+        position: absolute;
+        top: -100%;
+        left: 1rem;
+        z-index: 9999;
+        padding: 0.5rem 1rem;
+        background: #fff;
+        color: #111115;
+        font-weight: 700;
+        font-size: 0.875rem;
+        border-radius: 0 0 0.5rem 0.5rem;
+        text-decoration: none;
+        transition: top 0.15s;
+      }
+      .skip-link:focus {
+        top: 0;
+        outline: 2px solid #2eade7;
+        outline-offset: 2px;
+      }
+
       /* ── Critical CSS: paint background & font immediately ───────────── */
       html {
         padding: 0;
@@ -65,6 +86,7 @@
   </head>
 
   <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     <div id="root"></div>
     <!-- Kick off the hero data fetch immediately — before React parses — so
          by the time HeroSection mounts the data (or most of it) is ready. -->

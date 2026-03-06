@@ -191,19 +191,21 @@ const HeroSection = ({ movies, loading }: HeroSectionProps) => {
       </div>
 
       {/* ── Dot + thumbnail navigation ──────────────────────── */}
-      <div className="absolute bottom-3 sm:bottom-4 left-4 sm:left-10 lg:left-16 flex items-center gap-1.5 sm:gap-2">
+      <div className="absolute bottom-3 sm:bottom-4 left-4 sm:left-10 lg:left-16 flex items-center gap-0.5 sm:gap-1">
         {featured.map((m, i) => (
           <button
             key={m.id}
             onClick={() => goTo(i)}
-            className={`transition-all duration-300 rounded-full flex-shrink-0 ${
-              i === current
-                ? "w-6 h-2"
-                : "w-2 h-2 bg-white/30 hover:bg-white/60"
-            }`}
-            style={i === current ? { background: "var(--accent)" } : {}}
+            className="flex items-center justify-center w-8 h-8 flex-shrink-0"
             aria-label={`Go to slide ${i + 1}`}
-          />
+          >
+            <span
+              className={`block transition-all duration-300 rounded-full pointer-events-none ${
+                i === current ? "w-6 h-2" : "w-2 h-2 bg-white/30"
+              }`}
+              style={i === current ? { background: "var(--accent)" } : {}}
+            />
+          </button>
         ))}
       </div>
 
@@ -214,7 +216,7 @@ const HeroSection = ({ movies, loading }: HeroSectionProps) => {
             key={m.id}
             onClick={() => goTo(i)}
             aria-label={`View slide ${i + 1}: ${m.original_title}`}
-            aria-pressed={i === current}
+            aria-pressed={i === current ? "true" : "false"}
             className={`relative w-14 xl:w-16 aspect-[2/3] rounded-lg overflow-hidden transition-all duration-300 ${
               i === current
                 ? "scale-105 opacity-100"

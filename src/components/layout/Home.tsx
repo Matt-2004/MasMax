@@ -140,90 +140,92 @@ const Home = () => {
       </Suspense>
 
       {/* Hero — full bleed */}
-      <HeroSection movies={heroMovies} loading={heroLoading} />
+      <main id="main-content">
+        <HeroSection movies={heroMovies} loading={heroLoading} />
 
-      {/* Genre rail */}
-      <Divider />
-      <Suspense fallback={<div style={{ height: 80 }} />}>
-        <GenreRail />
-      </Suspense>
+        {/* Genre rail */}
+        <Divider />
+        <Suspense fallback={<div style={{ height: 80 }} />}>
+          <GenreRail />
+        </Suspense>
 
-      {/* Content rows — content-visibility:auto lets browser skip layout+paint
+        {/* Content rows — content-visibility:auto lets browser skip layout+paint
            for rows fully outside the viewport, cutting scroll jank significantly */}
-      <Divider />
-      <div
-        style={{ contentVisibility: "auto", containIntrinsicSize: "0 280px" }}
-      >
-        <HomeRow
-          title="Trending This Week"
-          subtitle="Most popular movies right now"
-          items={trendingMovies}
-          type="movie"
-          loading={trendingLoading}
-          viewAllHref="/movies"
-          eagerCount={5}
-        />
-      </div>
+        <Divider />
+        <div
+          style={{ contentVisibility: "auto", containIntrinsicSize: "0 280px" }}
+        >
+          <HomeRow
+            title="Trending This Week"
+            subtitle="Most popular movies right now"
+            items={trendingMovies}
+            type="movie"
+            loading={trendingLoading}
+            viewAllHref="/movies"
+            eagerCount={5}
+          />
+        </div>
 
-      <Divider />
-      <div
-        style={{ contentVisibility: "auto", containIntrinsicSize: "0 280px" }}
-      >
-        <HomeRow
-          title="Now Playing"
-          subtitle="Currently in cinemas"
-          items={nowPlaying}
-          type="movie"
-          loading={nowPlayingLoading}
-          viewAllHref="/movies"
-        />
-      </div>
+        <Divider />
+        <div
+          style={{ contentVisibility: "auto", containIntrinsicSize: "0 280px" }}
+        >
+          <HomeRow
+            title="Now Playing"
+            subtitle="Currently in cinemas"
+            items={nowPlaying}
+            type="movie"
+            loading={nowPlayingLoading}
+            viewAllHref="/movies"
+          />
+        </div>
 
-      <Divider />
-      <div
-        style={{ contentVisibility: "auto", containIntrinsicSize: "0 280px" }}
-      >
-        <HomeRow
-          title="Top Rated"
-          subtitle="All-time highest rated films"
-          items={topRated}
-          type="movie"
-          loading={topRatedLoading}
-          viewAllHref="/movies"
-        />
-      </div>
+        <Divider />
+        <div
+          style={{ contentVisibility: "auto", containIntrinsicSize: "0 280px" }}
+        >
+          <HomeRow
+            title="Top Rated"
+            subtitle="All-time highest rated films"
+            items={topRated}
+            type="movie"
+            loading={topRatedLoading}
+            viewAllHref="/movies"
+          />
+        </div>
 
-      <Divider />
-      <div
-        style={{ contentVisibility: "auto", containIntrinsicSize: "0 280px" }}
-      >
-        <HomeRow
-          title="Coming Soon"
-          subtitle="Upcoming theatrical releases"
-          items={upcoming}
-          type="movie"
-          loading={upcomingLoading}
-          viewAllHref="/movies"
-        />
-      </div>
+        <Divider />
+        <div
+          style={{ contentVisibility: "auto", containIntrinsicSize: "0 280px" }}
+        >
+          <HomeRow
+            title="Coming Soon"
+            subtitle="Upcoming theatrical releases"
+            items={upcoming}
+            type="movie"
+            loading={upcomingLoading}
+            viewAllHref="/movies"
+          />
+        </div>
 
-      <Divider />
-      <div
-        style={{ contentVisibility: "auto", containIntrinsicSize: "0 280px" }}
-      >
-        <HomeRow
-          title="Trending TV Shows"
-          subtitle="Hottest series this week"
-          items={trendingTV}
-          type="tv"
-          loading={trendingTVLoading}
-          viewAllHref="/series"
-        />
-      </div>
+        <Divider />
+        <div
+          style={{ contentVisibility: "auto", containIntrinsicSize: "0 280px" }}
+        >
+          <HomeRow
+            title="Trending TV Shows"
+            subtitle="Hottest series this week"
+            items={trendingTV}
+            type="tv"
+            loading={trendingTVLoading}
+            viewAllHref="/series"
+          />
+        </div>
 
-      <Suspense fallback={null}>
-        <Footer />
-      </Suspense>
+        <Suspense fallback={null}>
+          <Footer />
+        </Suspense>
+      </main>
     </div>
   );
 };

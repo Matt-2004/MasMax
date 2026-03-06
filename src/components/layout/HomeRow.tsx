@@ -28,7 +28,7 @@ const Arrow = memo(function Arrow({
     <button
       onClick={onClick}
       aria-label={dir === "left" ? "Scroll left" : "Scroll right"}
-      className="hidden sm:flex items-center justify-center w-8 h-8 rounded-full flex-shrink-0 transition-all duration-200 active:scale-90"
+      className="hidden sm:flex items-center justify-center w-10 h-10 rounded-full flex-shrink-0 transition-all duration-200 active:scale-90"
       style={{
         background: "var(--bg-surface-2)",
         border: "1px solid var(--border)",
@@ -263,7 +263,7 @@ const HomeRow = ({
             {viewAllHref && (
               <button
                 onClick={() => navigate(viewAllHref)}
-                className="hidden sm:flex items-center gap-1 font-roboto text-xs font-semibold px-3 py-1.5 rounded-lg transition-all duration-150"
+                className="hidden sm:flex items-center gap-1 font-roboto text-xs font-semibold px-3 py-2 rounded-lg transition-all duration-150"
                 style={{ color: "var(--accent-light)" }}
                 onMouseEnter={(e) => {
                   (e.currentTarget as HTMLButtonElement).style.background =

@@ -801,7 +801,7 @@ const MoviesPage = () => {
         <NavBar />
       </Suspense>
 
-      <div className="flex-1 max-w-[90rem] mx-auto w-full px-3 sm:px-5 lg:px-8 py-6">
+      <main className="flex-1 max-w-[90rem] mx-auto w-full px-3 sm:px-5 lg:px-8 py-6">
         {/* ── Page header ── */}
         <div className="flex items-center justify-between mb-5 flex-wrap gap-3">
           <div className="flex items-center gap-3">
@@ -817,7 +817,7 @@ const MoviesPage = () => {
                 Movies
               </h1>
               {!isLoading && totalResults > 0 && (
-                <p className="text-white/35 font-roboto text-xs mt-0.5">
+                <p className="text-white/60 font-roboto text-xs mt-0.5">
                   {totalResults.toLocaleString()} results
                 </p>
               )}
@@ -921,7 +921,7 @@ const MoviesPage = () => {
                 >
                   <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
                 </svg>
-                <p className="text-white/35 font-roboto text-sm">
+                <p className="text-white/60 font-roboto text-sm">
                   No movies match these filters.
                 </p>
                 <button
@@ -947,7 +947,7 @@ const MoviesPage = () => {
             )}
           </div>
         </div>
-      </div>
+      </main>
 
       <Suspense fallback={null}>
         <Footer />

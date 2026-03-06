@@ -161,7 +161,7 @@ const NavBar = () => {
           <div className="flex items-center gap-4">
             <button
               onClick={() => setActiveMenu(true)}
-              className="sm:hidden w-5 h-5 text-white/70 hover:text-white transition-colors flex-shrink-0"
+              className="sm:hidden -m-2.5 p-2.5 text-white/70 hover:text-white transition-colors flex-shrink-0"
               aria-label="Open menu"
             >
               <MenuIcon />
@@ -229,7 +229,7 @@ const NavBar = () => {
             {/* Search */}
             <button
               onClick={() => setActiveSearch(true)}
-              className="p-2 rounded-lg text-white/50 hover:text-white hover:bg-white/8 transition-all duration-200"
+              className="p-2.5 rounded-lg text-white/50 hover:text-white hover:bg-white/8 transition-all duration-200"
               aria-label="Search"
             >
               <SearchIcon />
@@ -249,7 +249,7 @@ const NavBar = () => {
                   className="flex items-center gap-2.5 pl-1 pr-3 py-1 rounded-full transition-all duration-200 hover:bg-white/8"
                   aria-label="User menu"
                   aria-haspopup="menu"
-                  aria-expanded={avatarOpen}
+                  aria-expanded={avatarOpen ? "true" : "false"}
                 >
                   <div
                     className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 transition-all duration-200"
@@ -277,7 +277,7 @@ const NavBar = () => {
                       </div>
                     )}
                   </div>
-                  <span className="hidden md:block font-roboto text-sm text-white/70 max-w-[90px] truncate">
+                  <span className="hidden md:block font-roboto text-sm text-white/85 max-w-[90px] truncate">
                     {user.displayName?.split(" ")[0] ?? "Account"}
                   </span>
                   <svg
@@ -342,7 +342,7 @@ const NavBar = () => {
                         <p className="font-roboto font-semibold text-white text-sm truncate">
                           {user.displayName ?? "User"}
                         </p>
-                        <p className="font-roboto text-white/35 text-xs truncate mt-0.5">
+                        <p className="font-roboto text-white/55 text-xs truncate mt-0.5">
                           {user.email}
                         </p>
                       </div>
@@ -390,7 +390,7 @@ const NavBar = () => {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => navigate("/login")}
-                  className="hidden sm:block font-roboto text-sm font-medium text-white/55 hover:text-white transition-colors duration-200 px-2"
+                  className="hidden sm:block font-roboto text-sm font-medium text-white/75 hover:text-white transition-colors duration-200 px-3 py-1.5"
                 >
                   Sign In
                 </button>
@@ -447,7 +447,7 @@ const NavBar = () => {
             aria-activedescendant={
               activeIdx >= 0 ? `suggestion-${activeIdx}` : undefined
             }
-            className="flex-1 h-full bg-transparent outline-none font-roboto text-white text-[0.95rem] placeholder:text-white/30"
+            className="flex-1 h-full bg-transparent outline-none font-roboto text-white text-[0.95rem] placeholder:text-white/50"
             placeholder="Search movies, series…"
           />
           {acLoading && (
@@ -474,8 +474,8 @@ const NavBar = () => {
           <button
             type="button"
             onClick={() => setActiveSearch(false)}
-            className="flex-shrink-0 font-roboto text-xs text-white/35 hover:text-white/70 transition-colors px-1"
-            aria-label="Close"
+            className="flex-shrink-0 font-roboto text-xs text-white/60 hover:text-white transition-colors px-2 py-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg hover:bg-white/8"
+            aria-label="Close search"
           >
             ESC
           </button>
@@ -584,8 +584,8 @@ const NavBar = () => {
           </button>
           <button
             onClick={() => setActiveMenu(false)}
-            className="p-1.5 rounded-lg text-white/40 hover:text-white hover:bg-white/8 transition-colors"
-            aria-label="Close"
+            className="p-2.5 rounded-lg text-white/60 hover:text-white hover:bg-white/8 transition-colors"
+            aria-label="Close navigation menu"
           >
             <Xicon />
           </button>
@@ -671,7 +671,7 @@ const NavBar = () => {
                   <p className="font-roboto font-semibold text-white text-sm truncate">
                     {user.displayName ?? "User"}
                   </p>
-                  <p className="font-roboto text-white/35 text-xs truncate">
+                  <p className="font-roboto text-white/55 text-xs truncate">
                     {user.email}
                   </p>
                 </div>
