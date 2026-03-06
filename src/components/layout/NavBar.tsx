@@ -225,7 +225,10 @@ const NavBar = () => {
           </nav>
 
           {/* ── Right: actions ── */}
-          <div className="flex items-center gap-1 sm:gap-2">
+          <div
+            className="flex items-center gap-1 sm:gap-2"
+            style={{ minWidth: 0 }}
+          >
             {/* Search */}
             <button
               onClick={() => setActiveSearch(true)}
@@ -241,173 +244,178 @@ const NavBar = () => {
             {/* Divider */}
             <div className="hidden sm:block w-px h-5 bg-white/10 mx-1" />
 
-            {/* Auth */}
-            {user ? (
-              <div ref={avatarRef} className="relative">
-                <button
-                  onClick={() => setAvatarOpen((v) => !v)}
-                  className="flex items-center gap-2.5 pl-1 pr-3 py-1 rounded-full transition-all duration-200 hover:bg-white/8"
-                  aria-label="User menu"
-                  aria-haspopup="menu"
-                  aria-expanded={avatarOpen ? "true" : "false"}
-                >
-                  <div
-                    className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 transition-all duration-200"
-                    style={{
-                      boxShadow: `0 0 0 2px color-mix(in srgb, var(--accent) 50%, transparent)`,
-                    }}
+            {/* Auth — fixed min-width prevents CLS when auth state resolves */}
+            <div
+              className="flex items-center justify-end"
+              style={{ minWidth: 120 }}
+            >
+              {user ? (
+                <div ref={avatarRef} className="relative">
+                  <button
+                    onClick={() => setAvatarOpen((v) => !v)}
+                    className="flex items-center gap-2.5 pl-1 pr-3 py-1 rounded-full transition-all duration-200 hover:bg-white/8"
+                    aria-label="User menu"
+                    aria-haspopup="menu"
+                    aria-expanded={avatarOpen ? "true" : "false"}
                   >
-                    {user.photoURL ? (
-                      <img
-                        src={user.photoURL}
-                        alt="avatar"
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div
-                        className="w-full h-full flex items-center justify-center text-white font-roboto font-bold text-xs"
-                        style={{
-                          background:
-                            "linear-gradient(135deg, var(--accent), var(--accent-dark))",
-                        }}
-                      >
-                        {(user.displayName ?? user.email ?? "U")
-                          .charAt(0)
-                          .toUpperCase()}
-                      </div>
-                    )}
-                  </div>
-                  <span className="hidden md:block font-roboto text-sm text-white/85 max-w-[90px] truncate">
-                    {user.displayName?.split(" ")[0] ?? "Account"}
-                  </span>
-                  <svg
-                    className="hidden md:block w-3 h-3 text-white/40 flex-shrink-0"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2.5}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </button>
-
-                {/* Dropdown */}
-                {avatarOpen && (
-                  <div
-                    role="menu"
-                    aria-label="User account menu"
-                    className="absolute right-0 top-12 w-56 rounded-2xl overflow-hidden z-50 border"
-                    style={{
-                      background: "var(--bg-surface)",
-                      borderColor: "var(--border)",
-                      boxShadow: "0 16px 48px rgba(0,0,0,0.6)",
-                    }}
-                  >
-                    {/* User info header */}
                     <div
-                      className="flex items-center gap-3 px-4 py-3.5 border-b"
-                      style={{ borderColor: "var(--border)" }}
+                      className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 transition-all duration-200"
+                      style={{
+                        boxShadow: `0 0 0 2px color-mix(in srgb, var(--accent) 50%, transparent)`,
+                      }}
                     >
-                      <div
-                        className="w-9 h-9 rounded-full overflow-hidden flex-shrink-0"
-                        style={{
-                          boxShadow: `0 0 0 2px color-mix(in srgb, var(--accent) 50%, transparent)`,
-                        }}
-                      >
-                        {user.photoURL ? (
-                          <img
-                            src={user.photoURL}
-                            alt="avatar"
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div
-                            className="w-full h-full flex items-center justify-center text-white font-roboto font-bold text-sm"
-                            style={{
-                              background:
-                                "linear-gradient(135deg, var(--accent), var(--accent-dark))",
-                            }}
-                          >
-                            {(user.displayName ?? user.email ?? "U")
-                              .charAt(0)
-                              .toUpperCase()}
-                          </div>
-                        )}
-                      </div>
-                      <div className="min-w-0">
-                        <p className="font-roboto font-semibold text-white text-sm truncate">
-                          {user.displayName ?? "User"}
-                        </p>
-                        <p className="font-roboto text-white/55 text-xs truncate mt-0.5">
-                          {user.email}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="py-1">
-                      <button
-                        role="menuitem"
-                        onClick={() => {
-                          navigate("/profile");
-                          setAvatarOpen(false);
-                        }}
-                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-roboto text-white/65 hover:text-white hover:bg-white/5 transition-colors"
-                      >
-                        <svg
-                          className="w-4 h-4 flex-shrink-0 fill-current opacity-70"
-                          viewBox="0 0 448 512"
+                      {user.photoURL ? (
+                        <img
+                          src={user.photoURL}
+                          alt="avatar"
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div
+                          className="w-full h-full flex items-center justify-center text-white font-roboto font-bold text-xs"
+                          style={{
+                            background:
+                              "linear-gradient(135deg, var(--accent), var(--accent-dark))",
+                          }}
                         >
-                          <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z" />
-                        </svg>
-                        My Profile
-                      </button>
-                      <button
-                        role="menuitem"
-                        onClick={async () => {
-                          await logout();
-                          setAvatarOpen(false);
-                        }}
-                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-roboto text-red-400/80 hover:text-red-300 hover:bg-red-500/8 transition-colors border-t mt-1 pt-2"
+                          {(user.displayName ?? user.email ?? "U")
+                            .charAt(0)
+                            .toUpperCase()}
+                        </div>
+                      )}
+                    </div>
+                    <span className="hidden md:block font-roboto text-sm text-white/85 max-w-[90px] truncate">
+                      {user.displayName?.split(" ")[0] ?? "Account"}
+                    </span>
+                    <svg
+                      className="hidden md:block w-3 h-3 text-white/40 flex-shrink-0"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2.5}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </button>
+
+                  {/* Dropdown */}
+                  {avatarOpen && (
+                    <div
+                      role="menu"
+                      aria-label="User account menu"
+                      className="absolute right-0 top-12 w-56 rounded-2xl overflow-hidden z-50 border"
+                      style={{
+                        background: "var(--bg-surface)",
+                        borderColor: "var(--border)",
+                        boxShadow: "0 16px 48px rgba(0,0,0,0.6)",
+                      }}
+                    >
+                      {/* User info header */}
+                      <div
+                        className="flex items-center gap-3 px-4 py-3.5 border-b"
                         style={{ borderColor: "var(--border)" }}
                       >
-                        <svg
-                          className="w-4 h-4 flex-shrink-0 fill-current opacity-70"
-                          viewBox="0 0 512 512"
+                        <div
+                          className="w-9 h-9 rounded-full overflow-hidden flex-shrink-0"
+                          style={{
+                            boxShadow: `0 0 0 2px color-mix(in srgb, var(--accent) 50%, transparent)`,
+                          }}
                         >
-                          <path d="M502.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 224 192 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l210.7 0-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128zM160 96c17.7 0 32-14.3 32-32s-14.3-32-32-32L96 32C43 32 0 75 0 128L0 384c0 53 43 96 96 96l64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0c-17.7 0-32-14.3-32-32l0-256c0-17.7 14.3-32 32-32l64 0z" />
-                        </svg>
-                        Sign Out
-                      </button>
+                          {user.photoURL ? (
+                            <img
+                              src={user.photoURL}
+                              alt="avatar"
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <div
+                              className="w-full h-full flex items-center justify-center text-white font-roboto font-bold text-sm"
+                              style={{
+                                background:
+                                  "linear-gradient(135deg, var(--accent), var(--accent-dark))",
+                              }}
+                            >
+                              {(user.displayName ?? user.email ?? "U")
+                                .charAt(0)
+                                .toUpperCase()}
+                            </div>
+                          )}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="font-roboto font-semibold text-white text-sm truncate">
+                            {user.displayName ?? "User"}
+                          </p>
+                          <p className="font-roboto text-white/55 text-xs truncate mt-0.5">
+                            {user.email}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="py-1">
+                        <button
+                          role="menuitem"
+                          onClick={() => {
+                            navigate("/profile");
+                            setAvatarOpen(false);
+                          }}
+                          className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-roboto text-white/65 hover:text-white hover:bg-white/5 transition-colors"
+                        >
+                          <svg
+                            className="w-4 h-4 flex-shrink-0 fill-current opacity-70"
+                            viewBox="0 0 448 512"
+                          >
+                            <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z" />
+                          </svg>
+                          My Profile
+                        </button>
+                        <button
+                          role="menuitem"
+                          onClick={async () => {
+                            await logout();
+                            setAvatarOpen(false);
+                          }}
+                          className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-roboto text-red-400/80 hover:text-red-300 hover:bg-red-500/8 transition-colors border-t mt-1 pt-2"
+                          style={{ borderColor: "var(--border)" }}
+                        >
+                          <svg
+                            className="w-4 h-4 flex-shrink-0 fill-current opacity-70"
+                            viewBox="0 0 512 512"
+                          >
+                            <path d="M502.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 224 192 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l210.7 0-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128zM160 96c17.7 0 32-14.3 32-32s-14.3-32-32-32L96 32C43 32 0 75 0 128L0 384c0 53 43 96 96 96l64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0c-17.7 0-32-14.3-32-32l0-256c0-17.7 14.3-32 32-32l64 0z" />
+                          </svg>
+                          Sign Out
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => navigate("/login")}
-                  className="hidden sm:block font-roboto text-sm font-medium text-white/75 hover:text-white transition-colors duration-200 px-3 py-1.5"
-                >
-                  Sign In
-                </button>
-                <button
-                  onClick={() => navigate("/register")}
-                  className="font-roboto text-sm font-semibold text-white px-4 py-1.5 rounded-lg transition-all duration-200 active:scale-95"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, var(--accent), var(--accent-dark))",
-                    boxShadow:
-                      "0 2px 12px color-mix(in srgb, var(--accent) 30%, transparent)",
-                  }}
-                >
-                  Get Started
-                </button>
-              </div>
-            )}
+                  )}
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => navigate("/login")}
+                    className="hidden sm:block font-roboto text-sm font-medium text-white/75 hover:text-white transition-colors duration-200 px-3 py-1.5"
+                  >
+                    Sign In
+                  </button>
+                  <button
+                    onClick={() => navigate("/register")}
+                    className="font-roboto text-sm font-semibold text-white px-4 py-1.5 rounded-lg transition-all duration-200 active:scale-95"
+                    style={{
+                      background:
+                        "linear-gradient(135deg, var(--accent), var(--accent-dark))",
+                      boxShadow:
+                        "0 2px 12px color-mix(in srgb, var(--accent) 30%, transparent)",
+                    }}
+                  >
+                    Get Started
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </header>

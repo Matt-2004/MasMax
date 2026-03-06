@@ -124,8 +124,16 @@ const HeroSection = ({ movies, loading }: HeroSectionProps) => {
       ))}
 
       {/* ── Gradient layers ─────────────────────────────────── */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#111115] via-[#111115]/55 to-transparent pointer-events-none" />
-      <div className="absolute inset-0 bg-gradient-to-r from-[#111115]/80 via-[#111115]/20 to-transparent pointer-events-none" />
+      {/* will-change:transform promotes each to its own compositor layer,
+          so the backdrop image crossfade never triggers a reflow here */}
+      <div
+        className="absolute inset-0 bg-gradient-to-t from-[#111115] via-[#111115]/55 to-transparent pointer-events-none"
+        style={{ willChange: "transform", contain: "strict" }}
+      />
+      <div
+        className="absolute inset-0 bg-gradient-to-r from-[#111115]/80 via-[#111115]/20 to-transparent pointer-events-none"
+        style={{ willChange: "transform", contain: "strict" }}
+      />
 
       {/* ── Content ─────────────────────────────────────────── */}
       <div
