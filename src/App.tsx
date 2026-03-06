@@ -15,11 +15,11 @@ const queryClient = new QueryClient({
 const Home = lazy(() => import("./components/layout/Home"));
 const Register = lazy(() => import("./components/auth/Register"));
 const Login = lazy(() => import("./components/auth/Login"));
-const MovieDetils = lazy(() => import("./components/details/MovieDetails"));
+const MovieDetails = lazy(() => import("./components/details/MovieDetails"));
 const MoviePage = lazy(() => import("./components/search/SearchPage"));
 const GenrePage = lazy(() => import("./components/genres/GenrePage"));
 const SeriesPage = lazy(() => import("./components/series/SeriesPage"));
-const SeriesDetils = lazy(() => import("./components/series/SeriesDetils"));
+const SeriesDetails = lazy(() => import("./components/series/SeriesDetails"));
 const MoviesPage = lazy(() => import("./components/movies/MoviesPage"));
 
 const PageLoader = () => (
@@ -34,10 +34,10 @@ const elements = [
   { path: "/register", element: <Register /> },
   { path: "/login", element: <Login /> },
   { path: "/search/:searchId", element: <MoviePage /> },
-  { path: "movie/:movieId", element: <MovieDetils /> },
+  { path: "movie/:movieId", element: <MovieDetails /> },
   { path: "/genres/:genreId", element: <GenrePage /> },
   { path: "/series", element: <SeriesPage /> },
-  { path: "/series/:seriesId", element: <SeriesDetils /> },
+  { path: "/series/:seriesId", element: <SeriesDetails /> },
 ];
 
 function App() {
