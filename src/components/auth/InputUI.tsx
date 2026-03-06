@@ -23,7 +23,7 @@ const InputUI = (props: IInput) => {
             error
               ? "border-red-500/70"
               : "border-white/10 focus:border-[#2eade7]/70"
-          } rounded-xl px-4 py-2.5 text-white text-sm font-roboto outline-none transition-colors duration-200 placeholder:text-white/45 pr-9`}
+          } rounded-xl px-4 py-2.5 text-white text-sm font-roboto outline-none transition-colors duration-200 placeholder:text-white/55 pr-9`}
         />
         {icon && (
           <span className="absolute right-3 top-1/2 -translate-y-1/2 text-base leading-none">

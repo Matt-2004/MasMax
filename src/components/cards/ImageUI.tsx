@@ -141,7 +141,7 @@ const MovieCardItem = memo(function MovieCardItem({
             <span className="text-yellow-400 text-xs sm:text-sm font-semibold font-roboto">
               {Math.round(p.vote_average * 10) / 10}
             </span>
-            <span className="text-white/30 text-xs hidden sm:inline font-roboto">
+            <span className="text-white/55 text-xs hidden sm:inline font-roboto">
               /10
             </span>
           </div>

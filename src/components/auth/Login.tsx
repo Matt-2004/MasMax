@@ -78,7 +78,7 @@ const Login = () => {
               <button
                 type="button"
                 onClick={() => setShowPass((v) => !v)}
-                className="text-white/40 hover:text-white/80 transition-colors text-xs font-roboto"
+                className="text-white/65 hover:text-white transition-colors text-xs font-roboto"
               >
                 {showPass ? "Hide" : "Show"}
               </button>
@@ -104,7 +104,7 @@ const Login = () => {
 
           <div className="flex items-center gap-3 my-5">
             <div className="flex-1 h-px bg-white/8" />
-            <span className="text-white/30 text-xs font-roboto">
+            <span className="text-white/55 text-xs font-roboto">
               or continue with
             </span>
             <div className="flex-1 h-px bg-white/8" />
@@ -112,7 +112,7 @@ const Login = () => {
 
           <GoogleAuth />
 
-          <p className="text-center font-roboto text-white/45 text-sm mt-6">
+          <p className="text-center font-roboto text-white/65 text-sm mt-6">
             Don&apos;t have an account?{" "}
             <button
               type="button"

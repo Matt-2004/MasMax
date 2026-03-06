@@ -10,13 +10,27 @@ const NavBar = lazy(() => import("../layout/NavBar"));
 // each export wrapped so React.lazy gets a { default } shape.
 // All 7 imports resolve from the same cached module chunk.
 const DC = {
-  BackdropHero: lazy(() => import("./DetailsComponents").then(m => ({ default: m.BackdropHero }))),
-  PosterCard: lazy(() => import("./DetailsComponents").then(m => ({ default: m.PosterCard }))),
-  GenreList: lazy(() => import("./DetailsComponents").then(m => ({ default: m.GenreList }))),
-  RatingBadge: lazy(() => import("./DetailsComponents").then(m => ({ default: m.RatingBadge }))),
-  WatchlistButton: lazy(() => import("./DetailsComponents").then(m => ({ default: m.WatchlistButton }))),
-  OverviewSection: lazy(() => import("./DetailsComponents").then(m => ({ default: m.OverviewSection }))),
-  VideosSection: lazy(() => import("./DetailsComponents").then(m => ({ default: m.VideosSection }))),
+  BackdropHero: lazy(() =>
+    import("./DetailsComponents").then((m) => ({ default: m.BackdropHero })),
+  ),
+  PosterCard: lazy(() =>
+    import("./DetailsComponents").then((m) => ({ default: m.PosterCard })),
+  ),
+  GenreList: lazy(() =>
+    import("./DetailsComponents").then((m) => ({ default: m.GenreList })),
+  ),
+  RatingBadge: lazy(() =>
+    import("./DetailsComponents").then((m) => ({ default: m.RatingBadge })),
+  ),
+  WatchlistButton: lazy(() =>
+    import("./DetailsComponents").then((m) => ({ default: m.WatchlistButton })),
+  ),
+  OverviewSection: lazy(() =>
+    import("./DetailsComponents").then((m) => ({ default: m.OverviewSection })),
+  ),
+  VideosSection: lazy(() =>
+    import("./DetailsComponents").then((m) => ({ default: m.VideosSection })),
+  ),
 };
 
 const MovieDetils = () => {
@@ -63,7 +77,9 @@ const MovieDetils = () => {
   if (loading) {
     return (
       <div className="min-h-screen" style={{ background: "var(--bg-base)" }}>
-        <Suspense fallback={<div style={{ height: 64, background: "var(--bg-nav)" }} />}>
+        <Suspense
+          fallback={<div style={{ height: 64, background: "var(--bg-nav)" }} />}
+        >
           <NavBar />
         </Suspense>
         <div className="animate-pulse">
@@ -76,7 +92,9 @@ const MovieDetils = () => {
                 <div className="h-8 bg-white/10 rounded-lg w-3/4" />
                 <div className="h-4 bg-white/8 rounded w-1/2" />
                 <div className="flex gap-2 mt-4">
-                  {[1, 2, 3].map(i => <div key={i} className="h-7 w-20 bg-white/8 rounded-full" />)}
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="h-7 w-20 bg-white/8 rounded-full" />
+                  ))}
                 </div>
                 <div className="h-24 bg-white/5 rounded-xl mt-6" />
               </div>
@@ -89,32 +107,50 @@ const MovieDetils = () => {
 
   if (!detils) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: "var(--bg-base)" }}>
-        <Suspense fallback={null}><NavBar /></Suspense>
-        <p className="text-white/40 font-roboto text-lg">Movie not found.</p>
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ background: "var(--bg-base)" }}
+      >
+        <Suspense fallback={null}>
+          <NavBar />
+        </Suspense>
+        <p className="text-white/65 font-roboto text-lg">Movie not found.</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen text-white" style={{ background: "var(--bg-base)" }}>
-      <Suspense fallback={<div style={{ height: 64, background: "var(--bg-nav)" }} />}>
+    <div
+      className="min-h-screen text-white"
+      style={{ background: "var(--bg-base)" }}
+    >
+      <Suspense
+        fallback={<div style={{ height: 64, background: "var(--bg-nav)" }} />}
+      >
         <NavBar />
       </Suspense>
 
       {/* ── Hero backdrop ── */}
-      <Suspense fallback={<div className="w-full h-[40vw] max-h-[520px] bg-white/5" />}>
-        <DC.BackdropHero backdrop_path={detils.backdrop_path} title={detils.title} />
+      <Suspense
+        fallback={<div className="w-full h-[40vw] max-h-[520px] bg-white/5" />}
+      >
+        <DC.BackdropHero
+          backdrop_path={detils.backdrop_path}
+          title={detils.title}
+        />
       </Suspense>
 
       {/* ── Main content card ── */}
       <div className="max-w-6xl mx-auto px-3 sm:px-6 lg:px-10">
         {/* Poster + info row — poster overlaps the backdrop */}
         <div className="flex flex-col sm:flex-row gap-5 lg:gap-10 -mt-20 sm:-mt-32 lg:-mt-44 relative z-10">
-
           {/* Poster */}
           <div className="flex-shrink-0 self-start mx-auto sm:mx-0">
-            <Suspense fallback={<div className="w-36 sm:w-48 lg:w-60 aspect-[2/3] rounded-2xl bg-white/10" />}>
+            <Suspense
+              fallback={
+                <div className="w-36 sm:w-48 lg:w-60 aspect-[2/3] rounded-2xl bg-white/10" />
+              }
+            >
               <DC.PosterCard
                 poster_path={detils.poster_path}
                 movie_id={detils.id.toString()}
@@ -130,13 +166,17 @@ const MovieDetils = () => {
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold font-roboto text-white leading-tight">
                 {detils.title}
               </h1>
-              <p className="text-white/40 font-roboto text-sm mt-1">
+              <p className="text-white/65 font-roboto text-sm mt-1">
                 {detils.release_date?.slice(0, 4)}
-                {detils.runtime ? ` · ${Math.floor(detils.runtime / 60)}h ${detils.runtime % 60}m` : ""}
+                {detils.runtime
+                  ? ` · ${Math.floor(detils.runtime / 60)}h ${detils.runtime % 60}m`
+                  : ""}
                 {detils.status ? ` · ${detils.status}` : ""}
               </p>
               {detils.tagline && (
-                <p className="text-white/35 font-roboto text-sm italic mt-1">&ldquo;{detils.tagline}&rdquo;</p>
+                <p className="text-white/60 font-roboto text-sm italic mt-1">
+                  &ldquo;{detils.tagline}&rdquo;
+                </p>
               )}
             </div>
 
@@ -147,7 +187,10 @@ const MovieDetils = () => {
 
             {/* Rating */}
             <Suspense fallback={null}>
-              <DC.RatingBadge vote_average={detils.vote_average} vote_count={detils.vote_count} />
+              <DC.RatingBadge
+                vote_average={detils.vote_average}
+                vote_count={detils.vote_count}
+              />
             </Suspense>
 
             {/* Watchlist button */}
@@ -157,7 +200,9 @@ const MovieDetils = () => {
 
             {/* Overview — shown inline on desktop */}
             <div className="hidden sm:block">
-              <p className="text-white/45 font-roboto text-sm font-semibold uppercase tracking-widest mb-2">Overview</p>
+              <p className="text-white/65 font-roboto text-sm font-semibold uppercase tracking-widest mb-2">
+                Overview
+              </p>
               <p className="text-white/75 font-roboto text-base leading-relaxed">
                 {detils.overview}
               </p>

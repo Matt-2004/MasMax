@@ -151,10 +151,10 @@ export function RatingBadge({
           <span className="text-white font-semibold font-roboto text-lg">
             {score}
           </span>
-          <span className="text-white/35 font-roboto text-sm">/10</span>
+          <span className="text-white/60 font-roboto text-sm">/10</span>
         </div>
         {vote_count !== undefined && (
-          <p className="text-white/35 font-roboto text-xs mt-0.5">
+          <p className="text-white/60 font-roboto text-xs mt-0.5">
             {vote_count.toLocaleString()} votes
           </p>
         )}
@@ -183,7 +183,7 @@ export function WatchlistButton({ movie_id }: { movie_id: string }) {
 export function OverviewSection({ overview }: { overview: string }) {
   return (
     <div>
-      <p className="text-white/45 font-roboto text-sm font-semibold uppercase tracking-widest mb-2">
+      <p className="text-white/65 font-roboto text-sm font-semibold uppercase tracking-widest mb-2">
         Overview
       </p>
       <p className="text-white/75 font-roboto text-base leading-relaxed">
@@ -208,7 +208,7 @@ export function VideosSection({ videos }: { videos: any[] }) {
     <section aria-label="Trailers and videos" className="mt-12">
       <h2 className="text-xl font-bold font-roboto text-white mb-5">
         Trailers &amp; Videos
-        <span className="text-white/30 font-normal text-base ml-2">
+        <span className="text-white/55 font-normal text-base ml-2">
           ({sorted.length})
         </span>
       </h2>

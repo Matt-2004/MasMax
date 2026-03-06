@@ -156,7 +156,7 @@ const HeroSection = ({ movies, loading }: HeroSectionProps) => {
             {Math.round((movie.vote_average ?? 0) * 10) / 10}
           </span>
           {movie.release_date && (
-            <span className="text-white/40 text-xs font-roboto">
+            <span className="text-white/65 text-xs font-roboto">
               {movie.release_date.slice(0, 4)}
             </span>
           )}

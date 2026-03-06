@@ -189,17 +189,17 @@ const NavBar = () => {
                   key={itemName}
                   onClick={() => navigate(item.path)}
                   className="relative h-16 flex items-center px-4 font-roboto text-[0.85rem] font-medium tracking-wide transition-colors duration-200 group"
-                  style={{ color: active ? "#fff" : "rgba(255,255,255,0.45)" }}
+                  style={{ color: active ? "#fff" : "rgba(255,255,255,0.65)" }}
                   aria-current={active ? "page" : undefined}
                   onMouseEnter={(e) => {
                     if (!active)
                       (e.currentTarget as HTMLButtonElement).style.color =
-                        "rgba(255,255,255,0.85)";
+                        "rgba(255,255,255,0.9)";
                   }}
                   onMouseLeave={(e) => {
                     if (!active)
                       (e.currentTarget as HTMLButtonElement).style.color =
-                        "rgba(255,255,255,0.45)";
+                        "rgba(255,255,255,0.65)";
                   }}
                 >
                   {itemName}
@@ -288,7 +288,7 @@ const NavBar = () => {
                       {user.displayName?.split(" ")[0] ?? "Account"}
                     </span>
                     <svg
-                      className="hidden md:block w-3 h-3 text-white/40 flex-shrink-0"
+                      className="hidden md:block w-3 h-3 text-white/60 flex-shrink-0"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -435,7 +435,7 @@ const NavBar = () => {
             borderColor: "rgba(255,255,255,0.08)",
           }}
         >
-          <span className="flex-shrink-0 text-white/35">
+          <span className="flex-shrink-0 text-white/60">
             <SearchIcon />
           </span>
           <input
@@ -472,7 +472,7 @@ const NavBar = () => {
                 setSuggestions([]);
                 searchRef.current?.focus();
               }}
-              className="flex-shrink-0 text-white/35 hover:text-white/70 transition-colors"
+              className="flex-shrink-0 text-white/60 hover:text-white transition-colors"
               aria-label="Clear"
             >
               <Xicon />
@@ -538,11 +538,11 @@ const NavBar = () => {
                   <p className="font-roboto text-sm text-white font-medium truncate">
                     {item.original_title}
                   </p>
-                  <p className="font-roboto text-xs text-white/35 mt-0.5">
+                  <p className="font-roboto text-xs text-white/60 mt-0.5">
                     {item.release_date?.slice(0, 4) ?? ""}
                   </p>
                 </div>
-                <span className="text-white/20 flex-shrink-0">
+                <span className="text-white/40 flex-shrink-0">
                   <AngleRightIcon />
                 </span>
               </li>
@@ -613,7 +613,7 @@ const NavBar = () => {
                 aria-current={isActive ? "page" : undefined}
                 className="w-full flex items-center gap-3.5 h-12 px-5 font-roboto text-[0.9rem] font-medium transition-all duration-150"
                 style={{
-                  color: isActive ? "#fff" : "rgba(255,255,255,0.45)",
+                  color: isActive ? "#fff" : "rgba(255,255,255,0.65)",
                   background: isActive
                     ? "color-mix(in srgb, var(--accent) 10%, transparent)"
                     : "transparent",

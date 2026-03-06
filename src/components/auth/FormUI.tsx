@@ -37,7 +37,7 @@ const FormUI = ({ children, title, subtitle }: FormUIProps) => {
             <h2 className="text-2xl sm:text-3xl font-bold text-white font-roboto">
               {title}
             </h2>
-            <p className="text-white/45 text-sm mt-1.5 font-roboto">
+            <p className="text-white/65 text-sm mt-1.5 font-roboto">
               {subtitle}
             </p>
           </div>

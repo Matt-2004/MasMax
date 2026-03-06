@@ -12,7 +12,9 @@ const GenrePage = () => {
   const navigate = useNavigate();
   const { genreId } = useParams<{ genreId: string }>();
 
-  const [movies, setMovies] = useState<MovieResult[]>(location.state?.search ?? []);
+  const [movies, setMovies] = useState<MovieResult[]>(
+    location.state?.search ?? [],
+  );
   const [loading, setLoading] = useState(!location.state?.search);
   const [error, setError] = useState("");
 
@@ -39,12 +41,16 @@ const GenrePage = () => {
         if (!cancelled) setLoading(false);
       }
     })();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [genreId, location.state]);
 
   return (
     <div className="min-h-screen" style={{ background: "var(--bg-base)" }}>
-      <Suspense fallback={<div style={{ height: 64, background: "var(--bg-nav)" }} />}>
+      <Suspense
+        fallback={<div style={{ height: 64, background: "var(--bg-nav)" }} />}
+      >
         <NavBar />
       </Suspense>
       <div className="max-w-6xl mx-auto px-3 sm:px-6 lg:px-10 py-6 sm:py-8">
@@ -52,7 +58,9 @@ const GenrePage = () => {
         <div className="flex items-center gap-3 mb-6">
           <div className="w-1 h-8 bg-gradient-to-b from-[#2eade7] to-[#1a8fc7] rounded-full" />
           <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white font-roboto">
-            <span className="text-[#2eade7]">{capitalizeFirstLetterEachWord(label)}</span>
+            <span className="text-[#2eade7]">
+              {capitalizeFirstLetterEachWord(label)}
+            </span>
           </h1>
         </div>
 
@@ -65,7 +73,9 @@ const GenrePage = () => {
         {loading ? (
           <SearchResultsSkeleton count={5} />
         ) : movies.length === 0 ? (
-          <p className="text-white/40 font-roboto text-base mt-12 text-center">No movies found.</p>
+          <p className="text-white/65 font-roboto text-base mt-12 text-center">
+            No movies found.
+          </p>
         ) : (
           <div className="flex flex-col gap-3">
             {movies.map((item: MovieResult) => (
@@ -90,9 +100,11 @@ const GenrePage = () => {
                   <h2 className="text-white font-semibold font-roboto text-sm sm:text-base leading-snug line-clamp-2 group-hover:text-[#60c8f5] transition-colors">
                     {item.original_title}
                   </h2>
-                  <p className="text-white/35 font-roboto text-xs">
+                  <p className="text-white/60 font-roboto text-xs">
                     {item.release_date?.slice(0, 4)}
-                    {item.vote_average ? ` · ★ ${Math.round(item.vote_average * 10) / 10}` : ""}
+                    {item.vote_average
+                      ? ` · ★ ${Math.round(item.vote_average * 10) / 10}`
+                      : ""}
                   </p>
                   <p className="text-white/55 font-roboto text-xs sm:text-sm leading-relaxed line-clamp-3 mt-0.5">
                     {item.overview}

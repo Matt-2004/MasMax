@@ -15,7 +15,7 @@
   --accent-light: #60c8f5;
   --accent-dark: #1a8fc7;
   --border: rgba(255, 255, 255, 0.08);
-  --text-muted: rgba(255, 255, 255, 0.45);
+  --text-muted: rgba(255, 255, 255, 0.65);
 }
 
 [data-theme="midnight"] {
@@ -29,7 +29,7 @@
   --accent-light: #c084fc;
   --accent-dark: #7c3aed;
   --border: rgba(168, 85, 247, 0.12);
-  --text-muted: rgba(255, 255, 255, 0.4);
+  --text-muted: rgba(255, 255, 255, 0.65);
 }
 
 [data-theme="ocean"] {
@@ -43,7 +43,7 @@
   --accent-light: #22d3ee;
   --accent-dark: #0891b2;
   --border: rgba(6, 182, 212, 0.12);
-  --text-muted: rgba(255, 255, 255, 0.4);
+  --text-muted: rgba(255, 255, 255, 0.65);
 }
 
 /* ── Apply theme vars to base elements ─────────────────── */

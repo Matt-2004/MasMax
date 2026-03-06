@@ -165,7 +165,7 @@ const MovieCardItem = memo(function MovieCardItem({
             <span className="text-yellow-400 text-xs sm:text-sm font-semibold font-roboto">
               {Math.round(movie.vote_average * 10) / 10}
             </span>
-            <span className="text-white/30 text-xs hidden sm:inline font-roboto">
+            <span className="text-white/55 text-xs hidden sm:inline font-roboto">
               /10
             </span>
           </div>
@@ -245,13 +245,13 @@ function FilterPanel({
         <div className="flex items-center gap-2">
           <button
             onClick={onReset}
-            className="font-roboto text-xs text-white/40 hover:text-white/80 transition-colors px-2 py-1 rounded-md hover:bg-white/5"
+            className="font-roboto text-xs text-white/60 hover:text-white transition-colors px-2 py-1 rounded-md hover:bg-white/5"
           >
             Reset all
           </button>
           <button
             onClick={onClose}
-            className="lg:hidden p-1.5 rounded-lg text-white/40 hover:text-white hover:bg-white/8 transition-colors"
+            className="lg:hidden p-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/8 transition-colors"
             aria-label="Close filters"
           >
             <svg className="w-4 h-4 fill-current" viewBox="0 0 384 512">
@@ -265,7 +265,7 @@ function FilterPanel({
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-6">
         {/* Sort by */}
         <div>
-          <p className="font-roboto text-xs font-semibold uppercase tracking-widest text-white/40 mb-2.5">
+          <p className="font-roboto text-xs font-semibold uppercase tracking-widest text-white/60 mb-2.5">
             Sort by
           </p>
           <div className="space-y-1">
@@ -291,7 +291,7 @@ function FilterPanel({
 
         {/* Min rating */}
         <div>
-          <p className="font-roboto text-xs font-semibold uppercase tracking-widest text-white/40 mb-2.5">
+          <p className="font-roboto text-xs font-semibold uppercase tracking-widest text-white/60 mb-2.5">
             Min Rating
           </p>
           <div className="flex flex-wrap gap-1.5">
@@ -320,7 +320,7 @@ function FilterPanel({
 
         {/* Release year */}
         <div>
-          <p className="font-roboto text-xs font-semibold uppercase tracking-widest text-white/40 mb-2.5">
+          <p className="font-roboto text-xs font-semibold uppercase tracking-widest text-white/60 mb-2.5">
             Release Year
           </p>
           <div className="flex items-center gap-2">
@@ -359,13 +359,13 @@ function FilterPanel({
                 ))}
               </select>
               <svg
-                className="pointer-events-none absolute right-1.5 top-1/2 -translate-y-1/2 w-3 h-3 fill-current text-white/30"
+                className="pointer-events-none absolute right-1.5 top-1/2 -translate-y-1/2 w-3 h-3 fill-current text-white/55"
                 viewBox="0 0 320 512"
               >
                 <path d="M137.4 374.6c12.5 12.5 32.8 12.5 45.3 0l128-128c9.2-9.2 11.9-22.9 6.9-34.9S301 192 288 192H32c-12.9 0-24.6 7.8-29.6 19.8S-.3 237.3 8.9 246.6l128 128z" />
               </svg>
             </div>
-            <span className="text-white/25 text-xs font-roboto flex-shrink-0">
+            <span className="text-white/55 text-xs font-roboto flex-shrink-0">
               –
             </span>
             <div className="relative flex-1">
@@ -401,7 +401,7 @@ function FilterPanel({
                 ))}
               </select>
               <svg
-                className="pointer-events-none absolute right-1.5 top-1/2 -translate-y-1/2 w-3 h-3 fill-current text-white/30"
+                className="pointer-events-none absolute right-1.5 top-1/2 -translate-y-1/2 w-3 h-3 fill-current text-white/55"
                 viewBox="0 0 320 512"
               >
                 <path d="M137.4 374.6c12.5 12.5 32.8 12.5 45.3 0l128-128c9.2-9.2 11.9-22.9 6.9-34.9S301 192 288 192H32c-12.9 0-24.6 7.8-29.6 19.8S-.3 237.3 8.9 246.6l128 128z" />
@@ -412,7 +412,7 @@ function FilterPanel({
 
         {/* Genres */}
         <div>
-          <p className="font-roboto text-xs font-semibold uppercase tracking-widest text-white/40 mb-2.5">
+          <p className="font-roboto text-xs font-semibold uppercase tracking-widest text-white/60 mb-2.5">
             Genres
           </p>
           <div className="flex flex-wrap gap-1.5">
@@ -719,7 +719,7 @@ function VirtualGrid({
           />
         )}
         {!hasNextPage && movies.length > 0 && (
-          <p className="text-white/25 font-roboto text-sm">
+          <p className="text-white/55 font-roboto text-sm">
             You've reached the end · {movies.length.toLocaleString()} movies
           </p>
         )}
@@ -884,7 +884,7 @@ const MoviesPage = () => {
 
             {isError && (
               <div className="flex-1 flex items-center justify-center">
-                <p className="text-white/40 font-roboto">
+                <p className="text-white/65 font-roboto">
                   Failed to load movies. Try again.
                 </p>
               </div>
@@ -916,7 +916,7 @@ const MoviesPage = () => {
             {!isLoading && !isError && movies.length === 0 && (
               <div className="flex-1 flex flex-col items-center justify-center gap-4 py-20">
                 <svg
-                  className="w-12 h-12 text-white/15 fill-current"
+                  className="w-12 h-12 text-white/35 fill-current"
                   viewBox="0 0 512 512"
                 >
                   <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />

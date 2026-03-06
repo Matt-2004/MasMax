@@ -70,7 +70,7 @@ const MoviePage = () => {
         {loading ? (
           <SearchResultsSkeleton count={5} />
         ) : search.length === 0 ? (
-          <p className="text-white/40 font-roboto text-base mt-12 text-center">
+          <p className="text-white/65 font-roboto text-base mt-12 text-center">
             No results found for &ldquo;{query}&rdquo;
           </p>
         ) : (
@@ -98,7 +98,7 @@ const MoviePage = () => {
                   <h2 className="text-white font-semibold font-roboto text-sm sm:text-base leading-snug line-clamp-2 group-hover:text-[#60c8f5] transition-colors">
                     {item.original_title}
                   </h2>
-                  <p className="text-white/35 font-roboto text-xs">
+                  <p className="text-white/60 font-roboto text-xs">
                     {item.release_date?.slice(0, 4)}
                     {item.vote_average
                       ? ` · ★ ${Math.round(item.vote_average * 10) / 10}`

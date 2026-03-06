@@ -112,7 +112,7 @@ function SeriesCard({ item }: { item: TVResult }) {
             <span className="text-yellow-400 text-xs sm:text-sm font-semibold font-roboto">
               {Math.round(item.vote_average * 10) / 10}
             </span>
-            <span className="text-white/30 text-xs hidden sm:inline font-roboto">
+            <span className="text-white/55 text-xs hidden sm:inline font-roboto">
               /10
             </span>
           </div>
